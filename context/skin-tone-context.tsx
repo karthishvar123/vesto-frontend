@@ -28,11 +28,20 @@ export function SkinToneProvider({ children }: { children: React.ReactNode }) {
         const savedTone = sessionStorage.getItem("vesto_normalized_tone");
 
         if (savedType) {
-            setSelectedType(parseInt(savedType) as SkinToneType);
+            const type = parseInt(savedType) as SkinToneType;
+            // Only update if different to avoid loop/redundant render
+            if (type !== selectedType) {
+                setSelectedType(type);
+            }
         }
         if (savedTone) {
-            setNormalizedTone(savedTone as NormalizedTone);
+            const tone = savedTone as NormalizedTone;
+            // Only update if different
+            if (tone !== normalizedTone) {
+                setNormalizedTone(tone);
+            }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     const normalizeSkinTone = (type: SkinToneType): NormalizedTone => {

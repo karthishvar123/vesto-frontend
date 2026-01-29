@@ -77,7 +77,7 @@ export default function ProductListingPage({ params }: { params: Promise<{ categ
     }, [category, style]);
 
     useEffect(() => {
-        let result = [...products];
+        const result = [...products];
 
         // Apply Sort
         if (sortBy === "price-asc") {

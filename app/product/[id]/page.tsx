@@ -21,6 +21,7 @@ interface Product {
     productStyle: string;
     baseColor: string;
     activityType: string;
+    affiliateLink?: string;
 }
 
 export default function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
@@ -223,9 +224,22 @@ export default function ProductDetailPage({ params }: { params: Promise<{ id: st
                         </div>
 
                         <div className="space-y-4">
-                            <Button className="w-full py-6 text-lg rounded-full bg-[#111] hover:bg-black/90 text-white" size="lg">
-                                Buy
-                            </Button>
+                            {product.affiliateLink ? (
+                                <a
+                                    href={product.affiliateLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="block w-full"
+                                >
+                                    <Button className="w-full py-6 text-lg rounded-full bg-[#111] hover:bg-black/90 text-white" size="lg">
+                                        Buy
+                                    </Button>
+                                </a>
+                            ) : (
+                                <Button className="w-full py-6 text-lg rounded-full bg-[#111] hover:bg-black/90 text-white" size="lg">
+                                    Buy
+                                </Button>
+                            )}
                             <div className={`grid gap-4 ${product.productType?.toLowerCase() === 'footwear' ? 'grid-cols-1' : 'grid-cols-2'}`}>
                                 {product.productType?.toLowerCase() !== 'footwear' && (
                                     <Link href={`/complete-your-look/${product.id}`} className="w-full">

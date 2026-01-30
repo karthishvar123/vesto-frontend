@@ -45,6 +45,30 @@ export default function ShopBySkinTonePage() {
                     </p>
                 </motion.div>
 
+                {/* Tone Guide */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.1 }}
+                    className="w-full max-w-6xl mb-16"
+                >
+                    <h2 className="text-xl font-bold uppercase tracking-tight text-[#111] mb-6 text-center">Reference Guide</h2>
+                    <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
+                        {[1, 2, 3, 4, 5, 6].map((num) => (
+                            <div key={num} className="flex flex-col items-center">
+                                <div className="relative w-full aspect-[3/4] rounded-lg overflow-hidden bg-gray-100 mb-2 shadow-sm">
+                                    <img
+                                        src={`/images/skin-tones/male-type-${num}.png`}
+                                        alt={`Type ${num}`}
+                                        className="object-cover w-full h-full"
+                                    />
+                                </div>
+                                <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Type {num}</span>
+                            </div>
+                        ))}
+                    </div>
+                </motion.div>
+
                 <motion.div
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl"
                     initial={{ opacity: 0, scale: 0.95 }}
@@ -62,23 +86,25 @@ export default function ShopBySkinTonePage() {
                                 whileTap={{ scale: 0.98 }}
                                 onClick={() => selectSkinTone(typeId)}
                                 className={`
-                                    relative p-6 rounded-3xl cursor-pointer transition-all duration-300 border-2 flex items-center gap-6
+                                    relative overflow-hidden cursor-pointer transition-all duration-300 rounded-2xl border-2
                                     ${isSelected
-                                        ? 'border-[#111] bg-gray-50 shadow-xl'
-                                        : 'border-transparent bg-white hover:bg-gray-50 hover:shadow-lg hover:border-gray-100'
+                                        ? 'border-[#111] shadow-2xl ring-1 ring-[#111] ring-offset-2'
+                                        : 'border-transparent shadow-lg hover:shadow-xl hover:translate-y-[-4px]'
                                     }
                                 `}
                             >
-                                {/* Circle Preview */}
+                                {/* Palette Color Block */}
                                 <div
-                                    className={`w-20 h-20 rounded-full flex-shrink-0 shadow-inner border-2 border-white/50 ${isSelected ? 'ring-2 ring-[#111] ring-offset-2' : ''}`}
-                                    style={{ background: `radial-gradient(circle at 35% 35%, ${tone.color}, ${tone.edge})` }}
-                                />
+                                    className="h-32 w-full"
+                                    style={{ backgroundColor: tone.color }}
+                                >
+                                    {/* Gradient overlay to show undertone depth */}
+                                    <div className="w-full h-full" style={{ background: `linear-gradient(to bottom right, ${tone.color}, ${tone.edge})` }} />
+                                </div>
 
-                                {/* Info */}
-                                <div className="flex flex-col items-start gap-1">
-                                    <div className="flex items-center gap-2">
-                                        <h2 className="text-xl font-bold uppercase tracking-tight text-[#111]">{tone.name}</h2>
+                                <div className="p-6 bg-white">
+                                    <div className="flex items-center justify-between mb-2">
+                                        <h2 className="text-2xl font-black uppercase tracking-tighter text-[#111]">{tone.name}</h2>
                                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${tone.undertoneColor}`}>
                                             {tone.undertone}
                                         </span>
@@ -88,10 +114,8 @@ export default function ShopBySkinTonePage() {
 
                                 {/* Checkmark for selected state */}
                                 {isSelected && (
-                                    <div className="absolute top-6 right-6 text-[#111]">
-                                        <div className="w-6 h-6 bg-[#111] rounded-full flex items-center justify-center text-white">
-                                            <ArrowRight className="w-3 h-3" />
-                                        </div>
+                                    <div className="absolute top-4 right-4 bg-white/30 backdrop-blur-md p-2 rounded-full text-white shadow-sm">
+                                        <ArrowRight className="w-5 h-5" />
                                     </div>
                                 )}
                             </motion.div>

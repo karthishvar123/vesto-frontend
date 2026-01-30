@@ -46,28 +46,7 @@ export default function ShopBySkinTonePage() {
                 </motion.div>
 
                 {/* Tone Guide */}
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 }}
-                    className="w-full max-w-6xl mb-16"
-                >
-                    <h2 className="text-xl font-bold uppercase tracking-tight text-[#111] mb-6 text-center">Reference Guide</h2>
-                    <div className="grid grid-cols-3 sm:grid-cols-6 gap-4">
-                        {[1, 2, 3, 4, 5, 6].map((num) => (
-                            <div key={num} className="flex flex-col items-center">
-                                <div className="relative w-full aspect-[3/4] rounded-lg overflow-hidden bg-gray-100 mb-2 shadow-sm">
-                                    <img
-                                        src={`/images/skin-tones/male-type-${num}.png`}
-                                        alt={`Type ${num}`}
-                                        className="object-cover w-full h-full"
-                                    />
-                                </div>
-                                <span className="text-xs font-bold text-gray-500 uppercase tracking-widest">Type {num}</span>
-                            </div>
-                        ))}
-                    </div>
-                </motion.div>
+                {/* Tone Guide removed */}
 
                 <motion.div
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl"

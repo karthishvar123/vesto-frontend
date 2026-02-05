@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { ArrowRight, Info, Camera, Sparkles } from "lucide-react";
 import { useState } from "react";
 import dynamic from "next/dynamic";
+import ProtectedRoute from "@/components/protected-route";
 
 // Dynamically import AICamera to avoid loading heavy ML models initially
 const AICamera = dynamic(() => import("@/components/skin-tone-finder/ai-camera"), {
@@ -40,126 +41,128 @@ export default function ShopBySkinTonePage() {
     ];
 
     return (
-        <main className="min-h-screen bg-white">
-            <Navbar />
+        <ProtectedRoute>
+            <main className="min-h-screen bg-white">
+                <Navbar />
 
-            {/* AI Camera Modal */}
-            <AnimatePresence>
-                {showCamera && (
-                    <AICamera
-                        onClose={() => setShowCamera(false)}
-                        onMatchFound={handleMatchFound}
-                    />
-                )}
-            </AnimatePresence>
+                {/* AI Camera Modal */}
+                <AnimatePresence>
+                    {showCamera && (
+                        <AICamera
+                            onClose={() => setShowCamera(false)}
+                            onMatchFound={handleMatchFound}
+                        />
+                    )}
+                </AnimatePresence>
 
-            <div className="pt-32 pb-16 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="text-center mb-12"
-                >
-                    <h1 className="text-4xl md:text-6xl font-black text-[#111] uppercase tracking-tighter mb-6">
-                        Select Your Skin Tone
-                    </h1>
-                    <p className="text-lg text-gray-500 font-medium max-w-2xl mx-auto flex items-center justify-center gap-2 mb-8">
-                        <Info className="w-5 h-5 text-gray-400" />
-                        Choose the tone that best matches your complexion.
-                    </p>
-
-                    {/* AI Finder Button */}
-                    <button
-                        onClick={() => setShowCamera(true)}
-                        className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-full font-bold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden"
+                <div className="pt-32 pb-16 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="text-center mb-12"
                     >
-                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                        <Camera className="w-5 h-5 relative z-10" />
-                        <span className="relative z-10">Find my Tone with AI</span>
-                        <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse relative z-10" />
-                    </button>
-                </motion.div>
+                        <h1 className="text-4xl md:text-6xl font-black text-[#111] uppercase tracking-tighter mb-6">
+                            Select Your Skin Tone
+                        </h1>
+                        <p className="text-lg text-gray-500 font-medium max-w-2xl mx-auto flex items-center justify-center gap-2 mb-8">
+                            <Info className="w-5 h-5 text-gray-400" />
+                            Choose the tone that best matches your complexion.
+                        </p>
 
-                <motion.div
-                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.6, delay: 0.2 }}
-                >
-                    {skinTones.map((tone, index) => {
-                        const typeId = (index + 1) as 1 | 2 | 3 | 4 | 5 | 6;
-                        const isSelected = selectedType === typeId;
+                        {/* AI Finder Button */}
+                        <button
+                            onClick={() => setShowCamera(true)}
+                            className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-full font-bold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden"
+                        >
+                            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                            <Camera className="w-5 h-5 relative z-10" />
+                            <span className="relative z-10">Find my Tone with AI</span>
+                            <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse relative z-10" />
+                        </button>
+                    </motion.div>
 
-                        return (
-                            <motion.div
-                                key={tone.name}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                onClick={() => selectSkinTone(typeId)}
-                                className={`
+                    <motion.div
+                        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl"
+                        initial={{ opacity: 0, scale: 0.95 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.6, delay: 0.2 }}
+                    >
+                        {skinTones.map((tone, index) => {
+                            const typeId = (index + 1) as 1 | 2 | 3 | 4 | 5 | 6;
+                            const isSelected = selectedType === typeId;
+
+                            return (
+                                <motion.div
+                                    key={tone.name}
+                                    whileHover={{ scale: 1.02 }}
+                                    whileTap={{ scale: 0.98 }}
+                                    onClick={() => selectSkinTone(typeId)}
+                                    className={`
                                     relative overflow-hidden cursor-pointer transition-all duration-300 rounded-2xl border-2
                                     ${isSelected
-                                        ? 'border-[#111] shadow-2xl ring-1 ring-[#111] ring-offset-2'
-                                        : 'border-transparent shadow-lg hover:shadow-xl hover:translate-y-[-4px]'
-                                    }
+                                            ? 'border-[#111] shadow-2xl ring-1 ring-[#111] ring-offset-2'
+                                            : 'border-transparent shadow-lg hover:shadow-xl hover:translate-y-[-4px]'
+                                        }
                                 `}
-                            >
-                                {/* Palette Color Block */}
-                                <div
-                                    className="h-32 w-full"
-                                    style={{ backgroundColor: tone.color }}
                                 >
-                                    {/* Gradient overlay to show undertone depth */}
-                                    <div className="w-full h-full" style={{ background: `linear-gradient(to bottom right, ${tone.color}, ${tone.edge})` }} />
-                                </div>
-
-                                <div className="p-6 bg-white">
-                                    <div className="flex items-center justify-between mb-2">
-                                        <h2 className="text-2xl font-black uppercase tracking-tighter text-[#111]">{tone.name}</h2>
-                                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${tone.undertoneColor}`}>
-                                            {tone.undertone}
-                                        </span>
+                                    {/* Palette Color Block */}
+                                    <div
+                                        className="h-32 w-full"
+                                        style={{ backgroundColor: tone.color }}
+                                    >
+                                        {/* Gradient overlay to show undertone depth */}
+                                        <div className="w-full h-full" style={{ background: `linear-gradient(to bottom right, ${tone.color}, ${tone.edge})` }} />
                                     </div>
-                                    <p className="text-sm text-gray-500 font-medium">{tone.sub}</p>
-                                </div>
 
-                                {/* Checkmark for selected state */}
-                                {isSelected && (
-                                    <div className="absolute top-4 right-4 bg-white/30 backdrop-blur-md p-2 rounded-full text-white shadow-sm">
-                                        <ArrowRight className="w-5 h-5" />
+                                    <div className="p-6 bg-white">
+                                        <div className="flex items-center justify-between mb-2">
+                                            <h2 className="text-2xl font-black uppercase tracking-tighter text-[#111]">{tone.name}</h2>
+                                            <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${tone.undertoneColor}`}>
+                                                {tone.undertone}
+                                            </span>
+                                        </div>
+                                        <p className="text-sm text-gray-500 font-medium">{tone.sub}</p>
                                     </div>
-                                )}
-                            </motion.div>
-                        );
-                    })}
-                </motion.div>
 
-                <motion.div
-                    className="mt-16 sticky bottom-8 z-50"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.4 }}
-                >
-                    <button
-                        onClick={handleShopClick}
-                        disabled={!selectedType}
-                        className={`relative px-8 md:px-12 py-4 md:py-5 rounded-full shadow-2xl
+                                    {/* Checkmark for selected state */}
+                                    {isSelected && (
+                                        <div className="absolute top-4 right-4 bg-white/30 backdrop-blur-md p-2 rounded-full text-white shadow-sm">
+                                            <ArrowRight className="w-5 h-5" />
+                                        </div>
+                                    )}
+                                </motion.div>
+                            );
+                        })}
+                    </motion.div>
+
+                    <motion.div
+                        className="mt-16 sticky bottom-8 z-50"
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: 0.4 }}
+                    >
+                        <button
+                            onClick={handleShopClick}
+                            disabled={!selectedType}
+                            className={`relative px-8 md:px-12 py-4 md:py-5 rounded-full shadow-2xl
                             flex items-center gap-3 transition-all duration-300 ease-out backdrop-blur-md
                             ${selectedType
-                                ? 'bg-[#111] text-white hover:scale-105 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.4)]'
-                                : 'bg-white/80 text-gray-300 border border-gray-100 cursor-not-allowed'
-                            }
+                                    ? 'bg-[#111] text-white hover:scale-105 hover:shadow-[0_20px_40px_-12px_rgba(0,0,0,0.4)]'
+                                    : 'bg-white/80 text-gray-300 border border-gray-100 cursor-not-allowed'
+                                }
                         `}
-                    >
-                        <span className="text-lg md:text-xl font-medium tracking-wide whitespace-nowrap">
-                            Shop with this skin tone
-                        </span>
-                        {selectedType && (
-                            <ArrowRight className="w-5 h-5 opacity-90" />
-                        )}
-                    </button>
-                </motion.div>
-            </div>
-        </main>
+                        >
+                            <span className="text-lg md:text-xl font-medium tracking-wide whitespace-nowrap">
+                                Shop with this skin tone
+                            </span>
+                            {selectedType && (
+                                <ArrowRight className="w-5 h-5 opacity-90" />
+                            )}
+                        </button>
+                    </motion.div>
+                </div>
+            </main>
+        </ProtectedRoute>
     );
 }

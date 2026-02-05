@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Loader2, Trash2 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import ProtectedRoute from "@/components/protected-route";
 
 export default function VirtualWardrobePage() {
     const { items, loading, removeFromWardrobe } = useWardrobe();
@@ -26,41 +27,43 @@ export default function VirtualWardrobePage() {
     const hasItems = items.length > 0;
 
     return (
-        <main className="min-h-screen bg-white pb-20">
-            <Navbar />
+        <ProtectedRoute>
+            <main className="min-h-screen bg-white pb-20">
+                <Navbar />
 
-            <div className="pt-32 px-4 md:px-8 max-w-7xl mx-auto">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6 }}
-                    className="mb-16 text-center"
-                >
-                    <h1 className="text-4xl md:text-6xl font-black text-[#111] uppercase tracking-tighter mb-4">
-                        Your Wardrobe
-                    </h1>
-                    <p className="text-lg text-gray-500 font-medium max-w-2xl mx-auto">
-                        A collection of your favorite pieces, organized for effortless styling.
-                    </p>
-                </motion.div>
+                <div className="pt-32 px-4 md:px-8 max-w-7xl mx-auto">
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="mb-16 text-center"
+                    >
+                        <h1 className="text-4xl md:text-6xl font-black text-[#111] uppercase tracking-tighter mb-4">
+                            Your Wardrobe
+                        </h1>
+                        <p className="text-lg text-gray-500 font-medium max-w-2xl mx-auto">
+                            A collection of your favorite pieces, organized for effortless styling.
+                        </p>
+                    </motion.div>
 
-                {!hasItems ? (
-                    <div className="text-center py-20 bg-gray-50 rounded-3xl border border-gray-100">
-                        <h2 className="text-2xl font-bold text-[#111] mb-4">Your wardrobe is empty</h2>
-                        <p className="text-gray-500 mb-8">Start adding items from the shop to build your collection.</p>
-                        <Link href="/recommendations" className="inline-block bg-[#111] text-white px-8 py-4 rounded-full font-medium hover:bg-black/90 transition-colors">
-                            Browse Recommendations
-                        </Link>
-                    </div>
-                ) : (
-                    <div className="space-y-24">
-                        {topwear.length > 0 && <WardrobeSection title="Topwear" items={topwear} onRemove={removeFromWardrobe} />}
-                        {bottomwear.length > 0 && <WardrobeSection title="Bottomwear" items={bottomwear} onRemove={removeFromWardrobe} />}
-                        {footwear.length > 0 && <WardrobeSection title="Footwear" items={footwear} onRemove={removeFromWardrobe} />}
-                    </div>
-                )}
-            </div>
-        </main>
+                    {!hasItems ? (
+                        <div className="text-center py-20 bg-gray-50 rounded-3xl border border-gray-100">
+                            <h2 className="text-2xl font-bold text-[#111] mb-4">Your wardrobe is empty</h2>
+                            <p className="text-gray-500 mb-8">Start adding items from the shop to build your collection.</p>
+                            <Link href="/recommendations" className="inline-block bg-[#111] text-white px-8 py-4 rounded-full font-medium hover:bg-black/90 transition-colors">
+                                Browse Recommendations
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className="space-y-24">
+                            {topwear.length > 0 && <WardrobeSection title="Topwear" items={topwear} onRemove={removeFromWardrobe} />}
+                            {bottomwear.length > 0 && <WardrobeSection title="Bottomwear" items={bottomwear} onRemove={removeFromWardrobe} />}
+                            {footwear.length > 0 && <WardrobeSection title="Footwear" items={footwear} onRemove={removeFromWardrobe} />}
+                        </div>
+                    )}
+                </div>
+            </main>
+        </ProtectedRoute>
     );
 }
 

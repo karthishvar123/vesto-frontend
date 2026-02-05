@@ -1,19 +1,33 @@
 "use client";
 
 import Navbar from "@/components/navbar";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useSkinTone } from "@/context/skin-tone-context";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Info } from "lucide-react";
+import { ArrowRight, Info, Camera, Sparkles } from "lucide-react";
+import { useState } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamically import AICamera to avoid loading heavy ML models initially
+const AICamera = dynamic(() => import("@/components/skin-tone-finder/ai-camera"), {
+    loading: () => <div className="fixed inset-0 bg-black/50 z-[100]" />,
+    ssr: false
+});
 
 export default function ShopBySkinTonePage() {
     const { selectSkinTone, selectedType, saveSkinToneToFirestore } = useSkinTone();
     const router = useRouter();
+    const [showCamera, setShowCamera] = useState(false);
 
     const handleShopClick = async () => {
         if (!selectedType) return;
         await saveSkinToneToFirestore();
         router.push("/recommendations");
+    };
+
+    const handleMatchFound = (type: 1 | 2 | 3 | 4 | 5 | 6) => {
+        selectSkinTone(type);
+        // Optional: show a toast or feedback
     };
 
     const skinTones = [
@@ -29,24 +43,42 @@ export default function ShopBySkinTonePage() {
         <main className="min-h-screen bg-white">
             <Navbar />
 
+            {/* AI Camera Modal */}
+            <AnimatePresence>
+                {showCamera && (
+                    <AICamera
+                        onClose={() => setShowCamera(false)}
+                        onMatchFound={handleMatchFound}
+                    />
+                )}
+            </AnimatePresence>
+
             <div className="pt-32 pb-16 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center">
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6 }}
-                    className="text-center mb-16"
+                    className="text-center mb-12"
                 >
                     <h1 className="text-4xl md:text-6xl font-black text-[#111] uppercase tracking-tighter mb-6">
                         Select Your Skin Tone
                     </h1>
-                    <p className="text-lg text-gray-500 font-medium max-w-2xl mx-auto flex items-center justify-center gap-2">
+                    <p className="text-lg text-gray-500 font-medium max-w-2xl mx-auto flex items-center justify-center gap-2 mb-8">
                         <Info className="w-5 h-5 text-gray-400" />
                         Choose the tone that best matches your complexion.
                     </p>
-                </motion.div>
 
-                {/* Tone Guide */}
-                {/* Tone Guide removed */}
+                    {/* AI Finder Button */}
+                    <button
+                        onClick={() => setShowCamera(true)}
+                        className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-full font-bold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden"
+                    >
+                        <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                        <Camera className="w-5 h-5 relative z-10" />
+                        <span className="relative z-10">Find my Tone with AI</span>
+                        <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse relative z-10" />
+                    </button>
+                </motion.div>
 
                 <motion.div
                     className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl"

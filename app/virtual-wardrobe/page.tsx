@@ -3,7 +3,7 @@
 import Navbar from "@/components/navbar";
 import { useWardrobe, WardrobeItem } from "@/context/wardrobe-context";
 import { motion } from "framer-motion";
-import { Loader2, Trash2 } from "lucide-react";
+import { Loader2, Trash2, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import ProtectedRoute from "@/components/protected-route";
@@ -47,19 +47,32 @@ export default function VirtualWardrobePage() {
                     </motion.div>
 
                     {!hasItems ? (
-                        <div className="text-center py-20 bg-gray-50 rounded-3xl border border-gray-100">
-                            <h2 className="text-2xl font-bold text-[#111] mb-4">Your wardrobe is empty</h2>
-                            <p className="text-gray-500 mb-8">Start adding items from the shop to build your collection.</p>
-                            <Link href="/recommendations" className="inline-block bg-[#111] text-white px-8 py-4 rounded-full font-medium hover:bg-black/90 transition-colors">
-                                Browse Recommendations
+                        <div className="flex flex-col items-center justify-center py-32 px-4 text-center bg-gray-50 rounded-[3rem] border border-gray-100 dashed border-2">
+                            <div className="bg-white p-6 rounded-full shadow-lg mb-8">
+                                <span className="text-6xl">🛍️</span>
+                            </div>
+                            <h2 className="text-3xl md:text-4xl font-black text-[#111] mb-4 tracking-tight">Your Wardrobe is Empty</h2>
+                            <p className="text-lg text-gray-500 max-w-md mb-10 leading-relaxed">
+                                Start building your digital closet. Save items you love and let our AI create perfect outfits for you.
+                            </p>
+                            <Link href="/recommendations" className="inline-flex items-center gap-2 bg-[#111] text-white px-10 py-5 rounded-full font-bold text-lg hover:scale-105 hover:shadow-xl transition-all duration-300">
+                                Start Your Collection <ArrowRight className="w-5 h-5" />
                             </Link>
                         </div>
                     ) : (
-                        <div className="space-y-24">
+                        <motion.div
+                            initial="hidden"
+                            animate="show"
+                            variants={{
+                                hidden: { opacity: 0 },
+                                show: { opacity: 1, transition: { staggerChildren: 0.15 } }
+                            }}
+                            className="space-y-24"
+                        >
                             {topwear.length > 0 && <WardrobeSection title="Topwear" items={topwear} onRemove={removeFromWardrobe} />}
                             {bottomwear.length > 0 && <WardrobeSection title="Bottomwear" items={bottomwear} onRemove={removeFromWardrobe} />}
                             {footwear.length > 0 && <WardrobeSection title="Footwear" items={footwear} onRemove={removeFromWardrobe} />}
-                        </div>
+                        </motion.div>
                     )}
                 </div>
             </main>
@@ -70,8 +83,28 @@ export default function VirtualWardrobePage() {
 function WardrobeSection({ title, items, onRemove }: { title: string, items: WardrobeItem[], onRemove: (id: string) => void }) {
     const isTopwear = title.toLowerCase() === 'topwear';
 
+    const containerSettings = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const itemSettings = {
+        hidden: { opacity: 0, y: 20 },
+        show: { opacity: 1, y: 0 }
+    };
+
     return (
-        <section>
+        <motion.section
+            variants={containerSettings}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, margin: "-50px" }}
+        >
             <div className="flex items-end justify-between border-b border-gray-100 pb-4 mb-8">
                 <h2 className="text-3xl font-light tracking-tight text-[#111]">{title}</h2>
                 <span className="text-sm text-gray-400 font-medium">{items.length} Items</span>
@@ -79,7 +112,11 @@ function WardrobeSection({ title, items, onRemove }: { title: string, items: War
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12">
                 {items.map((item) => (
-                    <div key={item.id} className="group relative block">
+                    <motion.div
+                        key={item.id}
+                        className="group relative block"
+                        variants={itemSettings}
+                    >
                         {/* 
                             Rule 2: Bottomwear and Footwear should not be selectable (only images present).
                             Rule 1: "Style this" Only beneath Topwear.
@@ -123,9 +160,9 @@ function WardrobeSection({ title, items, onRemove }: { title: string, items: War
                         >
                             <Trash2 className="w-4 h-4" />
                         </button>
-                    </div>
+                    </motion.div>
                 ))}
             </div>
-        </section>
+        </motion.section>
     );
 }

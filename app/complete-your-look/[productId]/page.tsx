@@ -6,7 +6,7 @@ import { doc, getDoc, query, collection, where, getDocs } from "firebase/firesto
 import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/navbar";
-import { Loader2, ArrowLeft } from "lucide-react";
+import { Loader2, ArrowLeft, SearchX } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ProtectedRoute from "@/components/protected-route";
 
@@ -42,33 +42,46 @@ export default function CompleteYourLookPage({ params }: { params: Promise<{ pro
         if (type === 'topwear') {
             if (['t-shirt', 'sweatshirt'].includes(style)) {
                 return [
-                    { type: 'bottomwear', styles: ['jeans', 'joggers', 'cotton-pant'], label: 'Recommended Bottomwear' },
-                    { type: 'footwear', styles: ['sneakers'], label: 'Recommended Footwear' }
+                    { type: 'bottomwear', styles: ['jeans'], label: 'Jeans' },
+                    { type: 'bottomwear', styles: ['joggers'], label: 'Joggers' },
+                    { type: 'bottomwear', styles: ['cotton-pant'], label: 'Cotton Pants' },
+                    { type: 'bottomwear', styles: ['shorts'], label: 'Shorts' },
+                    { type: 'topwear', styles: ['jacket'], label: 'Jackets' },
+                    { type: 'footwear', styles: ['sneakers'], label: 'Sneakers' }
                 ];
             }
             if (style === 'casual-shirt') {
                 return [
-                    { type: 'bottomwear', styles: ['jeans', 'trouser'], label: 'Recommended Bottomwear' },
-                    { type: 'footwear', styles: ['sneakers', 'loafer'], label: 'Recommended Footwear' }
+                    { type: 'bottomwear', styles: ['jeans'], label: 'Jeans' },
+                    { type: 'bottomwear', styles: ['trouser'], label: 'Trousers' },
+                    { type: 'topwear', styles: ['jacket'], label: 'Jackets' },
+                    { type: 'footwear', styles: ['sneakers'], label: 'Sneakers' },
+                    { type: 'footwear', styles: ['loafer'], label: 'Loafers' }
                 ];
             }
             if (style === 'formal-shirt') {
                 return [
-                    { type: 'bottomwear', styles: ['trouser'], label: 'Recommended Bottomwear' },
-                    { type: 'footwear', styles: ['formal-shoe', 'loafer'], label: 'Recommended Footwear' }
+                    { type: 'bottomwear', styles: ['trouser'], label: 'Trousers' },
+                    { type: 'footwear', styles: ['formal-shoe'], label: 'Formal Shoes' },
+                    { type: 'footwear', styles: ['loafer'], label: 'Loafers' }
                 ];
             }
             if (style === 'active-t-shirt') {
                 return [
-                    { type: 'bottomwear', styles: ['track-pant', 'joggers', 'shorts'], label: 'Recommended Bottomwear' },
-                    { type: 'footwear', styles: ['sports-shoe'], label: 'Recommended Footwear' }
+                    { type: 'bottomwear', styles: ['track-pant'], label: 'Track Pants' },
+                    { type: 'bottomwear', styles: ['joggers'], label: 'Joggers' },
+                    { type: 'bottomwear', styles: ['shorts'], label: 'Shorts' },
+                    { type: 'footwear', styles: ['sports-shoe'], label: 'Sports Shoes' }
                 ];
             }
             if (style === 'jacket') {
                 return [
-                    { type: 'topwear', styles: ['t-shirt', 'casual-shirt'], isInner: true, label: 'Recommended Inner Wear' },
-                    { type: 'bottomwear', styles: ['jeans', 'cotton-pant', 'trouser'], label: 'Recommended Bottomwear' },
-                    { type: 'footwear', styles: ['casual-shoe'], label: 'Recommended Footwear' }
+                    { type: 'topwear', styles: ['t-shirt'], isInner: true, label: 'T-Shirts' },
+                    { type: 'topwear', styles: ['casual-shirt'], isInner: true, label: 'Casual Shirts' },
+                    { type: 'bottomwear', styles: ['jeans'], label: 'Jeans' },
+                    { type: 'bottomwear', styles: ['cotton-pant'], label: 'Cotton Pants' },
+                    { type: 'bottomwear', styles: ['trouser'], label: 'Trousers' },
+                    { type: 'footwear', styles: ['casual-shoe'], label: 'Casual Shoes' }
                 ];
             }
         }
@@ -76,38 +89,51 @@ export default function CompleteYourLookPage({ params }: { params: Promise<{ pro
         if (type === 'bottomwear') {
             if (['jeans'].includes(style)) {
                 return [
-                    { type: 'topwear', styles: ['t-shirt', 'casual-shirt', 'sweatshirt'], label: 'Recommended Topwear' },
-                    { type: 'footwear', styles: ['sneakers'], label: 'Recommended Footwear' }
+                    { type: 'topwear', styles: ['t-shirt'], label: 'T-Shirts' },
+                    { type: 'topwear', styles: ['casual-shirt'], label: 'Casual Shirts' },
+                    { type: 'topwear', styles: ['sweatshirt'], label: 'Sweatshirts' },
+                    { type: 'topwear', styles: ['jacket'], label: 'Jackets' },
+                    { type: 'footwear', styles: ['sneakers'], label: 'Sneakers' }
                 ];
             }
             if (style === 'cotton-pant') {
                 return [
-                    { type: 'topwear', styles: ['t-shirt', 'jacket'], label: 'Recommended Topwear' },
-                    { type: 'footwear', styles: ['casual-shoe'], label: 'Recommended Footwear' }
+                    { type: 'topwear', styles: ['t-shirt'], label: 'T-Shirts' },
+                    { type: 'topwear', styles: ['jacket'], label: 'Jackets' },
+                    { type: 'footwear', styles: ['casual-shoe'], label: 'Casual Shoes' }
                 ];
             }
             if (style === 'trouser') {
                 return [
-                    { type: 'topwear', styles: ['formal-shirt', 'casual-shirt', 'jacket'], label: 'Recommended Topwear' },
-                    { type: 'footwear', styles: ['formal-shoe', 'loafer', 'casual-shoe'], label: 'Recommended Footwear' }
+                    { type: 'topwear', styles: ['formal-shirt'], label: 'Formal Shirts' },
+                    { type: 'topwear', styles: ['casual-shirt'], label: 'Casual Shirts' },
+                    { type: 'topwear', styles: ['jacket'], label: 'Jackets' },
+                    { type: 'footwear', styles: ['formal-shoe'], label: 'Formal Shoes' },
+                    { type: 'footwear', styles: ['loafer'], label: 'Loafers' },
+                    { type: 'footwear', styles: ['casual-shoe'], label: 'Casual Shoes' }
                 ];
             }
             if (style === 'joggers') {
                 return [
-                    { type: 'topwear', styles: ['t-shirt', 'sweatshirt', 'active-t-shirt'], label: 'Recommended Topwear' },
-                    { type: 'footwear', styles: ['sneakers', 'sports-shoe'], label: 'Recommended Footwear' }
+                    { type: 'topwear', styles: ['t-shirt'], label: 'T-Shirts' },
+                    { type: 'topwear', styles: ['sweatshirt'], label: 'Sweatshirts' },
+                    { type: 'topwear', styles: ['active-t-shirt'], label: 'Active T-Shirts' },
+                    { type: 'footwear', styles: ['sneakers'], label: 'Sneakers' },
+                    { type: 'footwear', styles: ['sports-shoe'], label: 'Sports Shoes' }
                 ];
             }
             if (style === 'shorts') {
                 return [
-                    { type: 'topwear', styles: ['t-shirt', 'active-t-shirt'], label: 'Recommended Topwear' },
-                    { type: 'footwear', styles: ['sneakers', 'sports-shoe'], label: 'Recommended Footwear' }
+                    { type: 'topwear', styles: ['t-shirt'], label: 'T-Shirts' },
+                    { type: 'topwear', styles: ['active-t-shirt'], label: 'Active T-Shirts' },
+                    { type: 'footwear', styles: ['sneakers'], label: 'Sneakers' },
+                    { type: 'footwear', styles: ['sports-shoe'], label: 'Sports Shoes' }
                 ];
             }
             if (style === 'track-pant') {
                 return [
-                    { type: 'topwear', styles: ['active-t-shirt'], label: 'Recommended Topwear' },
-                    { type: 'footwear', styles: ['sports-shoe'], label: 'Recommended Footwear' }
+                    { type: 'topwear', styles: ['active-t-shirt'], label: 'Active T-Shirts' },
+                    { type: 'footwear', styles: ['sports-shoe'], label: 'Sports Shoes' }
                 ];
             }
         }
@@ -209,8 +235,6 @@ export default function CompleteYourLookPage({ params }: { params: Promise<{ pro
         );
     }
 
-    const totalRecommendationPrice = Object.values(categorizedRecs).flat().reduce((acc, curr) => acc + curr.price, 0);
-
     return (
         <ProtectedRoute>
             <main className="min-h-screen bg-white text-[#111]">
@@ -259,7 +283,7 @@ export default function CompleteYourLookPage({ params }: { params: Promise<{ pro
                                 Object.entries(categorizedRecs).map(([category, items]) => (
                                     <div key={category} className="space-y-8 animate-in fade-in slide-in-from-bottom-8 duration-700">
                                         <div className="flex items-end justify-between border-b border-gray-100 pb-4">
-                                            <h3 className="text-2xl font-light tracking-tight">{category}</h3>
+                                            <h3 className="text-3xl font-black uppercase tracking-tighter text-[#111]">{category}</h3>
                                             <span className="text-sm text-gray-400 font-medium">{items.length} Options</span>
                                         </div>
 
@@ -296,27 +320,18 @@ export default function CompleteYourLookPage({ params }: { params: Promise<{ pro
                                     </div>
                                 ))
                             ) : (
-                                <div className="flex flex-col items-center justify-center text-center p-20 bg-gray-50 rounded-[2rem] border border-gray-100">
-                                    <h3 className="text-xl font-medium text-gray-900 mb-2">No Matches Found</h3>
-                                    <p className="text-gray-500 max-w-sm">We couldn't find the perfect items to pair with this look right now. Our catalogue is constantly updating.</p>
+                                <div className="flex flex-col items-center justify-center py-32 px-4 text-center bg-gray-50 rounded-[3rem] border border-gray-100 dashed border-2">
+                                    <div className="bg-white p-6 rounded-full shadow-lg mb-8">
+                                        <SearchX className="w-10 h-10 text-gray-400" />
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-[#111] mb-2">No Matches Found</h3>
+                                    <p className="text-gray-500 max-w-sm leading-relaxed">
+                                        We couldn't find the perfect items to pair with this look right now. Our catalogue is constantly updating.
+                                    </p>
                                 </div>
                             )}
                         </div>
                     </div>
-
-                    {Object.keys(categorizedRecs).length > 0 && (
-                        <div className="fixed bottom-8 left-0 right-0 max-w-none flex justify-center z-50 pointer-events-none px-4">
-                            <div className="pointer-events-auto bg-white/80 backdrop-blur-xl border border-white/20 shadow-2xl rounded-full p-2 pl-6 pr-2 flex items-center gap-6 transition-transform hover:scale-[1.02] duration-300">
-                                <div className="flex flex-col">
-                                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Total Outfit Value</span>
-                                    <span className="font-semibold text-lg">₹{product.price + totalRecommendationPrice}</span>
-                                </div>
-                                <Button className="rounded-full bg-black hover:bg-black/90 text-white px-8 py-6 h-auto text-base font-medium shadow-lg hover:shadow-xl transition-all">
-                                    Add Complete Look to Cart
-                                </Button>
-                            </div>
-                        </div>
-                    )}
                 </div>
             </main>
         </ProtectedRoute>

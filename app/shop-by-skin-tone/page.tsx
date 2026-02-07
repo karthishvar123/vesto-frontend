@@ -1,7 +1,7 @@
 "use client";
 
 import Navbar from "@/components/navbar";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useSkinTone } from "@/context/skin-tone-context";
 import { useRouter } from "next/navigation";
 import { ArrowRight, Info, Camera, Sparkles } from "lucide-react";
@@ -40,6 +40,21 @@ export default function ShopBySkinTonePage() {
         { name: "Type VI", color: "#4B2C20", edge: "#361E14", sub: "Black, Very Dark Brown", undertone: "Neutral", undertoneColor: "bg-gray-100 text-gray-800" }
     ];
 
+    const containerVariants: Variants = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.1
+            }
+        }
+    };
+
+    const itemVariants: Variants = {
+        hidden: { opacity: 0, y: 20 },
+        show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 50 } }
+    };
+
     return (
         <ProtectedRoute>
             <main className="min-h-screen bg-white">
@@ -57,36 +72,42 @@ export default function ShopBySkinTonePage() {
 
                 <div className="pt-32 pb-16 px-4 md:px-8 max-w-7xl mx-auto flex flex-col items-center">
                     <motion.div
-                        initial={{ opacity: 0, y: 20 }}
+                        initial={{ opacity: 0, y: 30 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6 }}
-                        className="text-center mb-12"
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="text-center mb-16 max-w-3xl"
                     >
-                        <h1 className="text-4xl md:text-6xl font-black text-[#111] uppercase tracking-tighter mb-6">
-                            Select Your Skin Tone
+                        <span className="inline-block px-4 py-1.5 rounded-full bg-gray-100 text-gray-600 text-xs font-bold uppercase tracking-widest mb-6">
+                            Personalized Styling
+                        </span>
+                        <h1 className="text-5xl md:text-7xl font-black text-[#111] uppercase tracking-tighter mb-6 leading-[0.9]">
+                            Find Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-violet-600">Perfect Match.</span>
                         </h1>
-                        <p className="text-lg text-gray-500 font-medium max-w-2xl mx-auto flex items-center justify-center gap-2 mb-8">
-                            <Info className="w-5 h-5 text-gray-400" />
-                            Choose the tone that best matches your complexion.
+                        <p className="text-xl text-gray-500 font-medium max-w-2xl mx-auto mb-10 leading-relaxed">
+                            Unlock personalized color recommendations tailored to your unique complexion. Stop guessing, start glowing.
                         </p>
 
                         {/* AI Finder Button */}
-                        <button
-                            onClick={() => setShowCamera(true)}
-                            className="group relative inline-flex items-center gap-3 px-8 py-4 bg-gradient-to-r from-indigo-600 to-violet-600 text-white rounded-full font-bold shadow-xl hover:shadow-2xl hover:scale-105 transition-all duration-300 overflow-hidden"
-                        >
-                            <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
-                            <Camera className="w-5 h-5 relative z-10" />
-                            <span className="relative z-10">Find my Tone with AI</span>
-                            <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse relative z-10" />
-                        </button>
+                        <div className="flex justify-center">
+                            <button
+                                onClick={() => setShowCamera(true)}
+                                className="group relative inline-flex items-center gap-4 px-10 py-5 bg-[#111] text-white rounded-full font-bold text-lg shadow-2xl hover:shadow-[0_20px_50px_-12px_rgba(0,0,0,0.5)] hover:scale-105 transition-all duration-300 overflow-hidden"
+                            >
+                                <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                                <Camera className="w-6 h-6 relative z-10" />
+                                <span className="relative z-10">Analyze with AI Camera</span>
+                                <div className="relative z-10 bg-white/20 p-1 rounded-full">
+                                    <Sparkles className="w-4 h-4 text-yellow-300 animate-pulse" />
+                                </div>
+                            </button>
+                        </div>
                     </motion.div>
 
                     <motion.div
                         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-5xl"
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        transition={{ duration: 0.6, delay: 0.2 }}
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="show"
                     >
                         {skinTones.map((tone, index) => {
                             const typeId = (index + 1) as 1 | 2 | 3 | 4 | 5 | 6;
@@ -95,23 +116,25 @@ export default function ShopBySkinTonePage() {
                             return (
                                 <motion.div
                                     key={tone.name}
-                                    whileHover={{ scale: 1.02 }}
+                                    variants={itemVariants}
+                                    whileHover={{ y: -8, transition: { duration: 0.2 } }}
                                     whileTap={{ scale: 0.98 }}
                                     onClick={() => selectSkinTone(typeId)}
                                     className={`
                                     relative overflow-hidden cursor-pointer transition-all duration-300 rounded-2xl border-2
                                     ${isSelected
                                             ? 'border-[#111] shadow-2xl ring-1 ring-[#111] ring-offset-2'
-                                            : 'border-transparent shadow-lg hover:shadow-xl hover:translate-y-[-4px]'
+                                            : 'border-transparent shadow-lg hover:shadow-xl'
                                         }
                                 `}
                                 >
                                     {/* Palette Color Block */}
                                     <div
-                                        className="h-32 w-full"
+                                        className="h-32 w-full relative group"
                                         style={{ backgroundColor: tone.color }}
                                     >
                                         {/* Gradient overlay to show undertone depth */}
+                                        <div className="w-full h-full absolute inset-0 opacity-0 group-hover:opacity-20 transition-opacity bg-white mix-blend-overlay" />
                                         <div className="w-full h-full" style={{ background: `linear-gradient(to bottom right, ${tone.color}, ${tone.edge})` }} />
                                     </div>
 
@@ -126,11 +149,18 @@ export default function ShopBySkinTonePage() {
                                     </div>
 
                                     {/* Checkmark for selected state */}
-                                    {isSelected && (
-                                        <div className="absolute top-4 right-4 bg-white/30 backdrop-blur-md p-2 rounded-full text-white shadow-sm">
-                                            <ArrowRight className="w-5 h-5" />
-                                        </div>
-                                    )}
+                                    <AnimatePresence>
+                                        {isSelected && (
+                                            <motion.div
+                                                initial={{ scale: 0, opacity: 0 }}
+                                                animate={{ scale: 1, opacity: 1 }}
+                                                exit={{ scale: 0, opacity: 0 }}
+                                                className="absolute top-4 right-4 bg-white/30 backdrop-blur-md p-2 rounded-full text-white shadow-sm"
+                                            >
+                                                <ArrowRight className="w-5 h-5" />
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
                                 </motion.div>
                             );
                         })}

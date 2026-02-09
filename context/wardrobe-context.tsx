@@ -38,7 +38,9 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
         if (typeof window !== 'undefined') {
             let sid = sessionStorage.getItem("vesto_session_id");
             if (!sid) {
-                sid = crypto.randomUUID();
+                // Generate UUID with fallback for older browsers
+                sid = crypto.randomUUID?.() ||
+                    `${Date.now()}-${Math.random().toString(36).substring(2, 15)}-${Math.random().toString(36).substring(2, 15)}`;
                 sessionStorage.setItem("vesto_session_id", sid);
             }
             setSessionId(sid);

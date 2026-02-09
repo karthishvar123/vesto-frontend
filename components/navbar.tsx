@@ -2,13 +2,27 @@
 
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/context/auth-context";
+import { Menu, X, ChevronRight } from "lucide-react";
 
 export default function Navbar() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user, logout } = useAuth();
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [mobileMenuOpen]);
 
   const menMenu = [
     {
@@ -105,12 +119,122 @@ export default function Navbar() {
 
           {/* Action Button */}
           <div className="flex items-center gap-4">
-            <Link href="/profile" className="text-base font-medium text-[#37352F] hover:text-black transition-colors hidden sm:block uppercase">
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setMobileMenuOpen(true)}
+              className="md:hidden p-2 text-[#37352F] hover:text-black transition-colors"
+              aria-label="Open menu"
+            >
+              <Menu className="w-6 h-6" />
+            </button>
+
+            {/* Desktop Profile Link */}
+            <Link href="/profile" className="text-base font-medium text-[#37352F] hover:text-black transition-colors hidden md:block uppercase">
               Profile
             </Link>
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu Drawer */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setMobileMenuOpen(false)}
+              className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] pointer-events-auto"
+            />
+
+            {/* Menu Content */}
+            <motion.div
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 30, stiffness: 300 }}
+              className="fixed top-0 right-0 bottom-0 w-[85vw] max-w-sm bg-white z-[70] pointer-events-auto shadow-2xl"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between p-6 border-b border-gray-100">
+                <Link
+                  href="/"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="font-bold tracking-tight text-[#111111] text-xl flex items-center gap-2 uppercase"
+                >
+                  <span className="w-8 h-8 bg-black rounded text-white flex items-center justify-center text-base font-serif italic">V</span>
+                  Vesto
+                </Link>
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                  aria-label="Close menu"
+                >
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              {/* Navigation Links */}
+              <nav className="p-6 space-y-1">
+                <Link
+                  href="/men"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-xl transition-colors group"
+                >
+                  <span className="text-lg font-medium text-[#111]">MEN</span>
+                  <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-[#111] group-hover:translate-x-1 transition-all" />
+                </Link>
+
+                <Link
+                  href="/shop-by-skin-tone"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-xl transition-colors group"
+                >
+                  <span className="text-lg font-medium text-[#111]">SHOP BY SKINTONE</span>
+                  <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-[#111] group-hover:translate-x-1 transition-all" />
+                </Link>
+
+                <Link
+                  href="/virtual-wardrobe"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-xl transition-colors group"
+                >
+                  <span className="text-lg font-medium text-[#111]">VIRTUAL WARDROBE</span>
+                  <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-[#111] group-hover:translate-x-1 transition-all" />
+                </Link>
+
+                <Link
+                  href="/profile"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="flex items-center justify-between p-4 hover:bg-gray-50 rounded-xl transition-colors group"
+                >
+                  <span className="text-lg font-medium text-[#111]">PROFILE</span>
+                  <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-[#111] group-hover:translate-x-1 transition-all" />
+                </Link>
+              </nav>
+
+              {/* User Info & Logout (if logged in) */}
+              {user && (
+                <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-gray-100 bg-gray-50">
+                  <p className="text-sm text-gray-500 mb-3">Signed in as</p>
+                  <p className="text-sm font-medium text-[#111] mb-4 truncate">{user.email}</p>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="w-full bg-[#111] text-white py-3 rounded-lg font-medium hover:bg-black/90 transition-colors"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </nav>
   );
 }

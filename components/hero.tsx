@@ -40,12 +40,12 @@ export default function Hero() {
 
                 {/* Massive Typography */}
                 {/* Massive Typography - Notion Style Serif */}
-                <h1 className="text-6xl md:text-7xl lg:text-8xl font-serif font-bold tracking-tight text-[#111111] mb-6">
+                <h1 className="text-5xl md:text-7xl lg:text-8xl font-serif font-bold tracking-tight text-[#111111] mb-6 px-4">
                     Style, <br className="md:hidden" />
                     <span className="italic text-gray-400">Reinvented.</span>
                 </h1>
 
-                <p className="text-lg md:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200 fill-mode-both">
+                <p className="text-base md:text-lg lg:text-xl text-white/60 max-w-2xl mx-auto mb-10 leading-relaxed px-6 animate-in fade-in slide-in-from-bottom-12 duration-1000 delay-200 fill-mode-both">
                     The intelligent wardrobe assistant that understands your skin tone, pairs your outfits, and redefines your confidence.
                 </p>
 

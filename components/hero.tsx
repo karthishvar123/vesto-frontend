@@ -9,11 +9,11 @@ export default function Hero() {
             {/* Background Image with Overlay */}
             <div className="absolute inset-0 pointer-events-none">
                 <img
-                    src="/hero-bg.png"
-                    alt="Background Texture"
-                    className="w-full h-full object-cover opacity-60 mix-blend-multiply"
+                    src="/vesto-hanger-bg.png"
+                    alt="Vesto Hanger Background"
+                    className="w-full h-full object-cover opacity-40"
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-white/30 via-transparent to-white" />
+                <div className="absolute inset-0 bg-gradient-to-b from-white/50 via-white/30 to-white" />
             </div>
 
 

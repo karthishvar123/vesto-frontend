@@ -161,7 +161,8 @@ export default function AICamera({ onClose, onMatchFound }: AICameraProps) {
                 const landmarker = await FaceLandmarker.createFromOptions(vision, {
                     baseOptions: {
                         modelAssetPath: `https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task`,
-                        delegate: "GPU"
+                        // Use CPU explicitly — GPU fallback emits a noisy TFLite XNNPACK info log
+                        delegate: "CPU"
                     },
                     outputFaceBlendshapes: false,
                     runningMode: "IMAGE",
@@ -273,6 +274,17 @@ export default function AICamera({ onClose, onMatchFound }: AICameraProps) {
     };
 
     const detectFace = (canvas: HTMLCanvasElement, landmarker: FaceLandmarker) => {
+        // Suppress MediaPipe/TFLite internal "INFO:" logs (XNNPACK delegate creation fires
+        // lazily on first detect() call and routes through console.info in the WASM runtime)
+        const origInfo = console.info;
+        const origLog = console.log;
+        const origWarn = console.warn;
+        const isTFLite = (...args: any[]) =>
+            typeof args[0] === "string" && args[0].startsWith("INFO:");
+        console.info = (...args) => { if (!isTFLite(...args)) origInfo(...args); };
+        console.log = (...args) => { if (!isTFLite(...args)) origLog(...args); };
+        console.warn = (...args) => { if (!isTFLite(...args)) origWarn(...args); };
+
         try {
             const results = landmarker.detect(canvas);
 
@@ -310,6 +322,11 @@ export default function AICamera({ onClose, onMatchFound }: AICameraProps) {
             console.error("Error analyzing face:", error);
             setFaceDetected(false);
             setBestMatch(null);
+        } finally {
+            // Always restore — even if detect() throws
+            console.info = origInfo;
+            console.log = origLog;
+            console.warn = origWarn;
         }
     };
 
@@ -377,16 +394,16 @@ export default function AICamera({ onClose, onMatchFound }: AICameraProps) {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="bg-white p-4 md:p-6 rounded-3xl shadow-2xl w-full max-w-md relative overflow-hidden"
+                className="bg-[#111] border border-white/10 p-4 md:p-6 rounded-3xl shadow-2xl w-full max-w-md relative overflow-hidden"
             >
                 <button
                     onClick={onClose}
-                    className="absolute top-4 right-4 p-2 bg-gray-100 rounded-full hover:bg-gray-200 transition-colors z-20"
+                    className="absolute top-4 right-4 p-2 bg-white/10 rounded-full hover:bg-white/20 transition-colors z-20"
                 >
-                    <X className="w-5 h-5 text-gray-600" />
+                    <X className="w-5 h-5 text-white" />
                 </button>
 
-                <h2 className="text-2xl font-black text-[#111] mb-4 text-center">AI Skin Tone Finder (Enhanced)</h2>
+                <h2 className="text-2xl font-black text-white mb-4 text-center">AI Skin Tone Finder</h2>
 
                 <div className="relative rounded-2xl overflow-hidden bg-gray-900 aspect-[3/4] mb-6 shadow-inner">
                     {capturedImage ? (
@@ -417,15 +434,15 @@ export default function AICamera({ onClose, onMatchFound }: AICameraProps) {
                         <motion.div
                             initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
-                            className="absolute bottom-4 left-4 right-4 bg-white/95 backdrop-blur-xl p-4 rounded-xl shadow-lg border border-white/50 flex items-center gap-4"
+                            className="absolute bottom-4 left-4 right-4 bg-black/80 backdrop-blur-xl p-4 rounded-xl border border-white/10 flex items-center gap-4"
                         >
                             <div
-                                className="w-12 h-12 rounded-full shadow-md border-2 border-white ring-1 ring-gray-100"
+                                className="w-12 h-12 rounded-full shadow-md border-2 border-white/20"
                                 style={{ backgroundColor: skinTones[bestMatch - 1].color }}
                             />
                             <div className="flex-1">
-                                <p className="text-xs text-gray-500 font-bold uppercase tracking-wider">Analysis Complete</p>
-                                <h3 className="text-lg font-black text-[#111]">Type {bestMatch} Match</h3>
+                                <p className="text-xs text-[#C4724F] font-bold uppercase tracking-wider">Analysis Complete</p>
+                                <h3 className="text-lg font-black text-white">Type {bestMatch} Match</h3>
                             </div>
                         </motion.div>
                     )}
@@ -444,7 +461,7 @@ export default function AICamera({ onClose, onMatchFound }: AICameraProps) {
                                 onClick={captureAndAnalyze}
                                 disabled={loading}
                                 className={`flex-1 py-4 rounded-xl flex items-center justify-center gap-2 font-bold text-lg transition-all
-                                    ${loading ? 'bg-gray-100 text-gray-400 cursor-not-allowed' : 'bg-[#111] text-white shadow-lg hover:scale-[1.02]'}
+                                    ${loading ? 'bg-white/5 text-white/30 cursor-not-allowed' : 'bg-[#C4724F] text-white hover:bg-[#d4845f] hover:scale-[1.02]'}
                                 `}
                             >
                                 <Camera className="w-5 h-5" />
@@ -453,7 +470,7 @@ export default function AICamera({ onClose, onMatchFound }: AICameraProps) {
                             <button
                                 onClick={() => fileInputRef.current?.click()}
                                 disabled={loading}
-                                className="flex-1 py-4 rounded-xl flex items-center justify-center gap-2 font-bold text-lg transition-all border-2 bg-white text-[#111] border-gray-200 hover:bg-gray-50"
+                                className="flex-1 py-4 rounded-xl flex items-center justify-center gap-2 font-bold text-lg transition-all border border-white/10 bg-white/5 text-white hover:bg-white/10"
                             >
                                 <Upload className="w-5 h-5" />
                                 Upload
@@ -470,7 +487,7 @@ export default function AICamera({ onClose, onMatchFound }: AICameraProps) {
                         <div className="flex gap-3">
                             <button
                                 onClick={handleRetake}
-                                className="flex-1 py-4 rounded-xl border-2 border-gray-200 font-bold text-gray-600 hover:bg-gray-50 transition-colors"
+                                className="flex-1 py-4 rounded-xl border border-white/10 font-bold text-white/60 hover:bg-white/5 transition-colors"
                             >
                                 Retake
                             </button>
@@ -478,15 +495,15 @@ export default function AICamera({ onClose, onMatchFound }: AICameraProps) {
                                 onClick={handleConfirm}
                                 disabled={!bestMatch}
                                 className={`flex-[2] py-4 rounded-xl flex items-center justify-center gap-2 font-bold text-white transition-all
-                                    ${bestMatch ? 'bg-[#111] shadow-lg hover:scale-[1.02]' : 'bg-gray-300 cursor-not-allowed'}
+                                    ${bestMatch ? 'bg-[#C4724F] hover:bg-[#d4845f] hover:scale-[1.02]' : 'bg-white/10 text-white/30 cursor-not-allowed'}
                                 `}
                             >
                                 Use This Tone <Check className="w-5 h-5" />
                             </button>
                         </div>
                     )}
-                    <p className="text-xs text-center text-gray-400 mt-2">
-                        Enhanced with multi-point analysis & lighting correction.
+                    <p className="text-xs text-center text-white/20 mt-2">
+                        Multi-point analysis &amp; lighting correction.
                     </p>
                 </div>
             </motion.div>

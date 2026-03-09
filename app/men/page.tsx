@@ -9,54 +9,30 @@ import Image from "next/image";
 import { Loader2, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
-interface Product {
-    id: string;
-    name: string;
-    price: number;
-    images: string[];
-    productType: string;
-    productStyle: string;
-    active: boolean;
-}
+interface Product { id: string; name: string; price: number; images: string[]; productType: string; productStyle: string; active: boolean; }
 
-// Define the menu structure to guide the page layout (matching Navbar)
 const menStructure = [
-    {
-        category: "Topwear",
-        slug: "topwear",
-        items: [
-            { label: "T-Shirt", value: "t-shirt" },
-            { label: "Sweatshirt", value: "sweatshirt" },
-            { label: "Jacket", value: "jacket" },
-            { label: "Formal Shirt", value: "formal-shirt" },
-            { label: "Casual Shirt", value: "casual-shirt" },
-            { label: "Active T-Shirt", value: "active-t-shirt" }
-        ]
-    },
-    {
-        category: "Bottomwear",
-        slug: "bottomwear",
-        items: [
-            { label: "Jeans", value: "jeans" },
-            { label: "Trouser", value: "trouser" },
-            { label: "Cotton Pant", value: "cotton-pant" },
-            { label: "Joggers", value: "joggers" },
-            { label: "Shorts", value: "shorts" },
-            { label: "Track Pant", value: "track-pant" }
-        ]
-    },
-    {
-        category: "Footwear",
-        slug: "footwear",
-        items: [
-            { label: "Casual Shoe", value: "casual-shoe" },
-            { label: "Sneakers", value: "sneakers" },
-            { label: "Formal Shoe", value: "formal-shoe" },
-            { label: "Loafer", value: "loafer" },
-            { label: "Sports Shoe", value: "sports-shoe" }
-        ]
-    }
+    { category: "Topwear", slug: "topwear", items: [{ label: "T-Shirt", value: "t-shirt" }, { label: "Sweatshirt", value: "sweatshirt" }, { label: "Jacket", value: "jacket" }, { label: "Formal Shirt", value: "formal-shirt" }, { label: "Casual Shirt", value: "casual-shirt" }, { label: "Active T-Shirt", value: "active-t-shirt" }] },
+    { category: "Bottomwear", slug: "bottomwear", items: [{ label: "Jeans", value: "jeans" }, { label: "Trouser", value: "trouser" }, { label: "Cotton Pant", value: "cotton-pant" }, { label: "Joggers", value: "joggers" }, { label: "Shorts", value: "shorts" }, { label: "Track Pant", value: "track-pant" }] },
+    { category: "Footwear", slug: "footwear", items: [{ label: "Casual Shoe", value: "casual-shoe" }, { label: "Sneakers", value: "sneakers" }, { label: "Formal Shoe", value: "formal-shoe" }, { label: "Loafer", value: "loafer" }, { label: "Sports Shoe", value: "sports-shoe" }] },
 ];
+
+function SkeletonRow() {
+    return (
+        <div className="space-y-4">
+            <div className="h-6 skeleton rounded w-32" />
+            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {Array.from({ length: 5 }).map((_, i) => (
+                    <div key={i} className="space-y-2">
+                        <div className="aspect-[3/4] skeleton rounded-xl" />
+                        <div className="h-3 skeleton rounded w-3/4" />
+                        <div className="h-3 skeleton rounded w-1/3" />
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+}
 
 export default function MenPage() {
     const [products, setProducts] = useState<Product[]>([]);
@@ -64,150 +40,97 @@ export default function MenPage() {
 
     useEffect(() => {
         const fetchProducts = async () => {
-            setLoading(true);
             try {
-                // Fetch all active products
-                // Ideally, we would filter by a gender field if it existed.
-                // For now, we fetch all active products and filter by the known Men's categories client-side.
-                const productsRef = collection(db, "products");
-                const q = query(productsRef, where("active", "==", true));
-                const querySnapshot = await getDocs(q);
-
-                const fetchedProducts: Product[] = [];
-                querySnapshot.forEach((doc) => {
-                    fetchedProducts.push({ id: doc.id, ...doc.data() } as Product);
-                });
-
-                setProducts(fetchedProducts);
-            } catch (error) {
-                console.error("Error fetching products:", error);
-            } finally {
-                setLoading(false);
-            }
+                const q = query(collection(db, "products"), where("active", "==", true));
+                const snap = await getDocs(q);
+                setProducts(snap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Product)));
+            } catch (e) { console.error(e); }
+            finally { setLoading(false); }
         };
-
         fetchProducts();
     }, []);
 
-    // Helper to get products for a specific category and style
-    const getProductsForStyle = (categorySlug: string, styleValue: string) => {
-        return products.filter(p =>
-            p.productType === categorySlug &&
-            p.productStyle === styleValue
-        );
-    };
-
-    if (loading) {
-        return (
-            <main className="min-h-screen bg-white">
-                <Navbar />
-                <div className="flex justify-center items-center h-screen">
-                    <Loader2 className="h-8 w-8 animate-spin text-[#111]" />
-                </div>
-            </main>
-        );
-    }
+    const getProductsForStyle = (cat: string, style: string) =>
+        products.filter(p => p.productType === cat && p.productStyle === style);
 
     return (
-        <main className="min-h-screen bg-white">
+        <main className="min-h-screen bg-[#0A0A0A]">
             <Navbar />
 
-            <div className="pt-32 pb-16 px-4 md:px-8 max-w-7xl mx-auto">
-                <header className="mb-16 text-center">
-                    <motion.h1
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="text-5xl md:text-7xl font-black text-[#111] uppercase tracking-tighter mb-4"
-                    >
-                        Men's Collection
-                    </motion.h1>
-                    <motion.p
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.1 }}
-                        className="text-gray-500 text-lg max-w-2xl mx-auto"
-                    >
-                        Explore our curated selection of essentials and statement pieces.
-                    </motion.p>
-                </header>
-
-                <div className="space-y-24">
-                    {menStructure.map((section, sectionIndex) => {
-                        // Check if this entire category has any products
-                        const hasProductsInCategory = section.items.some(style =>
-                            getProductsForStyle(section.slug, style.value).length > 0
-                        );
-
-                        if (!hasProductsInCategory) return null;
-
-                        return (
-                            <motion.section
-                                key={section.category}
-                                initial={{ opacity: 0, y: 30 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.6 }}
-                            >
-                                <div className="flex items-end justify-between border-b border-black/10 pb-4 mb-8">
-                                    <h2 className="text-3xl md:text-4xl font-bold text-[#111] uppercase tracking-tight">
-                                        {section.category}
-                                    </h2>
-                                    {/* Optional: 'View All' link for the category if you had a category page */}
-                                </div>
-
-                                <div className="space-y-12">
-                                    {section.items.map((style) => {
-                                        const styleProducts = getProductsForStyle(section.slug, style.value);
-
-                                        if (styleProducts.length === 0) return null;
-
-                                        return (
-                                            <div key={style.value} className="space-y-6">
-                                                <div className="flex items-center justify-between">
-                                                    <h3 className="text-xl font-medium text-gray-900 flex items-center gap-2">
-                                                        <span className="w-1.5 h-1.5 bg-[#111] rounded-full"></span>
-                                                        {style.label}
-                                                    </h3>
-                                                    <Link
-                                                        href={`/products/${section.slug}/${style.value}`}
-                                                        className="text-sm font-medium text-gray-500 hover:text-[#111] flex items-center gap-1 transition-colors group"
-                                                    >
-                                                        View all <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                                                    </Link>
-                                                </div>
-
-                                                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                                                    {styleProducts.slice(0, 5).map((product) => (
-                                                        <Link key={product.id} href={`/product/${encodeURIComponent(product.id)}`}>
-                                                            <div className="group cursor-pointer">
-                                                                <div className="aspect-[3/4] relative bg-gray-100 mb-3 overflow-hidden rounded-lg">
-                                                                    {product.images && product.images.length > 0 ? (
-                                                                        <Image
-                                                                            src={product.images[0]}
-                                                                            alt={product.name}
-                                                                            fill
-                                                                            className="object-cover group-hover:scale-105 transition-transform duration-500"
-                                                                        />
-                                                                    ) : (
-                                                                        <div className="w-full h-full flex items-center justify-center text-gray-300 bg-gray-50 text-xs">
-                                                                            No Image
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                                <h4 className="font-medium text-[#111] text-sm truncate">{product.name}</h4>
-                                                                <p className="text-gray-500 text-xs mt-0.5">₹{product.price}</p>
-                                                            </div>
-                                                        </Link>
-                                                    ))}
-                                                </div>
-                                            </div>
-                                        );
-                                    })}
-                                </div>
-                            </motion.section>
-                        );
-                    })}
+            {/* Hero banner */}
+            <div className="relative pt-32 pb-16 px-6 overflow-hidden">
+                <div className="absolute inset-0 pointer-events-none">
+                    <div className="absolute top-0 left-1/4 w-[400px] h-[400px] rounded-full bg-[#C4724F]/5 blur-[100px]" />
                 </div>
+                <div className="max-w-7xl mx-auto relative z-10">
+                    <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+                        <span className="text-[#C4724F] text-xs font-bold uppercase tracking-widest mb-4 block">Men's Collection</span>
+                        <h1 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none mb-4">
+                            The Edit
+                        </h1>
+                        <p className="text-white/40 text-lg max-w-xl">Curated essentials and statement pieces for the modern man.</p>
+                    </motion.div>
+                </div>
+            </div>
+
+            <div className="pb-24 px-4 md:px-8 max-w-7xl mx-auto">
+                {loading ? (
+                    <div className="space-y-20">
+                        {Array.from({ length: 3 }).map((_, i) => <SkeletonRow key={i} />)}
+                    </div>
+                ) : (
+                    <div className="space-y-24">
+                        {menStructure.map((section) => {
+                            const hasProducts = section.items.some(s => getProductsForStyle(section.slug, s.value).length > 0);
+                            if (!hasProducts) return null;
+                            return (
+                                <motion.section key={section.category} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
+                                    <div className="flex items-end justify-between border-b border-white/5 pb-4 mb-10">
+                                        <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter">{section.category}</h2>
+                                    </div>
+                                    <div className="space-y-14">
+                                        {section.items.map((style) => {
+                                            const styleProducts = getProductsForStyle(section.slug, style.value);
+                                            if (styleProducts.length === 0) return null;
+                                            return (
+                                                <div key={style.value}>
+                                                    <div className="flex items-center justify-between mb-5">
+                                                        <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest flex items-center gap-2">
+                                                            <span className="w-1 h-1 rounded-full bg-[#C4724F]" />
+                                                            {style.label}
+                                                        </h3>
+                                                        <Link href={`/products/${section.slug}/${style.value}`} className="text-xs font-bold text-[#C4724F] hover:text-[#E8A87C] flex items-center gap-1 transition-colors group uppercase tracking-wider">
+                                                            View all <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                                                        </Link>
+                                                    </div>
+                                                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                                        {styleProducts.slice(0, 5).map((product) => (
+                                                            <Link key={product.id} href={`/product/${encodeURIComponent(product.id)}`}>
+                                                                <div className="group product-card cursor-pointer">
+                                                                    <div className="aspect-[3/4] relative bg-[#111] overflow-hidden rounded-xl">
+                                                                        {product.images?.[0] ? (
+                                                                            <Image src={product.images[0]} alt={product.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                                                                        ) : (
+                                                                            <div className="w-full h-full flex items-center justify-center text-white/10 text-xs">No Image</div>
+                                                                        )}
+                                                                    </div>
+                                                                    <div className="p-3">
+                                                                        <h4 className="font-bold text-white text-sm truncate group-hover:text-[#E8A87C] transition-colors">{product.name}</h4>
+                                                                        <p className="text-white/40 text-xs mt-0.5">₹{product.price}</p>
+                                                                    </div>
+                                                                </div>
+                                                            </Link>
+                                                        ))}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </motion.section>
+                            );
+                        })}
+                    </div>
+                )}
             </div>
         </main>
     );

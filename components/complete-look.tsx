@@ -1,64 +1,71 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { CheckCircle2 } from "lucide-react";
+import GlowCard from "@/components/glow-card";
+import FloatingClothingGallery from "@/components/floating-clothing-gallery";
+
+const FEATURES = [
+    "Topwear → Bottomwear pairing intelligence",
+    "Footwear compatibility matching",
+    "Color family cross-matching",
+    "Style rules by occasion",
+];
 
 export default function CompleteLook() {
     return (
-        <section className="w-full py-24 bg-transparent flex items-center justify-center">
+        <section className="w-full py-32 bg-[#0D0D0D] relative overflow-hidden">
+            {/* Accent line */}
+            <div className="absolute left-0 top-0 w-px h-full bg-gradient-to-b from-transparent via-[#C4724F]/30 to-transparent" />
+
             <div className="container mx-auto px-6 max-w-7xl">
-                <div className="grid md:grid-cols-2 gap-12 items-center">
+                <div className="grid md:grid-cols-2 gap-16 items-center">
 
-                    {/* Left Side: Outfit Composition Image */}
-                    <div className="relative w-full aspect-square md:aspect-[4/3] flex items-center justify-center">
-                        {/* Using object-contain to make sure the full outfit composition is visible and not cropped */}
-                        <div className="relative w-full h-full max-w-[600px]">
-                            <Image
-                                src="/outfit-composition.png"
-                                alt="Complete Outfit Composition"
-                                fill
-                                className="object-contain mix-blend-multiply contrast-125"
-                                priority
-                            />
+                    {/* Left: Floating Clothing Gallery */}
+                    <motion.div
+                        className="relative"
+                        initial={{ opacity: 0, x: -40 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                    >
+                        <FloatingClothingGallery />
+                    </motion.div>
+
+                    {/* Right: Glow Card Text */}
+                    <GlowCard className="p-10 lg:p-14">
+                        <div className="space-y-8 relative z-10">
+                            <div>
+                                <span className="text-[#C4724F] text-xs font-bold uppercase tracking-widest mb-4 block">
+                                    Step 02 — Outfit Building
+                                </span>
+                                <h2 className="text-5xl md:text-6xl font-black text-white uppercase tracking-tighter leading-[0.88]">
+                                    COMPLETE<br />
+                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C4724F] to-[#E8A87C]">YOUR LOOK</span>
+                                </h2>
+                            </div>
+
+                            <p className="text-white/50 text-lg leading-relaxed font-light">
+                                Pick any item and Vesto instantly suggests everything that goes with it — matched by style, color family, and occasion.
+                            </p>
+
+                            <div className="space-y-3">
+                                {FEATURES.map((f, i) => (
+                                    <motion.div
+                                        key={f}
+                                        initial={{ opacity: 0, x: 20 }}
+                                        whileInView={{ opacity: 1, x: 0 }}
+                                        viewport={{ once: true }}
+                                        transition={{ delay: i * 0.1, duration: 0.5 }}
+                                        className="flex items-center gap-3 text-white/60"
+                                    >
+                                        <CheckCircle2 className="w-4 h-4 text-[#C4724F] shrink-0" />
+                                        <span className="text-sm">{f}</span>
+                                    </motion.div>
+                                ))}
+                            </div>
                         </div>
-                    </div>
-
-                    {/* Right Side: Typography */}
-                    <div className="flex flex-col items-end text-right space-y-6 w-full">
-                        <h2 className="text-5xl md:text-7xl lg:text-8xl font-bold text-[#111] uppercase tracking-tighter leading-[0.85] font-sans">
-                            <motion.span
-                                className="block"
-                                initial={{ opacity: 0, x: 50 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.8, ease: "easeOut" }}
-                            >
-                                COMPLETE
-                            </motion.span>
-                            <motion.span
-                                className="block"
-                                initial={{ opacity: 0, x: 50 }}
-                                whileInView={{ opacity: 1, x: 0 }}
-                                viewport={{ once: true }}
-                                transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
-                            >
-                                YOUR LOOK
-                            </motion.span>
-                        </h2>
-
-                        <motion.p
-                            className="text-lg md:text-xl text-[#111]/65 font-medium leading-loose max-w-lg"
-                            initial={{ opacity: 0, y: 20 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                        >
-                            Style compatibility across categories
-                            <br />
-                            <span>No mismatches. Ever.</span>
-                        </motion.p>
-                    </div>
-
+                    </GlowCard>
                 </div>
             </div>
         </section>

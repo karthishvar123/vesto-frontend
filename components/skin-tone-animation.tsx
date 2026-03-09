@@ -49,7 +49,7 @@ export default function SkinToneAnimation() {
                                 style={{ backgroundColor: tone.color }}
                             >
                                 {/* Static Text Inside */}
-                                <span className="text-white/90 text-xs sm:text-sm font-medium font-serif drop-shadow-md">
+                                <span className="text-white text-xs sm:text-sm font-medium font-serif drop-shadow-md">
                                     {tone.name}
                                 </span>
                             </div>

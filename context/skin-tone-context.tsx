@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { collection, doc, setDoc, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "./auth-context";
 
@@ -29,46 +29,57 @@ export function SkinToneProvider({ children }: { children: React.ReactNode }) {
 
         if (savedType) {
             const type = parseInt(savedType) as SkinToneType;
-            // Only update if different to avoid loop/redundant render
-            if (type !== selectedType) {
-                setSelectedType(type);
-            }
+            if (type !== selectedType) setSelectedType(type);
         }
         if (savedTone) {
             const tone = savedTone as NormalizedTone;
-            // Only update if different
-            if (tone !== normalizedTone) {
-                setNormalizedTone(tone);
-            }
+            if (tone !== normalizedTone) setNormalizedTone(tone);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
+    // FIX: When a logged-in user loads the app and has no session skin tone,
+    // pull their saved skin tone from Firestore so it persists across devices/sessions.
+    useEffect(() => {
+        if (!user || selectedType) return;
+
+        const loadFromFirestore = async () => {
+            try {
+                const docRef = doc(db, "Skintone", user.email!);
+                const snap = await getDoc(docRef);
+                if (snap.exists()) {
+                    const data = snap.data();
+                    const type = data.fitzpatrickType as SkinToneType;
+                    const tone = data.normalizedTone as NormalizedTone;
+                    setSelectedType(type);
+                    setNormalizedTone(tone);
+                    sessionStorage.setItem("vesto_skintone_type", type.toString());
+                    sessionStorage.setItem("vesto_normalized_tone", tone);
+                }
+            } catch (error) {
+                console.error("Error loading skin tone from Firestore:", error);
+            }
+        };
+
+        loadFromFirestore();
+    }, [user, selectedType]);
+
     const normalizeSkinTone = (type: SkinToneType): NormalizedTone => {
         switch (type) {
             case 1:
-            case 2:
-                return "fair";
-            case 3:
-                return "medium";
-            case 4:
-                return "tan";
+            case 2: return "fair";
+            case 3: return "medium";
+            case 4: return "tan";
             case 5:
-            case 6:
-                return "deep";
-            default:
-                return "medium"; // Fallback
+            case 6: return "deep";
+            default: return "medium";
         }
     };
 
     const selectSkinTone = (type: SkinToneType) => {
         const tone = normalizeSkinTone(type);
-
-        // Update State
         setSelectedType(type);
         setNormalizedTone(tone);
-
-        // Persist to Session Storage
         sessionStorage.setItem("vesto_skintone_type", type.toString());
         sessionStorage.setItem("vesto_normalized_tone", tone);
     };
@@ -77,13 +88,11 @@ export function SkinToneProvider({ children }: { children: React.ReactNode }) {
         if (!selectedType || !normalizedTone) return;
 
         try {
-            let docId = null;
+            let docId: string;
 
             if (user && user.email) {
-                // Use email if logged in
                 docId = user.email;
             } else {
-                // Use session ID if guest
                 let sessionId = sessionStorage.getItem("vesto_session_id");
                 if (!sessionId) {
                     sessionId = crypto.randomUUID();
@@ -105,8 +114,6 @@ export function SkinToneProvider({ children }: { children: React.ReactNode }) {
             console.error("Error saving skin tone:", error);
         }
     };
-
-
 
     return (
         <SkinToneContext.Provider value={{ selectedType, normalizedTone, selectSkinTone, saveSkinToneToFirestore }}>

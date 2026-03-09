@@ -1,23 +1,26 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Inter } from "next/font/google";
+import { DM_Sans, DM_Serif_Display } from "next/font/google";
 import "./globals.css";
 import { SkinToneProvider } from "@/context/skin-tone-context";
 import { WardrobeProvider } from "@/context/wardrobe-context";
 import { AuthProvider } from "@/context/auth-context";
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
+  weight: ["300", "400", "500", "700", "900"],
 });
 
-const inter = Inter({
-  variable: "--font-inter",
+const dmSerif = DM_Serif_Display({
+  variable: "--font-dm-serif",
   subsets: ["latin"],
+  weight: ["400"],
+  style: ["normal", "italic"],
 });
 
 export const metadata: Metadata = {
-  title: "Vesto | Revolutionizing Style",
-  description: "Curated men's fashion platform with personalized skin tone matching.",
+  title: "Vesto | AI-Powered Style Intelligence",
+  description: "Dress for your skin tone. Vesto analyses your complexion, builds your wardrobe, and pairs every outfit — so you always look intentional.",
 };
 
 export default function RootLayout({
@@ -26,9 +29,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body
-        className={`${playfair.variable} ${inter.variable} antialiased`}
+        className={`${dmSans.variable} ${dmSerif.variable} antialiased bg-[#0A0A0A]`}
         suppressHydrationWarning
       >
         <AuthProvider>

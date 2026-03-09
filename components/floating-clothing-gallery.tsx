@@ -1,0 +1,135 @@
+"use client";
+
+import React from "react";
+import { motion } from "framer-motion";
+import Image from "next/image";
+
+const items = [
+    { id: 1, name: "Shorts", src: "/products/generated/beige-shorts.png", x: -170, y: -170, rotate: -6 }, // Top-Left
+    { id: 2, name: "Joggers", src: "/products/generated/grey-joggers.png", x: 170, y: -170, rotate: 6 },  // Top-Right
+    { id: 3, name: "Cotton Pants", src: "/products/generated/beige-chinos.png", x: -170, y: 170, rotate: -4 }, // Bottom-Left
+    { id: 4, name: "Sneakers", src: "/products/generated/white-sneakers.png", x: 170, y: 170, rotate: 4 },   // Bottom-Right
+];
+
+export default function FloatingClothingGallery() {
+    const [isHovered, setIsHovered] = React.useState(false);
+
+    return (
+        <div
+            className="relative w-full h-[600px] flex items-center justify-center"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            {/* Satellite Items (Hidden behind Main) */}
+            {items.map((item, index) => (
+                <PolaroidItem
+                    key={item.id}
+                    item={item}
+                    index={index}
+                    isHovered={isHovered}
+                />
+            ))}
+
+            {/* Central T-Shirt (Hero Item) - Always Visible & Top Z-Index */}
+            <motion.div
+                className="relative z-50 cursor-pointer"
+                animate={{
+                    y: isHovered ? 0 : [0, -10, 0], // Stop floating on hover
+                    scale: isHovered ? 1.05 : 1,
+                    rotate: isHovered ? 0 : -2
+                }}
+                transition={{ duration: 0.5 }}
+            >
+                {/* Main Polaroid Frame */}
+                <div
+                    className="bg-white shadow-2xl transition-shadow duration-300"
+                    style={{
+                        padding: '12px 12px 40px 12px',
+                        borderRadius: '2px',
+                    }}
+                >
+                    <div className="relative w-48 h-60 bg-gray-50 border border-gray-100 overflow-hidden">
+                        <Image
+                            src="/products/generated/navy-tshirt.png"
+                            alt="Navy T-Shirt"
+                            fill
+                            className="object-cover"
+                        />
+                    </div>
+                    <div className="absolute bottom-3 left-0 w-full text-center">
+                        <span className="font-handwriting text-gray-800 text-sm font-bold uppercase tracking-widest">Main</span>
+                    </div>
+                </div>
+            </motion.div>
+
+        </div>
+    );
+}
+
+function PolaroidItem({ item, index, isHovered }: { item: any, index: number, isHovered: boolean }) {
+    // Generate random float values for unique motion
+    const randomDuration = 4 + (index * 0.5);
+
+    return (
+        <motion.div
+            className="absolute z-40 pointer-events-none"
+            initial={{ x: 0, y: 0, scale: 0.5, opacity: 0, rotate: 0 }}
+            animate={isHovered ? {
+                x: item.x,
+                y: item.y,
+                scale: 1,
+                opacity: 1,
+                rotate: item.rotate,
+                transition: {
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 15,
+                    delay: index * 0.1
+                }
+            } : {
+                x: 0,
+                y: 0,
+                scale: 0.5,
+                opacity: 0,
+                rotate: 0,
+                transition: { duration: 0.3 }
+            }}
+        >
+            {/* Satellite Polaroid Frame */}
+            <div
+                className="bg-white shadow-xl"
+                style={{
+                    padding: '8px 8px 28px 8px', // Slightly smaller padding for smaller items
+                    borderRadius: '2px',
+                }}
+            >
+                {/* Reduced size from w-40 h-40 to w-32 h-32 */}
+                <div className="relative w-32 h-32 bg-gray-50 border border-gray-100 overflow-hidden">
+                    <Image
+                        src={item.src}
+                        alt={item.name}
+                        fill
+                        className="object-cover"
+                    />
+                </div>
+                <div className="absolute bottom-1.5 left-0 w-full text-center">
+                    <span className="font-handwriting text-gray-600 text-[10px] font-medium uppercase tracking-widest">{item.name}</span>
+                </div>
+            </div>
+
+            {/* Continuous Float Animation only when visible */}
+            {isHovered && (
+                <motion.div
+                    className="absolute inset-0"
+                    animate={{ y: [0, -6, 0] }}
+                    transition={{
+                        duration: randomDuration,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: 0.5 + (index * 0.2)
+                    }}
+                />
+            )}
+        </motion.div>
+    );
+}

@@ -4,59 +4,66 @@ import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import GlowCard from "@/components/glow-card";
-import FlipCardStack from "@/components/flip-card-stack";
+import Image from "next/image";
 
-const CARDS = [
+const WARDROBE_CARDS = [
     {
-        title: "Topwear",
+        label: "Topwear",
         description: "T-Shirts, Shirts, Jackets...",
-        image: null,
+        image: "/products/generated/hanger-tshirt.png",
+        accent: "#C4724F",
+        bg: "#1a1208",
     },
     {
-        title: "Bottomwear",
+        label: "Bottomwear",
         description: "Jeans, Trousers, Joggers...",
-        image: null,
+        image: "/products/generated/beige-chinos.png",
+        accent: "#4ECDC4",
+        bg: "#0a1a18",
     },
     {
-        title: "Footwear",
-        description: "Sneakers, Formal, Loafers...",
-        image: null,
+        label: "Footwear",
+        description: "Sneakers, Loafers, Formals...",
+        image: "/products/generated/white-sneakers.png",
+        accent: "#F7DC6F",
+        bg: "#18180a",
     },
 ];
 
-// Since FlipCardStack expects card.image.src format, render our own cards inline
 function WardrobeCardStack() {
-    const colors = ["#1a1a2e", "#0f1a1a", "#1a1a0f"];
-    const accents = ["#C4724F", "#4ECDC4", "#F7DC6F"];
-    const labels = ["Topwear", "Bottomwear", "Footwear"];
-    const counts = ["T-Shirts, Shirts, Jackets...", "Jeans, Trousers, Joggers...", "Sneakers, Formal, Loafers..."];
-
     return (
-        <div className="relative h-80 flex items-center justify-center">
-            {labels.map((label, i) => (
+        <div className="relative h-[26rem] flex items-center justify-center">
+            {WARDROBE_CARDS.map((card, i) => (
                 <motion.div
-                    key={label}
-                    className="absolute w-56 rounded-2xl border border-white/10 overflow-hidden shadow-2xl cursor-grab"
-                    style={{ backgroundColor: colors[i] }}
-                    initial={{ rotate: (i - 1) * 12, x: (i - 1) * 55, y: (i - 1) * 10, zIndex: i }}
-                    animate={{ rotate: (i - 1) * 12, x: (i - 1) * 55, y: (i - 1) * 10 }}
+                    key={card.label}
+                    className="absolute w-64 h-[22rem] rounded-2xl border border-white/10 overflow-hidden shadow-2xl cursor-grab flex flex-col"
+                    style={{ backgroundColor: card.bg }}
+                    initial={{ rotate: (i - 1) * 12, x: (i - 1) * 70, y: (i - 1) * 10, zIndex: i }}
+                    animate={{ rotate: (i - 1) * 12, x: (i - 1) * 70, y: (i - 1) * 10 }}
                     whileHover={{ y: -24, rotate: 0, scale: 1.06, zIndex: 10 }}
                     transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 >
-                    <div className="p-5">
-                        <div
-                            className="w-9 h-9 rounded-xl mb-4 flex items-center justify-center text-lg font-black"
-                            style={{ backgroundColor: accents[i] + "22", color: accents[i] }}
-                        >
-                            {label[0]}
-                        </div>
-                        <p className="text-white font-bold text-sm mb-1">{label}</p>
-                        <p className="text-white/30 text-xs">{counts[i]}</p>
+                    {/* Image area — fills most of the card */}
+                    <div className="relative flex-1 w-full overflow-hidden">
+                        <Image
+                            src={card.image}
+                            alt={card.label}
+                            fill
+                            className="object-contain p-4 drop-shadow-lg"
+                            sizes="256px"
+                        />
+                        {/* Subtle top-to-transparent gradient so label reads cleanly */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
                     </div>
+
+                    {/* Label bar at bottom */}
                     <div
-                        className="h-20 w-full opacity-20"
-                        style={{ background: `linear-gradient(to bottom, transparent, ${accents[i]})` }}
-                    />
+                        className="px-4 py-3 border-t border-white/5"
+                        style={{ backgroundColor: card.accent + "18" }}
+                    >
+                        <p className="text-white font-bold text-sm">{card.label}</p>
+                        <p className="text-white/35 text-[11px] mt-0.5 truncate">{card.description}</p>
+                    </div>
                 </motion.div>
             ))}
         </div>

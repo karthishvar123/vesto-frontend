@@ -20,6 +20,7 @@ export const COLOR_COMPAT: Record<string, string[]> = {
     warm: ['warm', 'earthy', 'neutral'],
     cool: ['cool', 'neutral'],
     earthy: ['earthy', 'warm', 'neutral'],
+    multicolour: ['neutral'],   // multi-colour items only pair with neutral (black/grey/white) bottoms
 };
 
 export function getAllowedColors(baseColor: string): string[] {

@@ -21,6 +21,7 @@ interface WardrobeContextType {
     items: WardrobeItem[];
     addToWardrobe: (item: WardrobeItem) => Promise<void>;
     removeFromWardrobe: (itemId: string) => Promise<void>;
+    updateWardrobeItem: (itemId: string, updates: Partial<WardrobeItem>) => Promise<void>;
     isInWardrobe: (itemId: string) => boolean;
     loading: boolean;
 }
@@ -134,6 +135,35 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
+    const updateWardrobeItem = async (itemId: string, updates: Partial<WardrobeItem>) => {
+        const targetId = (user && user.email) ? user.email : sessionId;
+        if (!targetId) return;
+
+        const oldItem = items.find(i => i.id === itemId);
+        if (!oldItem) return;
+        const updatedItem = { ...oldItem, ...updates };
+
+        // Optimistic update
+        setItems(prev => prev.map(i => i.id === itemId ? updatedItem : i));
+
+        try {
+            const docRef = doc(db, "Wardrobe", targetId);
+            // Firestore arrays don't support in-place edit — remove old, add updated
+            await setDoc(docRef, {
+                items: arrayRemove(oldItem),
+                updatedAt: serverTimestamp()
+            }, { merge: true });
+            await setDoc(docRef, {
+                items: arrayUnion(updatedItem),
+                updatedAt: serverTimestamp()
+            }, { merge: true });
+        } catch (error) {
+            console.error("Error updating wardrobe item:", error);
+            // Rollback
+            setItems(prev => prev.map(i => i.id === itemId ? oldItem : i));
+        }
+    };
+
     const removeFromWardrobe = async (itemId: string) => {
         const targetId = (user && user.email) ? user.email : sessionId;
         if (!targetId) return;
@@ -160,7 +190,7 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <WardrobeContext.Provider value={{ items, addToWardrobe, removeFromWardrobe, isInWardrobe, loading }}>
+        <WardrobeContext.Provider value={{ items, addToWardrobe, removeFromWardrobe, updateWardrobeItem, isInWardrobe, loading }}>
             {children}
         </WardrobeContext.Provider>
     );

@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   description: "Dress for your skin tone. Vesto analyses your complexion, builds your wardrobe, and pairs every outfit — so you always look intentional.",
 };
 
+import { Footer } from "@/components/footer";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -31,13 +33,16 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`${dmSans.variable} ${dmSerif.variable} antialiased bg-[#0A0A0A]`}
+        className={`${dmSans.variable} ${dmSerif.variable} antialiased bg-[#0A0A0A] flex flex-col min-h-screen`}
         suppressHydrationWarning
       >
         <AuthProvider>
           <SkinToneProvider>
             <WardrobeProvider>
-              {children}
+              <main className="flex-grow">
+                {children}
+              </main>
+              <Footer />
             </WardrobeProvider>
           </SkinToneProvider>
         </AuthProvider>

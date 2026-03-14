@@ -6,8 +6,11 @@ import Navbar from "@/components/navbar";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shirt, HeartOff, Sparkles, ArrowRight, Package } from "lucide-react";
+import { Shirt, HeartOff, Sparkles, ArrowRight, Package, Upload, Pencil } from "lucide-react";
 import ProtectedRoute from "@/components/protected-route";
+import UploadClothesModal from "@/components/upload-clothes-modal";
+import EditClothesModal from "@/components/edit-clothes-modal";
+import DailyOutfitCard from "@/components/daily-outfit-card";
 
 const TABS = ["All", "Topwear", "Bottomwear", "Footwear"];
 
@@ -15,6 +18,8 @@ export default function VirtualWardrobePage() {
     const { items, removeFromWardrobe, loading } = useWardrobe();
     const [activeTab, setActiveTab] = useState("All");
     const [removingId, setRemovingId] = useState<string | null>(null);
+    const [uploadOpen, setUploadOpen] = useState(false);
+    const [editingItem, setEditingItem] = useState<WardrobeItem | null>(null);
 
     const filtered = activeTab === "All" ? items : items.filter(i => i.productType?.toLowerCase() === activeTab.toLowerCase());
 
@@ -52,12 +57,23 @@ export default function VirtualWardrobePage() {
                                 </h1>
                                 <p className="text-white/30 mt-3">{items.length} item{items.length !== 1 ? "s" : ""} saved</p>
                             </div>
-                            <Link href="/men" className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 hover:border-[#C4724F]/40 text-white text-sm font-bold rounded-full transition-all group">
-                                Browse & Add
-                                <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                            </Link>
+                            <div className="flex items-center gap-3">
+                                <button
+                                    onClick={() => setUploadOpen(true)}
+                                    className="inline-flex items-center gap-2 px-5 py-3 bg-[#C4724F]/10 border border-[#C4724F]/30 hover:bg-[#C4724F]/20 hover:border-[#C4724F]/60 text-[#C4724F] text-sm font-bold rounded-full transition-all"
+                                >
+                                    <Upload className="w-4 h-4" /> Upload My Clothes
+                                </button>
+                                <Link href="/men" className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 border border-white/10 hover:border-[#C4724F]/40 text-white text-sm font-bold rounded-full transition-all group">
+                                    Browse Shop
+                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+                                </Link>
+                            </div>
                         </div>
                     </motion.div>
+
+                    {/* Daily Outfit Suggestions */}
+                    <DailyOutfitCard items={items} loading={loading} />
 
                     {/* Tabs */}
                     <div className="flex gap-2 mb-10 flex-wrap">
@@ -132,6 +148,16 @@ export default function VirtualWardrobePage() {
                                                     </Link>
                                                 </div>
 
+                                                {/* Edit button — only for user-uploaded items */}
+                                                {item.id.startsWith("upload_") && (
+                                                    <button
+                                                        onClick={() => setEditingItem(item)}
+                                                        className="absolute top-3 left-3 w-8 h-8 rounded-full bg-black/60 backdrop-blur-sm border border-white/10 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all hover:bg-[#C4724F]/80 hover:border-[#C4724F]"
+                                                    >
+                                                        <Pencil className="w-3.5 h-3.5 text-white" />
+                                                    </button>
+                                                )}
+
                                                 {/* Remove button */}
                                                 <button
                                                     onClick={() => handleRemove(item.id)}
@@ -153,6 +179,8 @@ export default function VirtualWardrobePage() {
                     )}
                 </div>
             </main>
+            <UploadClothesModal open={uploadOpen} onClose={() => setUploadOpen(false)} />
+            <EditClothesModal item={editingItem} onClose={() => setEditingItem(null)} />
         </ProtectedRoute>
     );
 }

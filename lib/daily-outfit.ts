@@ -35,9 +35,18 @@ function hashString(str: string): number {
     return Math.abs(hash);
 }
 
-// ── Pick one item from a list using a seeded index ───────────
+// ── Deterministic shuffle then pick first ───────────
+function seededShuffle<T>(arr: T[], seed: number): T[] {
+    const out = [...arr];
+    for (let i = out.length - 1; i > 0; i--) {
+        const j = Math.abs((seed * (i + 1) * 2654435761) >>> 0) % (i + 1);
+        [out[i], out[j]] = [out[j], out[i]];
+    }
+    return out;
+}
+
 function seededPick<T>(arr: T[], seed: number): T {
-    return arr[seed % arr.length];
+    return seededShuffle(arr, seed)[0];
 }
 
 // ── Date helpers ─────────────────────────────────────────────

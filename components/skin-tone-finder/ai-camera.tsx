@@ -143,6 +143,7 @@ export default function AICamera({ onClose, onMatchFound }: AICameraProps) {
     const [faceDetected, setFaceDetected] = useState(false);
     const [bestMatch, setBestMatch] = useState<number | null>(null);
     const [scannedColor, setScannedColor] = useState<string | null>(null);
+    const [cameraError, setCameraError] = useState(false);
     const [capturedImage, setCapturedImage] = useState<string | null>(null);
     const landmarkerRef = useRef<FaceLandmarker | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
@@ -211,6 +212,7 @@ export default function AICamera({ onClose, onMatchFound }: AICameraProps) {
         } catch (error) {
             console.error("Error accessing camera:", error);
             setLoading(false);
+            setCameraError(true);
         }
     };
 
@@ -427,6 +429,14 @@ export default function AICamera({ onClose, onMatchFound }: AICameraProps) {
                         <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/50 text-white gap-3">
                             <Loader2 className="w-10 h-10 animate-spin" />
                             <p className="font-medium text-sm">Initializing Face AI...</p>
+                        </div>
+                    )}
+
+                    {cameraError && !capturedImage && (
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white gap-4 p-6 text-center">
+                            <X className="w-10 h-10 text-red-400" />
+                            <p className="font-bold">Camera access denied</p>
+                            <p className="text-sm text-white/50">Please allow camera permissions or use the Upload button instead.</p>
                         </div>
                     )}
 

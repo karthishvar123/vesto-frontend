@@ -1,7 +1,10 @@
 "use client";
 
 import React from "react";
-import FluidCardStack, { FluidCardItem } from "./fluid-card-stack";
+import dynamic from "next/dynamic";
+import type { FluidCardItem } from "./fluid-card-stack";
+
+const FluidCardStack = dynamic(() => import("./fluid-card-stack"), { ssr: false });
 import { motion } from "framer-motion";
 
 const items: FluidCardItem[] = [

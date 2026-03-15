@@ -50,6 +50,7 @@ function Card({
         <motion.div
             layout
             onMouseEnter={onHover}
+            onClick={onHover}
             className={cn(
                 "relative h-full rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 ease-out",
                 isActive ? "flex-[3]" : "flex-[1]"
@@ -93,10 +94,9 @@ function Card({
                         </div>
                         <h3
                             className={cn(
-                                "text-xl font-bold uppercase tracking-wider transition-colors duration-300",
+                                "text-xl font-bold text-white uppercase tracking-wider transition-colors duration-300",
                                 // Removed text-white class to rely on inline style
                             )}
-                            style={{ color: '#FFFFFF' }}
                         >
                             {item.title}
                         </h3>
@@ -106,10 +106,9 @@ function Card({
                     <motion.p
                         layout="position"
                         className={cn(
-                            "text-lg font-serif italic transition-opacity duration-300",
+                            "text-lg font-serif italic text-white transition-opacity duration-300",
                             isActive ? "opacity-100" : "opacity-70 line-clamp-2"
                         )}
-                        style={{ color: '#FFFFFF' }}
                     >
                         {item.subtitle}
                     </motion.p>
@@ -125,8 +124,7 @@ function Card({
                         transition={{ duration: 0.4, ease: "easeInOut" }}
                     >
                         <p
-                            className="text-base leading-relaxed max-w-lg"
-                            style={{ color: '#FFFFFF' }}
+                            className="text-base leading-relaxed text-white max-w-lg"
                         >
                             {item.description}
                         </p>

@@ -12,13 +12,14 @@ const items = [
 ];
 
 export default function FloatingClothingGallery() {
-    const [isHovered, setIsHovered] = React.useState(false);
+    const [isActive, setIsActive] = React.useState(false);
 
     return (
         <div
-            className="relative w-full h-[600px] flex items-center justify-center"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
+            className="relative w-full h-[600px] flex items-center justify-center cursor-pointer"
+            onMouseEnter={() => setIsActive(true)}
+            onMouseLeave={() => setIsActive(false)}
+            onClick={() => setIsActive(!isActive)}
         >
             {/* Satellite Items (Hidden behind Main) */}
             {items.map((item, index) => (
@@ -26,7 +27,7 @@ export default function FloatingClothingGallery() {
                     key={item.id}
                     item={item}
                     index={index}
-                    isHovered={isHovered}
+                    isActive={isActive}
                 />
             ))}
 
@@ -34,9 +35,9 @@ export default function FloatingClothingGallery() {
             <motion.div
                 className="relative z-50 cursor-pointer"
                 animate={{
-                    y: isHovered ? 0 : [0, -10, 0], // Stop floating on hover
-                    scale: isHovered ? 1.05 : 1,
-                    rotate: isHovered ? 0 : -2
+                    y: isActive ? 0 : [0, -10, 0], // Stop floating on active
+                    scale: isActive ? 1.05 : 1,
+                    rotate: isActive ? 0 : -2
                 }}
                 transition={{ duration: 0.5 }}
             >
@@ -66,7 +67,7 @@ export default function FloatingClothingGallery() {
     );
 }
 
-function PolaroidItem({ item, index, isHovered }: { item: any, index: number, isHovered: boolean }) {
+function PolaroidItem({ item, index, isActive }: { item: any, index: number, isActive: boolean }) {
     // Generate random float values for unique motion
     const randomDuration = 4 + (index * 0.5);
 
@@ -74,7 +75,7 @@ function PolaroidItem({ item, index, isHovered }: { item: any, index: number, is
         <motion.div
             className="absolute z-40 pointer-events-none"
             initial={{ x: 0, y: 0, scale: 0.5, opacity: 0, rotate: 0 }}
-            animate={isHovered ? {
+            animate={isActive ? {
                 x: item.x,
                 y: item.y,
                 scale: 1,
@@ -118,7 +119,7 @@ function PolaroidItem({ item, index, isHovered }: { item: any, index: number, is
             </div>
 
             {/* Continuous Float Animation only when visible */}
-            {isHovered && (
+            {isActive && (
                 <motion.div
                     className="absolute inset-0"
                     animate={{ y: [0, -6, 0] }}

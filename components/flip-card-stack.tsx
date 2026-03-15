@@ -3,7 +3,35 @@
 import { useState, useCallback, useMemo, startTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function FlipCardStack(props) {
+interface CardImage {
+    src: string;
+    srcSet?: string;
+    alt?: string;
+    positionX?: string;
+    positionY?: string;
+}
+
+interface Card {
+    image?: CardImage;
+    title?: string;
+    description?: string;
+}
+
+interface FlipCardStackProps {
+    cards?: Card[];
+    cardWidth?: number;
+    cardHeight?: number;
+    stackOffset?: number;
+    stackRotation?: number;
+    dragThreshold?: number;
+    animationDuration?: number;
+    animationEase?: string;
+    borderRadius?: number;
+    shadowIntensity?: number;
+    style?: React.CSSProperties;
+}
+
+export default function FlipCardStack(props: FlipCardStackProps) {
     const {
         cards = [],
         cardWidth = 300,
@@ -113,6 +141,7 @@ export default function FlipCardStack(props) {
                         height: cardHeight,
                         borderRadius,
                         overflow: "hidden",
+                        touchAction: "none",
                         cursor: isTopCard ? "grab" : "default",
                         boxShadow: `0px ${4 + transform.zIndex * 2}px ${8 + transform.zIndex * 4}px rgba(0, 0, 0, ${shadowIntensity})`,
                         ...transform // Apply transform directly to style to ensure initial state is correct, or rely on motion

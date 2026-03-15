@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
-import { doc, setDoc, getDoc, arrayUnion, arrayRemove, serverTimestamp } from "firebase/firestore";
+import { doc, setDoc, getDoc, arrayUnion, arrayRemove, serverTimestamp, runTransaction } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "./auth-context";
 
@@ -33,10 +33,29 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
     const [loading, setLoading] = useState(true);
     const [sessionId, setSessionId] = useState<string | null>(null);
     const { user, loading: authLoading } = useAuth();
+    
+    // Internal helper to sync items to localStorage
+    const updateItemsAndCache = (newItemsOrUpdater: React.SetStateAction<WardrobeItem[]>) => {
+        setItems((prev) => {
+            const resolvedItems = typeof newItemsOrUpdater === "function" ? newItemsOrUpdater(prev) : newItemsOrUpdater;
+            if (typeof window !== "undefined") {
+                localStorage.setItem("vesto_wardrobe_cache", JSON.stringify(resolvedItems));
+            }
+            return resolvedItems;
+        });
+    };
 
-    // Initialize Session ID for guests
+    // Initialize Session ID & Optimistic Cache Load
     useEffect(() => {
-        if (typeof window !== 'undefined') {
+        if (typeof window !== "undefined") {
+            const cachedItems = localStorage.getItem("vesto_wardrobe_cache");
+            if (cachedItems) {
+                try {
+                    setItems(JSON.parse(cachedItems));
+                } catch {
+                    console.error("Failed to parse wardrobe cache");
+                }
+            }
             let sid = sessionStorage.getItem("vesto_session_id");
             if (!sid) {
                 // Generate UUID with fallback for older browsers
@@ -92,7 +111,7 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
                             }
                         }
                     }
-                    setItems(userItems);
+                    updateItemsAndCache(userItems);
 
                 } else if (sessionId) {
                     // Guest User
@@ -100,9 +119,10 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
                     const docSnap = await getDoc(docRef);
 
                     if (docSnap.exists()) {
-                        setItems(docSnap.data().items || []);
+                        updateItemsAndCache(docSnap.data().items || []);
                     } else {
-                        setItems([]);
+                        // Keep cached items if we are offline and couldn't fetch, otherwise 0
+                        setItems(prev => prev.length > 0 ? prev : []);
                     }
                 }
             } catch (error) {
@@ -121,7 +141,7 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
 
         // Optimistic Update
         if (items.some(i => i.id === item.id)) return;
-        setItems(prev => [...prev, item]);
+        updateItemsAndCache(prev => [...prev, item]);
 
         try {
             const docRef = doc(db, "Wardrobe", targetId);
@@ -131,7 +151,7 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
             }, { merge: true });
         } catch (error) {
             console.error("Error adding to wardrobe:", error);
-            setItems(prev => prev.filter(i => i.id !== item.id));
+            updateItemsAndCache(prev => prev.filter(i => i.id !== item.id));
         }
     };
 
@@ -144,23 +164,22 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
         const updatedItem = { ...oldItem, ...updates };
 
         // Optimistic update
-        setItems(prev => prev.map(i => i.id === itemId ? updatedItem : i));
+        updateItemsAndCache(prev => prev.map(i => i.id === itemId ? updatedItem : i));
 
         try {
             const docRef = doc(db, "Wardrobe", targetId);
-            // Firestore arrays don't support in-place edit — remove old, add updated
-            await setDoc(docRef, {
-                items: arrayRemove(oldItem),
-                updatedAt: serverTimestamp()
-            }, { merge: true });
-            await setDoc(docRef, {
-                items: arrayUnion(updatedItem),
-                updatedAt: serverTimestamp()
-            }, { merge: true });
+            await runTransaction(db, async (transaction) => {
+                const snap = await transaction.get(docRef);
+                const currentItems: WardrobeItem[] = snap.exists() ? snap.data().items || [] : [];
+                const updatedItems = currentItems.map((i: WardrobeItem) =>
+                    i.id === itemId ? updatedItem : i
+                );
+                transaction.set(docRef, { items: updatedItems, updatedAt: serverTimestamp() }, { merge: true });
+            });
         } catch (error) {
             console.error("Error updating wardrobe item:", error);
             // Rollback
-            setItems(prev => prev.map(i => i.id === itemId ? oldItem : i));
+            updateItemsAndCache(prev => prev.map(i => i.id === itemId ? oldItem : i));
         }
     };
 
@@ -171,7 +190,7 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
         const itemToRemove = items.find(i => i.id === itemId);
         if (!itemToRemove) return;
 
-        setItems(prev => prev.filter(i => i.id !== itemId));
+        updateItemsAndCache(prev => prev.filter(i => i.id !== itemId));
 
         try {
             const docRef = doc(db, "Wardrobe", targetId);
@@ -181,7 +200,7 @@ export function WardrobeProvider({ children }: { children: React.ReactNode }) {
             }, { merge: true });
         } catch (error) {
             console.error("Error removing from wardrobe:", error);
-            setItems(prev => [...prev, itemToRemove]);
+            updateItemsAndCache(prev => [...prev, itemToRemove]);
         }
     };
 

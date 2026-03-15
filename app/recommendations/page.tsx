@@ -19,11 +19,13 @@ interface Product {
     baseColor: string;
 }
 
-const PRIORITY_MAP = {
-    fair: ["cool", "neutral"],
-    medium: ["neutral", "earthy"],
-    tan: ["earthy", "warm"],
-    deep: ["warm", "cool"],
+const PRIORITY_MAP: Record<number, string[]> = {
+    1: ["cool", "neutral"],
+    2: ["cool", "neutral"],
+    3: ["neutral", "earthy"],
+    4: ["earthy", "warm"],
+    5: ["warm", "earthy"],
+    6: ["warm", "neutral"],
 };
 
 function SkeletonCard() {
@@ -37,19 +39,19 @@ function SkeletonCard() {
 }
 
 export default function RecommendationsPage() {
-    const { normalizedTone } = useSkinTone();
+    const { selectedType } = useSkinTone();
     const [loading, setLoading] = useState(true);
     const [topwear, setTopwear] = useState<Product[]>([]);
 
     useEffect(() => {
         const fetchAndSortProducts = async () => {
-            if (!normalizedTone) { setLoading(false); return; }
+            if (!selectedType) { setLoading(false); return; }
             try {
                 const productsRef = collection(db, "products");
                 const q = query(productsRef, where("active", "==", true));
                 const snapshot = await getDocs(q);
                 const allProducts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })) as Product[];
-                const priorities = PRIORITY_MAP[normalizedTone] || [];
+                const priorities = PRIORITY_MAP[selectedType] || [];
                 const tops = allProducts
                     .filter(p => p.productType === "topwear" && priorities.includes(p.baseColor))
                     .sort((a, b) => priorities.indexOf(a.baseColor) - priorities.indexOf(b.baseColor));
@@ -61,9 +63,9 @@ export default function RecommendationsPage() {
             }
         };
         fetchAndSortProducts();
-    }, [normalizedTone]);
+    }, [selectedType]);
 
-    if (!normalizedTone && !loading) {
+    if (!selectedType && !loading) {
         return (
             <div className="min-h-screen bg-[#0A0A0A]">
                 <Navbar />

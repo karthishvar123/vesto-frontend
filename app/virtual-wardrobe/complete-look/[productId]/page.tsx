@@ -58,7 +58,7 @@ export default function CompleteWardrobeLookPage({ params }: { params: Promise<{
 
                 for (const req of neededConfig) {
                     const matches = findMatches(req.type, req.styles);
-                    if (matches.length > 0) newRecs[req.label] = matches;
+                    newRecs[req.label] = matches;
                 }
                 setCategorizedRecs(newRecs);
 
@@ -157,27 +157,36 @@ export default function CompleteWardrobeLookPage({ params }: { params: Promise<{
                                         <span className="text-sm text-white/30 font-medium">{items.length} Options</span>
                                     </div>
 
-                                    <div className="grid grid-cols-2 md:grid-cols-3 gap-x-5 gap-y-10">
-                                        {items.map((item) => (
-                                            <div key={item.id} className="group">
-                                                <div className="aspect-[3/4] relative bg-[#111] rounded-xl overflow-hidden border border-white/5 group-hover:border-[#C4724F]/30 transition-all duration-300">
-                                                    {item.images?.[0] ? (
-                                                        <Image
-                                                            src={item.images[0]}
-                                                            alt={item.name}
-                                                            fill
-                                                            className="object-cover transition-transform duration-700 group-hover:scale-105"
-                                                        />
-                                                    ) : (
-                                                        <div className="w-full h-full flex items-center justify-center text-white/10 text-xs">No Image</div>
-                                                    )}
+                                    {items.length > 0 ? (
+                                        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-5 gap-y-10">
+                                            {items.map((item) => (
+                                                <div key={item.id} className="group">
+                                                    <div className="aspect-[3/4] relative bg-[#111] rounded-xl overflow-hidden border border-white/5 group-hover:border-[#C4724F]/30 transition-all duration-300">
+                                                        {item.images?.[0] ? (
+                                                            <Image
+                                                                src={item.images[0]}
+                                                                alt={item.name}
+                                                                fill
+                                                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                                            />
+                                                        ) : (
+                                                            <div className="w-full h-full flex items-center justify-center text-white/10 text-xs">No Image</div>
+                                                        )}
+                                                    </div>
+                                                    <div className="p-3">
+                                                        <h4 className="font-bold text-white text-sm leading-snug">{item.name}</h4>
+                                                    </div>
                                                 </div>
-                                                <div className="p-3">
-                                                    <h4 className="font-bold text-white text-sm leading-snug">{item.name}</h4>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="text-white/30 text-sm text-center py-6 border border-white/5 rounded-xl">
+                                            No {category} in your wardrobe yet.{" "}
+                                            <Link href="/recommendations" className="text-[#C4724F] hover:underline">
+                                                Shop {category}
+                                            </Link>
+                                        </div>
+                                    )}
                                 </div>
                             ))
                         ) : (

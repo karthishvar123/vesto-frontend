@@ -1,9 +1,10 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { DM_Sans, DM_Serif_Display } from "next/font/google";
 import "./globals.css";
 import { SkinToneProvider } from "@/context/skin-tone-context";
 import { WardrobeProvider } from "@/context/wardrobe-context";
 import { AuthProvider } from "@/context/auth-context";
+import Script from "next/script";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
@@ -21,6 +22,16 @@ const dmSerif = DM_Serif_Display({
 export const metadata: Metadata = {
   title: "Vesto | AI-Powered Style Intelligence",
   description: "Dress for your skin tone. Vesto analyses your complexion, builds your wardrobe, and pairs every outfit — so you always look intentional.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Vesto",
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#C4724F",
 };
 
 import { Footer } from "@/components/footer";
@@ -46,6 +57,19 @@ export default function RootLayout({
             </WardrobeProvider>
           </SkinToneProvider>
         </AuthProvider>
+
+        <Script id="sw-register" strategy="afterInteractive">
+          {`
+            if ('serviceWorker' in navigator) {
+              window.addEventListener('load', function() {
+                navigator.serviceWorker.register('/sw.js').then(
+                  function(registration) { console.log('SW registered: ', registration.scope); },
+                  function(err) { console.log('SW registration failed: ', err); }
+                );
+              });
+            }
+          `}
+        </Script>
       </body>
     </html>
   );

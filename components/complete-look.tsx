@@ -3,7 +3,9 @@
 import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import GlowCard from "@/components/glow-card";
-import FloatingClothingGallery from "@/components/floating-clothing-gallery";
+import dynamic from "next/dynamic";
+
+const FloatingClothingGallery = dynamic(() => import("@/components/floating-clothing-gallery"), { ssr: false });
 
 const FEATURES = [
     "Topwear → Bottomwear pairing intelligence",

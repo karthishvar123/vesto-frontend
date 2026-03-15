@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useRef, useEffect, useCallback } from "react";
-import { motion, useMotionValue, useSpring, useTransform, useVelocity, useAnimationFrame } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useVelocity } from "framer-motion";
 import Image from "next/image";
 
 interface MotionLayerScrollerProps {
@@ -63,13 +63,6 @@ export default function MotionLayerScroller({
         scrollY.set(100);
         return () => container.removeEventListener("wheel", handleWheel);
     }, [handleWheel, scrollY]);
-
-    // Auto Play (Slow drift)
-    useAnimationFrame((time, delta) => {
-        const current = scrollY.get();
-        // Small increment for auto-scroll drift when not interacting
-        // scrollY.set(current + 0.5); 
-    });
 
 
     // Tilt based on velocity

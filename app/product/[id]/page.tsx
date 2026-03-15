@@ -13,7 +13,7 @@ import { ArrowRight, Heart, HeartOff, ChevronLeft, Sparkles, Tag, Palette } from
 interface Product {
     id: string; name: string; price: number; description: string;
     images: string[]; productType: string; productStyle: string;
-    baseColor: string; activityType: string; skinToneCompatibility: string[];
+    baseColor: string; activityType: string; skinToneCompatibility: string[]; colorFamily?: string;
 }
 
 function SkeletonProduct() {
@@ -64,7 +64,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
     const handleWardrobeToggle = () => {
         if (!product) return;
-        inWardrobe ? removeFromWardrobe(product.id) : addToWardrobe({ id: product.id, name: product.name, price: product.price, images: product.images, productType: product.productType, productStyle: product.productStyle, baseColor: product.baseColor });
+        inWardrobe ? removeFromWardrobe(product.id) : addToWardrobe({ id: product.id, name: product.name, price: product.price, images: product.images, productType: product.productType, productStyle: product.productStyle, baseColor: product.baseColor, activityType: product.activityType, colorFamily: product.colorFamily ?? "" });
     };
 
     if (loading) return <main className="min-h-screen bg-[#0A0A0A]"><Navbar /><SkeletonProduct /></main>;

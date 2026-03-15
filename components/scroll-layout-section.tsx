@@ -2,7 +2,9 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import FlipCardStack from "./flip-card-stack";
+import dynamic from "next/dynamic";
+
+const FlipCardStack = dynamic(() => import("./flip-card-stack"), { ssr: false });
 import GlowCard from "./glow-card";
 import ConicGradientButton from "./conic-gradient-button";
 import { ArrowRight } from "lucide-react";

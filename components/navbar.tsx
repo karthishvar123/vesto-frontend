@@ -108,20 +108,59 @@ export default function Navbar() {
         <div className="flex items-center gap-4">
           <button
             onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden p-2 text-white/60 hover:text-white"
+            className="md:hidden p-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-white/60 hover:text-white"
           >
             <Menu className="w-5 h-5" />
           </button>
-          <Link
-            href="/profile"
-            className="hidden md:flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white transition-colors uppercase tracking-wide"
+          <div
+            className="relative hidden md:flex items-center"
+            onMouseEnter={() => setActiveMenu("PROFILE")}
           >
-            {user ? (
-              <span className="w-7 h-7 rounded-full bg-[#C4724F]/20 border border-[#C4724F]/40 flex items-center justify-center text-[#C4724F] text-xs font-bold">
-                {user.email?.[0].toUpperCase()}
-              </span>
-            ) : "Profile"}
-          </Link>
+            <button
+              className="flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white transition-colors uppercase tracking-wide py-3"
+            >
+              {user ? (
+                <span className="w-7 h-7 rounded-full bg-[#C4724F]/20 border border-[#C4724F]/40 flex items-center justify-center text-[#C4724F] text-xs font-bold">
+                  {user.email?.[0].toUpperCase()}
+                </span>
+              ) : "Profile"}
+            </button>
+
+            <AnimatePresence>
+              {activeMenu === "PROFILE" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 8 }}
+                  transition={{ duration: 0.18 }}
+                  className="absolute top-full right-0 mt-4 w-48 bg-[#111]/95 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl p-4 z-50 overflow-hidden"
+                >
+                  {user ? (
+                    <div className="flex flex-col gap-1">
+                      <p className="px-3 py-2 text-xs text-white/40 truncate border-b border-white/5 mb-1 pb-2">
+                        {user.email}
+                      </p>
+                      <button
+                        onClick={logout}
+                        className="w-full text-left px-3 py-2 text-sm text-red-400 hover:text-red-300 hover:bg-red-400/10 rounded-lg transition-colors"
+                      >
+                        Sign Out
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex flex-col gap-1">
+                      <Link
+                        href="/auth" 
+                        className="px-3 py-2 text-sm text-white/70 hover:text-white hover:bg-white/5 rounded-lg transition-colors"
+                      >
+                        Sign In
+                      </Link>
+                    </div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </div>
 
@@ -158,7 +197,7 @@ export default function Navbar() {
                   { label: "MEN", href: "/men" },
                   { label: "SHOP BY SKINTONE", href: "/shop-by-skin-tone" },
                   { label: "VIRTUAL WARDROBE", href: "/virtual-wardrobe" },
-                  { label: "PROFILE", href: "/profile" },
+                  { label: "PROFILE", href: "/auth" },
                 ].map((item) => (
                   <Link
                     key={item.label}

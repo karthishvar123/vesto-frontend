@@ -130,7 +130,7 @@ export default function Hero() {
                 </div>
 
                 {/* Main heading */}
-                <h1 className="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter text-white leading-[0.88] mb-6 select-none">
+                <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter text-white leading-[0.88] mb-6 select-none">
                     <span className="block">DRESS FOR</span>
                     <span className="block min-h-[1.1em] text-transparent bg-clip-text bg-gradient-to-r from-[#C4724F] via-[#E8A87C] to-[#C4724F]">
                         {displayed}
@@ -143,24 +143,24 @@ export default function Hero() {
                 </p>
 
                 {/* CTA buttons */}
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 w-full px-0 sm:px-0">
                     <Link
                         href="/shop-by-skin-tone"
-                        className="group flex items-center gap-3 px-8 py-4 bg-[#C4724F] hover:bg-[#d4845f] text-white font-bold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(196,114,79,0.4)]"
+                        className="group flex items-center justify-center gap-3 px-8 py-4 w-full sm:w-auto bg-[#C4724F] hover:bg-[#d4845f] text-white font-bold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(196,114,79,0.4)]"
                     >
                         Find My Skin Tone
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </Link>
                     <Link
                         href="/men"
-                        className="group flex items-center gap-3 px-8 py-4 border border-white/10 hover:border-white/30 bg-white/5 hover:bg-white/10 text-white font-medium rounded-full transition-all duration-300 backdrop-blur-sm"
+                        className="group flex items-center justify-center gap-3 px-8 py-4 w-full sm:w-auto border border-white/10 hover:border-white/30 bg-white/5 hover:bg-white/10 text-white font-medium rounded-full transition-all duration-300 backdrop-blur-sm"
                     >
                         Browse Collection
                     </Link>
                 </div>
 
                 {/* Stats bar */}
-                <div className="flex items-center justify-center gap-12 text-center border-t border-white/5 pt-10">
+                <div className="flex items-center justify-center gap-6 sm:gap-12 text-center border-t border-white/5 pt-10">
                     {[
                         { num: "6", label: "Skin Tone Types" },
                         { num: "3", label: "Smart Categories" },

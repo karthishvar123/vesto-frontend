@@ -18,14 +18,14 @@ const generatedImages = [
 
 export default function ScrollLayoutSection() {
     return (
-        <section className="relative w-full min-h-screen py-24 flex flex-col lg:flex-row items-center justify-center gap-12 px-6 lg:px-20 overflow-hidden">
+        <section className="relative w-full py-16 sm:py-24 flex flex-col lg:flex-row items-center justify-center gap-8 sm:gap-12 px-4 sm:px-6 lg:px-20 overflow-hidden">
 
             {/* Left Column: Flip Card Stack */}
-            <div className="w-full lg:w-1/2 h-[500px] lg:h-[700px] relative z-20 flex items-center justify-center">
+            <div className="w-full lg:w-1/2 h-[360px] sm:h-[500px] lg:h-[700px] relative z-20 flex items-center justify-center">
                 <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-black/0 to-black/0 pointer-events-none z-30" />
                 <FlipCardStack
                     cards={generatedImages.map(img => ({ image: { src: img } }))}
-                    cardWidth={350}
+                    cardWidth={typeof window !== "undefined" && window.innerWidth < 400 ? 280 : 350}
                     cardHeight={500}
                     stackOffset={12}
                     stackRotation={-5}

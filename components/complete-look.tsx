@@ -16,16 +16,16 @@ const FEATURES = [
 
 export default function CompleteLook() {
     return (
-        <section className="w-full py-32 bg-[#0D0D0D] relative overflow-hidden">
+        <section className="w-full py-16 sm:py-32 bg-[#0D0D0D] relative overflow-hidden">
             {/* Accent line */}
             <div className="absolute left-0 top-0 w-px h-full bg-gradient-to-b from-transparent via-[#C4724F]/30 to-transparent" />
 
             <div className="container mx-auto px-6 max-w-7xl">
-                <div className="grid md:grid-cols-2 gap-16 items-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-16 items-center">
 
                     {/* Left: Floating Clothing Gallery */}
                     <motion.div
-                        className="relative"
+                        className="relative h-[380px] sm:h-auto"
                         initial={{ opacity: 0, x: -40 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}

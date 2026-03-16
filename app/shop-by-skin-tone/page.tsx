@@ -49,7 +49,7 @@ export default function ShopBySkinTonePage() {
                 <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-[#C4724F]/5 blur-[120px]" />
             </div>
 
-            <div className="relative z-10 pt-32 pb-24 px-4 md:px-8 max-w-7xl mx-auto">
+            <div className="relative z-10 pt-28 pb-16 px-4 md:px-8 max-w-7xl mx-auto">
 
                 {/* Header */}
                 <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center mb-16 max-w-3xl mx-auto">
@@ -67,7 +67,7 @@ export default function ShopBySkinTonePage() {
                     {/* AI Camera button */}
                     <button
                         onClick={() => setShowCamera(true)}
-                        className="group inline-flex items-center gap-3 px-8 py-4 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#C4724F]/40 text-white font-bold rounded-full transition-all duration-300"
+                        className="group inline-flex items-center justify-center gap-3 px-5 sm:px-8 py-3 sm:py-4 w-full sm:w-auto bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#C4724F]/40 text-white font-bold rounded-full transition-all duration-300"
                     >
                         <Camera className="w-5 h-5 text-[#C4724F]" />
                         Analyse with AI Camera
@@ -105,7 +105,7 @@ export default function ShopBySkinTonePage() {
                                     )}
                                 </div>
                                 {/* Info */}
-                                <div className="p-4 bg-[#111]">
+                                <div className="p-3 sm:p-4 bg-[#111]">
                                     <div className="flex items-center justify-between mb-1">
                                         <h3 className="text-white font-black text-base uppercase tracking-tight">{tone.name}</h3>
                                         <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border uppercase tracking-wide ${tone.badge}`}>{tone.undertone}</span>
@@ -123,7 +123,7 @@ export default function ShopBySkinTonePage() {
                         onClick={handleShopClick}
                         disabled={!selectedType}
                         whileHover={selectedType ? { scale: 1.03 } : {}}
-                        className={`flex items-center gap-3 px-10 py-5 rounded-full font-bold text-lg transition-all duration-300 ${selectedType ? "bg-[#C4724F] text-white shadow-[0_0_40px_rgba(196,114,79,0.3)] hover:bg-[#d4845f]" : "bg-white/5 text-white/20 border border-white/5 cursor-not-allowed"}`}
+                        className={`flex items-center justify-center gap-3 px-6 sm:px-10 py-4 sm:py-5 w-full sm:w-auto rounded-full font-bold text-base sm:text-lg transition-all duration-300 ${selectedType ? "bg-[#C4724F] text-white shadow-[0_0_40px_rgba(196,114,79,0.3)] hover:bg-[#d4845f]" : "bg-white/5 text-white/20 border border-white/5 cursor-not-allowed"}`}
                     >
                         Shop with this skin tone
                         {selectedType && <ArrowRight className="w-5 h-5" />}

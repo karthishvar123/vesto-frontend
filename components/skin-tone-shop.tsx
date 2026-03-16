@@ -26,7 +26,7 @@ export default function SkinToneShop() {
                         <span className="text-[#C4724F] text-xs font-bold uppercase tracking-widest mb-4 block">
                             Step 01 — Personalization
                         </span>
-                        <h2 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.88]">
+                        <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-[0.9]">
                             Start With<br />
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C4724F] to-[#E8A87C]">
                                 Your Tone
@@ -39,7 +39,7 @@ export default function SkinToneShop() {
                 </div>
 
                 {/* Tone cards */}
-                <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-14">
+                <div className="grid grid-cols-3 md:grid-cols-6 gap-2 sm:gap-3 mb-10 sm:mb-14">
                     {TONES.map((tone, i) => (
                         <motion.div
                             key={tone.id}
@@ -52,7 +52,7 @@ export default function SkinToneShop() {
                         >
                             {/* Color block */}
                             <div
-                                className="h-28 w-full transition-all duration-500 group-hover:brightness-110"
+                                className="h-20 sm:h-28 w-full transition-all duration-500 group-hover:brightness-110"
                                 style={{ background: `linear-gradient(135deg, ${tone.color}, ${tone.color}bb)` }}
                             />
                             {/* Info */}
@@ -70,10 +70,10 @@ export default function SkinToneShop() {
                 </div>
 
                 {/* CTA Row */}
-                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+                <div className="flex flex-col items-stretch sm:flex-row sm:items-center gap-4">
                     <Link
                         href="/shop-by-skin-tone"
-                        className="group flex items-center gap-3 px-8 py-4 bg-[#C4724F] hover:bg-[#d4845f] text-white font-bold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(196,114,79,0.3)]"
+                        className="group flex items-center justify-center gap-3 px-6 py-4 w-full sm:w-auto bg-[#C4724F] hover:bg-[#d4845f] text-white font-bold rounded-full transition-all duration-300 hover:scale-105 hover:shadow-[0_0_40px_rgba(196,114,79,0.3)]"
                     >
                         <ScanFace className="w-4 h-4" />
                         Shop by Skin Tone

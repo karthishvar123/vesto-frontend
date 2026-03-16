@@ -23,7 +23,7 @@ export default function FluidCardStack({ items, className }: FluidCardStackProps
 
     return (
         <LayoutGroup>
-            <div className={cn("w-full flex flex-col md:flex-row gap-4 h-[600px] md:h-[450px]", className)}>
+            <div className={cn("w-full flex flex-col md:flex-row gap-3 h-[420px] sm:h-[500px] md:h-[450px]", className)}>
                 {items.map((item) => (
                     <Card
                         key={item.id}

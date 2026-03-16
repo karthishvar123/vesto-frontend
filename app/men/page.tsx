@@ -109,7 +109,7 @@ export default function MenPage() {
                                                                 <div className="group product-card cursor-pointer">
                                                                     <div className="aspect-[3/4] relative bg-[#111] overflow-hidden rounded-xl">
                                                                         {product.images?.[0] ? (
-                                                                            <Image src={product.images[0]} alt={product.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                                                                            <Image src={product.images[0]} alt={product.name} fill sizes="(max-width: 768px) 50vw, (max-width: 1024px) 25vw, 20vw" className="object-cover group-hover:scale-105 transition-transform duration-500" />
                                                                         ) : (
                                                                             <div className="w-full h-full flex items-center justify-center text-white/10 text-xs">No Image</div>
                                                                         )}

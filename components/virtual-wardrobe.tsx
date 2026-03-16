@@ -32,35 +32,24 @@ const WARDROBE_CARDS = [
 
 function WardrobeCardStack() {
     return (
-        <div className="relative h-[26rem] flex items-center justify-center">
+        <div className="relative h-[22rem] sm:h-[26rem] flex items-center justify-center">
             {WARDROBE_CARDS.map((card, i) => (
                 <motion.div
                     key={card.label}
-                    className="absolute w-64 h-[22rem] rounded-2xl border border-white/10 overflow-hidden shadow-2xl cursor-grab flex flex-col"
+                    className="absolute w-52 sm:w-64 h-[18rem] sm:h-[22rem] rounded-2xl border border-white/10 overflow-hidden shadow-2xl cursor-grab flex flex-col"
                     style={{ backgroundColor: card.bg }}
-                    initial={{ rotate: (i - 1) * 12, x: (i - 1) * 70, y: (i - 1) * 10, zIndex: i }}
-                    animate={{ rotate: (i - 1) * 12, x: (i - 1) * 70, y: (i - 1) * 10 }}
+                    initial={{ rotate: (i - 1) * 8, x: (i - 1) * 46, y: (i - 1) * 8, zIndex: i }}
+                    animate={{ rotate: (i - 1) * 8, x: (i - 1) * 46, y: (i - 1) * 8 }}
                     whileHover={{ y: -24, rotate: 0, scale: 1.06, zIndex: 10 }}
                     transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 >
-                    {/* Image area — fills most of the card */}
                     <div className="relative flex-1 w-full overflow-hidden">
-                        <Image
-                            src={card.image}
-                            alt={card.label}
-                            fill
-                            className="object-contain p-4 drop-shadow-lg"
-                            sizes="256px"
-                        />
-                        {/* Subtle top-to-transparent gradient so label reads cleanly */}
+                        <Image src={card.image} alt={card.label} fill
+                            className="object-contain p-4 drop-shadow-lg" sizes="256px" />
                         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/60" />
                     </div>
-
-                    {/* Label bar at bottom */}
-                    <div
-                        className="px-4 py-3 border-t border-white/5"
-                        style={{ backgroundColor: card.accent + "18" }}
-                    >
+                    <div className="px-4 py-3 border-t border-white/5"
+                        style={{ backgroundColor: card.accent + "18" }}>
                         <p className="text-white font-bold text-sm">{card.label}</p>
                         <p className="text-white/35 text-[11px] mt-0.5 truncate">{card.description}</p>
                     </div>

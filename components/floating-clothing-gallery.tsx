@@ -5,10 +5,10 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 
 const items = [
-    { id: 1, name: "Shorts", src: "/products/generated/beige-shorts.png", x: -170, y: -170, rotate: -6 }, // Top-Left
-    { id: 2, name: "Joggers", src: "/products/generated/grey-joggers.png", x: 170, y: -170, rotate: 6 },  // Top-Right
-    { id: 3, name: "Cotton Pants", src: "/products/generated/beige-chinos.png", x: -170, y: 170, rotate: -4 }, // Bottom-Left
-    { id: 4, name: "Sneakers", src: "/products/generated/white-sneakers.png", x: 170, y: 170, rotate: 4 },   // Bottom-Right
+    { id: 1, name: "Shorts", src: "/products/generated/beige-shorts.png", x: -120, y: -120, rotate: -6 },
+    { id: 2, name: "Joggers", src: "/products/generated/grey-joggers.png", x: 120, y: -120, rotate: 6 },
+    { id: 3, name: "Cotton Pants", src: "/products/generated/beige-chinos.png", x: -120, y: 120, rotate: -4 },
+    { id: 4, name: "Sneakers", src: "/products/generated/white-sneakers.png", x: 120, y: 120, rotate: 4 },
 ];
 
 export default function FloatingClothingGallery() {
@@ -16,7 +16,7 @@ export default function FloatingClothingGallery() {
 
     return (
         <div
-            className="relative w-full h-[600px] flex items-center justify-center cursor-pointer"
+            className="relative w-full h-[380px] sm:h-[500px] flex items-center justify-center cursor-pointer"
             onMouseEnter={() => setIsActive(true)}
             onMouseLeave={() => setIsActive(false)}
             onClick={() => setIsActive(!isActive)}

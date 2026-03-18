@@ -6,7 +6,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import Navbar from "@/components/navbar";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight, SlidersHorizontal } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSkinTone } from "@/context/skin-tone-context";
 
@@ -51,11 +51,11 @@ const COLOR_META: Record<string, { label: string; dot: string }> = {
 export default function MenPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
-    // Per-section filter state keyed by section slug
-    const [sectionColors, setSectionColors] = useState<Record<string, string | null>>({});
-    const [sectionBrands, setSectionBrands] = useState<Record<string, string | null>>({});
+    const [activeColor, setActiveColor] = useState<string | null>(null);
+    const [brandFilter, setBrandFilter] = useState<string | null>(null);
     const { selectedType } = useSkinTone();
     const recommendedColors = selectedType ? (TONE_COLORS[selectedType] ?? []) : [];
+    const brands = [...new Set(products.map(p => p.brand).filter(Boolean))] as string[];
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -69,26 +69,13 @@ export default function MenPage() {
         fetchProducts();
     }, []);
 
-    const getProductsForStyle = (cat: string, style: string) => {
-        const activeColor = sectionColors[cat] ?? null;
-        const brandFilter = sectionBrands[cat] ?? null;
-        return products.filter(p =>
+    const getProductsForStyle = (cat: string, style: string) =>
+        products.filter(p =>
             p.productType === cat &&
             p.productStyle === style &&
             (!activeColor || p.baseColor === activeColor) &&
             (!brandFilter || p.brand === brandFilter)
         );
-    };
-
-    const getBrandsForSection = (slug: string) =>
-        [...new Set(
-            products.filter(p => p.productType === slug && p.brand).map(p => p.brand!)
-        )];
-
-    const getColorsForSection = (slug: string) =>
-        [...new Set(
-            products.filter(p => p.productType === slug && p.baseColor).map(p => p.baseColor!)
-        )];
 
     return (
         <main className="min-h-screen bg-[#0A0A0A]">
@@ -110,7 +97,69 @@ export default function MenPage() {
                 </div>
             </div>
 
+            {/* Color filter chips */}
             <div className="pb-24 px-4 md:px-8 max-w-7xl mx-auto">
+                <div className="flex gap-2 overflow-x-auto pb-3 mb-8" style={{ scrollbarWidth: "none" }}>
+                    <button
+                        onClick={() => setActiveColor(null)}
+                        className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all shrink-0 ${
+                            !activeColor ? "bg-[#C4724F] border-[#C4724F] text-white" : "border-white/10 text-white/40 hover:text-white"
+                        }`}
+                    >
+                        All
+                    </button>
+                    {Object.entries(COLOR_META).map(([key, meta]) => {
+                        const isRecommended = recommendedColors.includes(key);
+                        const isActive = activeColor === key;
+                        return (
+                            <button
+                                key={key}
+                                onClick={() => setActiveColor(isActive ? null : key)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all shrink-0 ${
+                                    isActive ? "bg-[#C4724F] border-[#C4724F] text-white"
+                                    : isRecommended ? "border-[#C4724F]/50 text-[#C4724F] bg-[#C4724F]/10"
+                                    : "border-white/10 text-white/40 hover:text-white"
+                                }`}
+                            >
+                                <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: meta.dot }} />
+                                {meta.label}
+                                {isRecommended && !isActive && (
+                                    <span className="text-[8px] bg-[#C4724F] text-white px-1.5 py-0.5 rounded-full leading-none">
+                                        FOR YOU
+                                    </span>
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
+
+                {/* Brand filter chips */}
+                {brands.length > 0 && (
+                    <div className="flex gap-2 overflow-x-auto pb-3 mb-8" style={{ scrollbarWidth: "none" }}>
+                        <button
+                            onClick={() => setBrandFilter(null)}
+                            className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all shrink-0 ${
+                                !brandFilter ? "bg-white/10 border-white/20 text-white" : "border-white/10 text-white/30 hover:text-white"
+                            }`}
+                        >
+                            All Brands
+                        </button>
+                        {brands.map(brand => (
+                            <button
+                                key={brand}
+                                onClick={() => setBrandFilter(brandFilter === brand ? null : brand)}
+                                className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all shrink-0 ${
+                                    brandFilter === brand
+                                        ? "bg-white/10 border-white/20 text-white"
+                                        : "border-white/10 text-white/30 hover:text-white"
+                                }`}
+                            >
+                                {brand}
+                            </button>
+                        ))}
+                    </div>
+                )}
+
                 {loading ? (
                     <div className="space-y-20">
                         {Array.from({ length: 3 }).map((_, i) => <SkeletonRow key={i} />)}
@@ -118,93 +167,13 @@ export default function MenPage() {
                 ) : (
                     <div className="space-y-24">
                         {menStructure.map((section) => {
-                            const sectionHasProducts = section.items.some(s => products.some(p => p.productType === section.slug && p.productStyle === s.value));
-                            if (!sectionHasProducts) return null;
-
-                            const activeColor = sectionColors[section.slug] ?? null;
-                            const brandFilter = sectionBrands[section.slug] ?? null;
-                            const sectionColors_ = getColorsForSection(section.slug);
-                            const sectionBrands_ = getBrandsForSection(section.slug);
-
+                            const hasProducts = section.items.some(s => getProductsForStyle(section.slug, s.value).length > 0);
+                            if (!hasProducts) return null;
                             return (
                                 <motion.section key={section.category} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-                                    {/* Section header */}
-                                    <div className="flex items-end justify-between border-b border-white/5 pb-4 mb-6">
+                                    <div className="flex items-end justify-between border-b border-white/5 pb-4 mb-10">
                                         <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter">{section.category}</h2>
                                     </div>
-
-                                    {/* Per-section filter chips */}
-                                    <div className="mb-8 space-y-2">
-                                        {/* Color filter */}
-                                        {sectionColors_.length > 0 && (
-                                            <div className="flex items-center gap-2 overflow-x-auto pb-1" style={{ scrollbarWidth: "none" }}>
-                                                <div className="flex items-center gap-1.5 text-white/30 text-xs uppercase tracking-widest shrink-0 mr-1">
-                                                    <SlidersHorizontal className="w-3 h-3" /> Filter
-                                                </div>
-                                                <button
-                                                    onClick={() => setSectionColors(prev => ({ ...prev, [section.slug]: null }))}
-                                                    className={`px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all shrink-0 ${
-                                                        !activeColor ? "bg-[#C4724F] border-[#C4724F] text-white" : "border-white/10 text-white/40 hover:text-white"
-                                                    }`}
-                                                >
-                                                    All
-                                                </button>
-                                                {sectionColors_.map(key => {
-                                                    const meta = COLOR_META[key];
-                                                    if (!meta) return null;
-                                                    const isRecommended = recommendedColors.includes(key);
-                                                    const isActive = activeColor === key;
-                                                    return (
-                                                        <button
-                                                            key={key}
-                                                            onClick={() => setSectionColors(prev => ({ ...prev, [section.slug]: isActive ? null : key }))}
-                                                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all shrink-0 ${
-                                                                isActive ? "bg-[#C4724F] border-[#C4724F] text-white"
-                                                                : isRecommended ? "border-[#C4724F]/50 text-[#C4724F] bg-[#C4724F]/10"
-                                                                : "border-white/10 text-white/40 hover:text-white"
-                                                            }`}
-                                                        >
-                                                            <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: meta.dot }} />
-                                                            {meta.label}
-                                                            {isRecommended && !isActive && (
-                                                                <span className="text-[8px] bg-[#C4724F] text-white px-1 py-0.5 rounded-full leading-none">FOR YOU</span>
-                                                            )}
-                                                        </button>
-                                                    );
-                                                })}
-
-                                                {/* Brand chips inline */}
-                                                {sectionBrands_.length > 0 && (
-                                                    <>
-                                                        <span className="w-px h-4 bg-white/10 shrink-0 mx-1" />
-                                                        <button
-                                                            onClick={() => setSectionBrands(prev => ({ ...prev, [section.slug]: null }))}
-                                                            className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap border transition-all shrink-0 ${
-                                                                !brandFilter ? "bg-white/10 border-white/20 text-white" : "border-white/10 text-white/30 hover:text-white"
-                                                            }`}
-                                                        >
-                                                            All Brands
-                                                        </button>
-                                                        {sectionBrands_.map(brand => (
-                                                            <button
-                                                                key={brand}
-                                                                onClick={() => setSectionBrands(prev => ({ ...prev, [section.slug]: brandFilter === brand ? null : brand }))}
-                                                                className={`px-3 py-1.5 rounded-full text-xs font-bold whitespace-nowrap border transition-all shrink-0 ${
-                                                                    brandFilter === brand
-                                                                        ? "bg-white/10 border-white/20 text-white"
-                                                                        : "border-white/10 text-white/30 hover:text-white"
-                                                                }`}
-                                                            >
-                                                                {brand}
-                                                            </button>
-                                                        ))}
-                                                    </>
-                                                )}
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Style rows */}
                                     <div className="space-y-14">
                                         {section.items.map((style) => {
                                             const styleProducts = getProductsForStyle(section.slug, style.value);

@@ -337,7 +337,7 @@ export default function ProductsByCategoryPage({
                 </div>
             </div>
 
-            {/* Filter Bottom Sheet */}
+            {/* Filter Side Drawer */}
             <AnimatePresence>
                 {showFilterSheet && (
                     <>
@@ -347,34 +347,33 @@ export default function ProductsByCategoryPage({
                             onClick={() => setShowFilterSheet(false)}
                         />
                         <motion.div
-                            initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
+                            initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
                             transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                            className="fixed bottom-0 left-0 right-0 z-50 bg-[#111] rounded-t-3xl border-t border-white/10 max-h-[85vh] overflow-y-auto"
+                            className="fixed top-0 right-0 bottom-0 z-50 bg-[#111] border-l border-white/10 w-full sm:w-[360px] flex flex-col overflow-hidden"
                         >
-                            <div className="flex justify-center pt-3 pb-1">
-                                <div className="w-10 h-1 rounded-full bg-white/20" />
+                            {/* Header */}
+                            <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 shrink-0">
+                                <h3 className="text-white font-black text-lg uppercase tracking-tight">Filter</h3>
+                                <div className="flex items-center gap-3">
+                                    {activeFilterCount > 0 && (
+                                        <button onClick={clearAllFilters}
+                                            className="text-white/40 text-sm hover:text-white transition-colors">
+                                            Clear all
+                                        </button>
+                                    )}
+                                    <button onClick={() => setShowFilterSheet(false)}
+                                        className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
+                                        <X className="w-4 h-4 text-white" />
+                                    </button>
+                                </div>
                             </div>
 
-                            <div className="px-5 pb-8">
-                                <div className="flex items-center justify-between py-4 border-b border-white/10 mb-5">
-                                    <h3 className="text-white font-black text-lg uppercase tracking-tight">Filter</h3>
-                                    <div className="flex items-center gap-3">
-                                        {activeFilterCount > 0 && (
-                                            <button onClick={clearAllFilters}
-                                                className="text-white/40 text-sm hover:text-white transition-colors">
-                                                Clear all
-                                            </button>
-                                        )}
-                                        <button onClick={() => setShowFilterSheet(false)}
-                                            className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                                            <X className="w-4 h-4 text-white" />
-                                        </button>
-                                    </div>
-                                </div>
+                            {/* Scrollable content */}
+                            <div className="flex-1 overflow-y-auto px-5 py-5 space-y-7">
 
                                 {/* Color filter */}
                                 {availableColors.length > 0 && (
-                                    <div className="mb-7">
+                                    <div>
                                         <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-3">
                                             Color Family
                                         </p>
@@ -384,14 +383,14 @@ export default function ProductsByCategoryPage({
                                                 const isActive = activeColors.includes(color);
                                                 return (
                                                     <button key={color} onClick={() => toggleColor(color)}
-                                                        className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-bold border transition-all capitalize ${
+                                                        className={`flex items-center gap-2 px-3 py-2 rounded-full text-xs font-bold border transition-all capitalize ${
                                                             isActive
                                                                 ? "bg-[#C4724F] border-[#C4724F] text-white"
                                                                 : isRecommended
                                                                 ? "border-[#C4724F]/50 text-[#C4724F] bg-[#C4724F]/10"
                                                                 : "border-white/10 text-white/60"
                                                         }`}>
-                                                        <span className="w-2.5 h-2.5 rounded-full"
+                                                        <span className="w-2 h-2 rounded-full"
                                                             style={{ backgroundColor: COLOR_DOTS[color] || "#888" }} />
                                                         {color}
                                                         {isRecommended && !isActive && (
@@ -409,14 +408,14 @@ export default function ProductsByCategoryPage({
 
                                 {/* Brand filter */}
                                 {availableBrands.length > 0 && (
-                                    <div className="mb-7">
+                                    <div>
                                         <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-3">Brand</p>
                                         <div className="flex flex-wrap gap-2">
                                             {availableBrands.map(brand => {
                                                 const isActive = activeBrands.includes(brand);
                                                 return (
                                                     <button key={brand} onClick={() => toggleBrand(brand)}
-                                                        className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium border transition-all ${
+                                                        className={`flex items-center gap-2 px-3 py-2 rounded-full text-xs font-medium border transition-all ${
                                                             isActive
                                                                 ? "bg-white text-black border-white"
                                                                 : "border-white/10 text-white/60"
@@ -431,7 +430,7 @@ export default function ProductsByCategoryPage({
                                 )}
 
                                 {/* Price range */}
-                                <div className="mb-7">
+                                <div>
                                     <div className="flex items-center justify-between mb-3">
                                         <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Price Range</p>
                                         <p className="text-white text-xs font-bold">
@@ -455,10 +454,13 @@ export default function ProductsByCategoryPage({
                                         <span>₹{maxPrice}</span>
                                     </div>
                                 </div>
+                            </div>
 
+                            {/* Sticky apply button */}
+                            <div className="px-5 py-4 border-t border-white/10 shrink-0">
                                 <button
                                     onClick={() => setShowFilterSheet(false)}
-                                    className="w-full py-4 bg-[#C4724F] hover:bg-[#d4845f] text-white font-bold rounded-full transition-colors text-base"
+                                    className="w-full py-3.5 bg-[#C4724F] hover:bg-[#d4845f] text-white font-bold rounded-full transition-colors"
                                 >
                                     Show {filtered.length} result{filtered.length !== 1 ? "s" : ""}
                                 </button>

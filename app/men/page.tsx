@@ -6,7 +6,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import Navbar from "@/components/navbar";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, SlidersHorizontal, ChevronDown } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSkinTone } from "@/context/skin-tone-context";
 
@@ -69,13 +69,35 @@ export default function MenPage() {
         fetchProducts();
     }, []);
 
-    const getProductsForStyle = (cat: string, style: string) =>
-        products.filter(p =>
+    // Per-section sort and color state
+    // key = "category/style" e.g. "topwear/t-shirt"
+    const [sectionSort, setSectionSort] = useState<Record<string, "asc" | "desc" | "">>({});
+    const [sectionColor, setSectionColor] = useState<Record<string, string | null>>({});
+    const [openFilter, setOpenFilter] = useState<string | null>(null);
+
+    const getProductsForStyle = (cat: string, style: string) => {
+        const key = `${cat}/${style}`;
+        const sort = sectionSort[key] || "";
+        const color = sectionColor[key] ?? null;
+        let result = products.filter(p =>
             p.productType === cat &&
             p.productStyle === style &&
             (!activeColor || p.baseColor === activeColor) &&
-            (!brandFilter || p.brand === brandFilter)
+            (!brandFilter || p.brand === brandFilter) &&
+            (!color || p.baseColor === color)
         );
+        if (sort === "asc") result = [...result].sort((a, b) => a.price - b.price);
+        if (sort === "desc") result = [...result].sort((a, b) => b.price - a.price);
+        return result;
+    };
+
+    const toggleSectionColor = (key: string, color: string) => {
+        setSectionColor(prev => ({ ...prev, [key]: prev[key] === color ? null : color }));
+    };
+
+    const setSectionSortVal = (key: string, val: "asc" | "desc" | "") => {
+        setSectionSort(prev => ({ ...prev, [key]: val }));
+    };
 
     return (
         <main className="min-h-screen bg-[#0A0A0A]">
@@ -176,19 +198,90 @@ export default function MenPage() {
                                     </div>
                                     <div className="space-y-14">
                                         {section.items.map((style) => {
+                                            const key = `${section.slug}/${style.value}`;
                                             const styleProducts = getProductsForStyle(section.slug, style.value);
                                             if (styleProducts.length === 0) return null;
+                                            const isFilterOpen = openFilter === key;
+                                            const activeSection = sectionColor[key] ?? null;
+                                            const activeSort = sectionSort[key] || "";
+                                            // Get available colors for this style
+                                            const styleColors = [...new Set(
+                                                products
+                                                    .filter(p => p.productType === section.slug && p.productStyle === style.value && p.baseColor)
+                                                    .map(p => p.baseColor as string)
+                                            )];
                                             return (
                                                 <div key={style.value}>
-                                                    <div className="flex items-center justify-between mb-5">
+                                                    {/* Style header row */}
+                                                    <div className="flex items-center justify-between mb-3">
                                                         <h3 className="text-sm font-bold text-white/50 uppercase tracking-widest flex items-center gap-2">
                                                             <span className="w-1 h-1 rounded-full bg-[#C4724F]" />
                                                             {style.label}
                                                         </h3>
-                                                        <Link href={`/products/${section.slug}/${style.value}`} className="text-xs font-bold text-[#C4724F] hover:text-[#E8A87C] flex items-center gap-1 transition-colors group uppercase tracking-wider">
-                                                            View all <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
-                                                        </Link>
+                                                        <div className="flex items-center gap-2">
+                                                            {/* Filter toggle */}
+                                                            {styleColors.length > 0 && (
+                                                                <button
+                                                                    onClick={() => setOpenFilter(isFilterOpen ? null : key)}
+                                                                    className={`flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-full border transition-all ${
+                                                                        isFilterOpen || activeSection
+                                                                            ? "border-[#C4724F]/60 text-[#C4724F] bg-[#C4724F]/10"
+                                                                            : "border-white/10 text-white/30 hover:text-white"
+                                                                    }`}
+                                                                >
+                                                                    <SlidersHorizontal className="w-3 h-3" />
+                                                                    {activeSection ? <span className="w-1.5 h-1.5 rounded-full bg-[#C4724F]" /> : "Filter"}
+                                                                </button>
+                                                            )}
+                                                            {/* Sort dropdown */}
+                                                            <div className="relative">
+                                                                <select
+                                                                    value={activeSort}
+                                                                    onChange={e => setSectionSortVal(key, e.target.value as "asc" | "desc" | "")}
+                                                                    className="appearance-none bg-transparent border border-white/10 text-white/30 hover:text-white text-[10px] font-bold uppercase tracking-wider pl-3 pr-7 py-1.5 rounded-full focus:outline-none focus:border-white/20 transition-all cursor-pointer"
+                                                                >
+                                                                    <option value="" className="bg-[#111] text-white">Sort</option>
+                                                                    <option value="asc" className="bg-[#111] text-white">Price: Low → High</option>
+                                                                    <option value="desc" className="bg-[#111] text-white">Price: High → Low</option>
+                                                                </select>
+                                                                <ChevronDown className="w-3 h-3 text-white/30 absolute right-2 top-1/2 -translate-y-1/2 pointer-events-none" />
+                                                            </div>
+                                                            <Link href={`/products/${section.slug}/${style.value}`} className="text-xs font-bold text-[#C4724F] hover:text-[#E8A87C] flex items-center gap-1 transition-colors group uppercase tracking-wider">
+                                                                View all <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                                                            </Link>
+                                                        </div>
                                                     </div>
+
+                                                    {/* Inline color filter chips */}
+                                                    {isFilterOpen && (
+                                                        <div className="flex gap-2 mb-4 flex-wrap">
+                                                            <button
+                                                                onClick={() => setSectionColor(prev => ({ ...prev, [key]: null }))}
+                                                                className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase border transition-all whitespace-nowrap ${
+                                                                    !activeSection ? "bg-[#C4724F] border-[#C4724F] text-white" : "border-white/10 text-white/30 hover:text-white"
+                                                                }`}
+                                                            >
+                                                                All
+                                                            </button>
+                                                            {styleColors.map(color => (
+                                                                <button
+                                                                    key={color}
+                                                                    onClick={() => toggleSectionColor(key, color)}
+                                                                    className={`flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase border transition-all whitespace-nowrap ${
+                                                                        activeSection === color
+                                                                            ? "bg-[#C4724F] border-[#C4724F] text-white"
+                                                                            : "border-white/10 text-white/30 hover:text-white"
+                                                                    }`}
+                                                                >
+                                                                    <span
+                                                                        className="w-2 h-2 rounded-full shrink-0"
+                                                                        style={{ backgroundColor: COLOR_META[color]?.dot || "#888" }}
+                                                                    />
+                                                                    {COLOR_META[color]?.label || color}
+                                                                </button>
+                                                            ))}
+                                                        </div>
+                                                    )}
                                                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
                                                         {styleProducts.slice(0, 5).map((product) => (
                                                             <Link key={product.id} href={`/product/${encodeURIComponent(product.id)}`}>

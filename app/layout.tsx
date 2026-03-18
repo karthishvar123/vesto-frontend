@@ -40,6 +40,7 @@ export const viewport: Viewport = {
 
 import { Footer } from "@/components/footer";
 import BottomNav from "@/components/bottom-nav";
+import OnboardingWrapper from "@/components/onboarding-wrapper";
 
 export default function RootLayout({
   children,
@@ -55,6 +56,7 @@ export default function RootLayout({
         <AuthProvider>
           <SkinToneProvider>
             <WardrobeProvider>
+              <OnboardingWrapper />
               <main className="flex-grow pb-24 md:pb-0">
                 {children}
               </main>

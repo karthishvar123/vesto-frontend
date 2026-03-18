@@ -6,10 +6,11 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import Navbar from "@/components/navbar";
 import Link from "next/link";
 import Image from "next/image";
-import { Loader2, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { useSkinTone } from "@/context/skin-tone-context";
 
-interface Product { id: string; name: string; price: number; images: string[]; productType: string; productStyle: string; active: boolean; }
+interface Product { id: string; name: string; price: number; images: string[]; productType: string; productStyle: string; active: boolean; baseColor?: string; }
 
 const menStructure = [
     { category: "Topwear", slug: "topwear", items: [{ label: "T-Shirt", value: "t-shirt" }, { label: "Sweatshirt", value: "sweatshirt" }, { label: "Jacket", value: "jacket" }, { label: "Formal Shirt", value: "formal-shirt" }, { label: "Casual Shirt", value: "casual-shirt" }, { label: "Active T-Shirt", value: "active-t-shirt" }] },
@@ -34,9 +35,25 @@ function SkeletonRow() {
     );
 }
 
+const TONE_COLORS: Record<number, string[]> = {
+    1: ["cool", "neutral"], 2: ["cool", "neutral"],
+    3: ["neutral", "earthy"], 4: ["earthy", "warm"],
+    5: ["warm", "earthy"], 6: ["warm", "neutral"],
+};
+
+const COLOR_META: Record<string, { label: string; dot: string }> = {
+    neutral: { label: "Neutral", dot: "#9CA3AF" },
+    cool:    { label: "Cool",    dot: "#60A5FA" },
+    warm:    { label: "Warm",    dot: "#F59E0B" },
+    earthy:  { label: "Earthy",  dot: "#92400E" },
+};
+
 export default function MenPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
+    const [activeColor, setActiveColor] = useState<string | null>(null);
+    const { selectedType } = useSkinTone();
+    const recommendedColors = selectedType ? (TONE_COLORS[selectedType] ?? []) : [];
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -51,7 +68,11 @@ export default function MenPage() {
     }, []);
 
     const getProductsForStyle = (cat: string, style: string) =>
-        products.filter(p => p.productType === cat && p.productStyle === style);
+        products.filter(p =>
+            p.productType === cat &&
+            p.productStyle === style &&
+            (!activeColor || p.baseColor === activeColor)
+        );
 
     return (
         <main className="min-h-screen bg-[#0A0A0A]">
@@ -73,7 +94,41 @@ export default function MenPage() {
                 </div>
             </div>
 
+            {/* Color filter chips */}
             <div className="pb-24 px-4 md:px-8 max-w-7xl mx-auto">
+                <div className="flex gap-2 overflow-x-auto pb-3 mb-8" style={{ scrollbarWidth: "none" }}>
+                    <button
+                        onClick={() => setActiveColor(null)}
+                        className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all shrink-0 ${
+                            !activeColor ? "bg-[#C4724F] border-[#C4724F] text-white" : "border-white/10 text-white/40 hover:text-white"
+                        }`}
+                    >
+                        All
+                    </button>
+                    {Object.entries(COLOR_META).map(([key, meta]) => {
+                        const isRecommended = recommendedColors.includes(key);
+                        const isActive = activeColor === key;
+                        return (
+                            <button
+                                key={key}
+                                onClick={() => setActiveColor(isActive ? null : key)}
+                                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all shrink-0 ${
+                                    isActive ? "bg-[#C4724F] border-[#C4724F] text-white"
+                                    : isRecommended ? "border-[#C4724F]/50 text-[#C4724F] bg-[#C4724F]/10"
+                                    : "border-white/10 text-white/40 hover:text-white"
+                                }`}
+                            >
+                                <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: meta.dot }} />
+                                {meta.label}
+                                {isRecommended && !isActive && (
+                                    <span className="text-[8px] bg-[#C4724F] text-white px-1.5 py-0.5 rounded-full leading-none">
+                                        FOR YOU
+                                    </span>
+                                )}
+                            </button>
+                        );
+                    })}
+                </div>
                 {loading ? (
                     <div className="space-y-20">
                         {Array.from({ length: 3 }).map((_, i) => <SkeletonRow key={i} />)}

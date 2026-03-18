@@ -6,7 +6,7 @@ import Navbar from "@/components/navbar";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shirt, HeartOff, Sparkles, ArrowRight, Package, Upload, Pencil } from "lucide-react";
+import { Shirt, HeartOff, Sparkles, ArrowRight, Upload, Pencil, ScanFace, Plus } from "lucide-react";
 import ProtectedRoute from "@/components/protected-route";
 import UploadClothesModal from "@/components/upload-clothes-modal";
 import EditClothesModal from "@/components/edit-clothes-modal";
@@ -103,16 +103,68 @@ export default function VirtualWardrobePage() {
                                 </div>
                             ))}
                         </div>
+                    ) : items.length === 0 && activeTab === "All" ? (
+                        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center justify-center py-16 px-4 text-center">
+                            {/* Animated icon */}
+                            <div className="relative w-32 h-32 mb-6">
+                                <div className="absolute inset-0 rounded-3xl bg-[#C4724F]/10 border border-[#C4724F]/20 flex items-center justify-center">
+                                    <Shirt className="w-12 h-12 text-[#C4724F]/40" />
+                                </div>
+                                <motion.div
+                                    className="absolute -top-2 -right-2 w-8 h-8 bg-[#C4724F] rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(196,114,79,0.5)]"
+                                    animate={{ scale: [1, 1.2, 1] }}
+                                    transition={{ repeat: Infinity, duration: 2 }}
+                                >
+                                    <Plus className="w-4 h-4 text-white" />
+                                </motion.div>
+                            </div>
+
+                            <h2 className="text-white font-black text-2xl mb-2 uppercase tracking-tight">
+                                Your closet is empty
+                            </h2>
+                            <p className="text-white/40 text-sm mb-8 max-w-xs leading-relaxed">
+                                Start by finding clothes that match your skin tone, then add them here to build your wardrobe.
+                            </p>
+
+                            {/* Step guide */}
+                            <div className="w-full max-w-xs space-y-3 mb-8">
+                                {[
+                                    { step: "1", text: "Select your skin tone", href: "/shop-by-skin-tone" },
+                                    { step: "2", text: "Browse matched clothes", href: "/men" },
+                                    { step: "3", text: "Add items to wardrobe", href: null },
+                                ].map((item) => (
+                                    <div key={item.step} className="flex items-center gap-3 bg-white/5 rounded-xl p-3 border border-white/5">
+                                        <span className="w-7 h-7 rounded-full bg-[#C4724F]/20 border border-[#C4724F]/30 flex items-center justify-center text-[#C4724F] text-xs font-black shrink-0">
+                                            {item.step}
+                                        </span>
+                                        <p className="text-white/60 text-sm flex-1 text-left">{item.text}</p>
+                                        {item.href && (
+                                            <Link href={item.href} className="text-[#C4724F] shrink-0">
+                                                <ArrowRight className="w-4 h-4" />
+                                            </Link>
+                                        )}
+                                    </div>
+                                ))}
+                            </div>
+
+                            <Link
+                                href="/shop-by-skin-tone"
+                                className="flex items-center gap-2 px-8 py-4 bg-[#C4724F] text-white font-bold rounded-full hover:bg-[#d4845f] transition-all hover:scale-105"
+                            >
+                                <ScanFace className="w-4 h-4" />
+                                Get Started
+                            </Link>
+                        </motion.div>
                     ) : filtered.length === 0 ? (
                         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center justify-center py-32 px-4 text-center rounded-3xl border-2 border-dashed border-white/5">
                             <div className="w-20 h-20 rounded-full bg-white/5 flex items-center justify-center mb-6">
-                                <Package className="w-8 h-8 text-white/20" />
+                                <Shirt className="w-8 h-8 text-white/20" />
                             </div>
                             <h3 className="text-2xl font-black text-white mb-2">
-                                {activeTab === "All" ? "Your wardrobe is empty" : `No ${activeTab} yet`}
+                                No {activeTab} yet
                             </h3>
                             <p className="text-white/30 max-w-xs mb-8">
-                                {activeTab === "All" ? "Save items from the shop to start building your digital closet." : `Browse the shop and save some ${activeTab.toLowerCase()} to get started.`}
+                                Browse the shop and save some {activeTab.toLowerCase()} to get started.
                             </p>
                             <Link href="/men" className="vesto-btn-primary">
                                 Browse Shop <ArrowRight className="w-4 h-4" />

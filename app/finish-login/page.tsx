@@ -125,7 +125,7 @@ export default function FinishLoginPage() {
                         <h2 className="text-xl text-white mb-2">Login Link Expired or Invalid</h2>
                         <p className="text-white/40 mb-6">{errorMsg}</p>
                         <button
-                            onClick={() => router.push('/profile')}
+                            onClick={() => router.push('/auth')}
                             className="bg-[#C4724F] hover:bg-[#d4845f] text-white px-6 py-3 rounded-lg font-bold transition-colors"
                         >
                             Back to Login

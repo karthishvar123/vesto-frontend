@@ -39,6 +39,7 @@ export const viewport: Viewport = {
 };
 
 import { Footer } from "@/components/footer";
+import BottomNav from "@/components/bottom-nav";
 
 export default function RootLayout({
   children,
@@ -54,10 +55,11 @@ export default function RootLayout({
         <AuthProvider>
           <SkinToneProvider>
             <WardrobeProvider>
-              <main className="flex-grow">
+              <main className="flex-grow pb-24 md:pb-0">
                 {children}
               </main>
               <Footer />
+              <BottomNav />
             </WardrobeProvider>
           </SkinToneProvider>
         </AuthProvider>

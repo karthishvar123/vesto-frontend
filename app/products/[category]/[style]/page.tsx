@@ -57,7 +57,7 @@ export default function ProductsByCategoryPage({ params }: { params: Promise<{ c
 
                 <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="mb-12">
                     <span className="text-[#C4724F] text-xs font-bold uppercase tracking-widest mb-3 block">{categoryLabel}</span>
-                    <h1 className="text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none mb-4">{styleLabel}</h1>
+                    <h1 className="text-3xl sm:text-5xl md:text-7xl font-black text-white uppercase tracking-tighter leading-none mb-4">{styleLabel}</h1>
                     <p className="text-white/30 text-sm">{loading ? "Loading..." : `${filtered.length} items`}</p>
                 </motion.div>
 

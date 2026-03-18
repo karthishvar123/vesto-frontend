@@ -49,7 +49,7 @@ export default function ShopBySkinTonePage() {
                 <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[700px] h-[700px] rounded-full bg-[#C4724F]/5 blur-[120px]" />
             </div>
 
-            <div className="relative z-10 pt-28 pb-16 px-4 md:px-8 max-w-7xl mx-auto">
+            <div className="relative z-10 pt-20 sm:pt-28 pb-16 px-4 md:px-8 max-w-7xl mx-auto">
 
                 {/* Header */}
                 <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center mb-16 max-w-3xl mx-auto">

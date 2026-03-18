@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 
@@ -17,6 +17,14 @@ const generatedImages = [
 ];
 
 export default function ScrollLayoutSection() {
+    const [cardW, setCardW] = useState(350);
+    useEffect(() => {
+        const update = () => setCardW(window.innerWidth < 400 ? 260 : 350);
+        update();
+        window.addEventListener("resize", update);
+        return () => window.removeEventListener("resize", update);
+    }, []);
+
     return (
         <section className="relative w-full py-16 sm:py-24 flex flex-col lg:flex-row items-center justify-center gap-8 sm:gap-12 px-4 sm:px-6 lg:px-20 overflow-hidden">
 
@@ -25,8 +33,8 @@ export default function ScrollLayoutSection() {
                 <div className="absolute inset-0 bg-gradient-to-r from-black/0 via-black/0 to-black/0 pointer-events-none z-30" />
                 <FlipCardStack
                     cards={generatedImages.map(img => ({ image: { src: img } }))}
-                    cardWidth={typeof window !== "undefined" && window.innerWidth < 400 ? 280 : 350}
-                    cardHeight={500}
+                    cardWidth={cardW}
+                    cardHeight={cardW === 260 ? 380 : 500}
                     stackOffset={12}
                     stackRotation={-5}
                     borderRadius={12}

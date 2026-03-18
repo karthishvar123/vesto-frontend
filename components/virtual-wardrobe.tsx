@@ -61,9 +61,9 @@ function WardrobeCardStack() {
 
 export default function VirtualWardrobe() {
     return (
-        <section className="w-full py-32 bg-[#0A0A0A] relative overflow-hidden">
+        <section className="w-full py-16 sm:py-32 bg-[#0A0A0A] relative overflow-hidden">
             <div className="container mx-auto px-6 max-w-7xl">
-                <div className="grid md:grid-cols-2 gap-16 items-center">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-16 items-center">
 
                     {/* Left: Flip Card Stack */}
                     <motion.div

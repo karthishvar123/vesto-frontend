@@ -41,7 +41,7 @@ const STYLE_META: Record<
 // ── Tiny item thumbnail ───────────────────────────────────────
 function ItemThumb({ item, label }: { item: WardrobeItem; label: string }) {
     return (
-        <div className="flex flex-col items-center gap-2 flex-1">
+        <div className="flex flex-col items-center gap-2 flex-1 min-w-0">
             <div className="w-full aspect-[3/4] relative bg-[#1a1a1a] rounded-xl overflow-hidden border border-white/5">
                 {item.images?.[0] ? (
                     <Image
@@ -57,7 +57,7 @@ function ItemThumb({ item, label }: { item: WardrobeItem; label: string }) {
                 )}
             </div>
             <p className="text-[10px] text-white/30 uppercase tracking-widest font-bold">{label}</p>
-            <p className="text-xs text-white/60 font-semibold truncate max-w-full text-center px-1">
+            <p className="text-xs text-white/60 font-semibold truncate w-full text-center px-1">
                 {item.name}
             </p>
         </div>
@@ -73,7 +73,7 @@ function OutfitCard({ outfit }: { outfit: DailyOutfit }) {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
-            className="flex-1 min-w-[220px] bg-[#111] rounded-2xl border border-white/5 p-4 flex flex-col gap-4 hover:border-[#C4724F]/30 transition-colors"
+            className="w-full bg-[#111] rounded-2xl border border-white/5 p-4 flex flex-col gap-4 hover:border-[#C4724F]/30 transition-colors"
         >
             {/* Header */}
             <div className="flex items-center justify-between">
@@ -147,7 +147,7 @@ export default function DailyOutfitCard({ items, loading }: Props) {
             <div className="h-px bg-gradient-to-r from-transparent via-[#C4724F]/20 to-transparent mb-6" />
 
             {/* Cards row */}
-            <div className="flex gap-4 flex-wrap md:flex-nowrap">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {suggestions.map((outfit, i) => (
                     <OutfitCard key={`${outfit.style}-${i}`} outfit={outfit} />
                 ))}

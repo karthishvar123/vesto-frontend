@@ -1,13 +1,17 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
     return (
-        <footer className="border-t border-white/10 bg-[#0A0A0A] py-12 mt-20">
+        <footer className="border-t border-white/10 bg-[#0A0A0A] py-12 pb-24 md:pb-12 mt-20">
             <div className="container mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-center gap-6">
-                <div className="flex flex-col items-center md:items-start gap-2">
-                    <span className="text-xl font-bold tracking-wider text-white">
-                        VESTO
-                    </span>
+                <div className="flex flex-col items-center md:items-start gap-4">
+                    <Link href="/" className="flex items-center gap-3">
+                        <Image src="/logo.png" alt="Vesto Logo" width={40} height={40} className="w-10 h-10 rounded-xl object-cover shadow-[0_0_15px_rgba(196,114,79,0.3)]" />
+                        <span className="text-2xl font-black tracking-widest text-[#C4724F] uppercase">
+                            VESTO
+                        </span>
+                    </Link>
                     <p className="text-white/40 text-sm text-center md:text-left">
                         AI-Powered Style Intelligence for the Modern Wardrobe.
                     </p>

@@ -45,7 +45,7 @@ export default function VirtualWardrobePage() {
                     <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] rounded-full bg-[#C4724F]/4 blur-[120px]" />
                 </div>
 
-                <div className="relative z-10 pt-32 pb-24 px-4 md:px-8 max-w-7xl mx-auto">
+                <div className="relative z-10 pt-20 sm:pt-32 pb-24 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto">
 
                     {/* Header */}
                     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="mb-12">

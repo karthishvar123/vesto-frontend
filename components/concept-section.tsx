@@ -10,12 +10,12 @@ export default function ConceptSection() {
     return (
         <section
             id="how-it-works"
-            className="w-full min-h-screen bg-transparent flex items-center justify-center py-20 relative overflow-hidden"
+            className="w-full bg-transparent flex items-center justify-center py-12 sm:py-20 relative overflow-hidden"
         >
-            <div className="container mx-auto px-6 h-full flex flex-col lg:flex-row items-center justify-between gap-16 lg:gap-24">
+            <div className="container mx-auto px-4 sm:px-6 h-full flex flex-col lg:flex-row items-center justify-between gap-8 lg:gap-24">
 
                 {/* Left Side: Glassy Section Box with Glow Effect */}
-                <GlowCard className="flex-1 w-full max-w-3xl h-[600px] flex flex-col justify-center p-12 lg:p-16">
+                <GlowCard className="flex-1 w-full max-w-3xl min-h-[300px] flex flex-col justify-center p-6 sm:p-12 lg:p-16">
                     <div className="space-y-6 relative z-10">
                         <h2 className="text-4xl md:text-6xl font-serif font-bold text-white leading-tight uppercase tracking-tight" style={{ color: '#FFFFFF' }}>
                             Wear Colors <br />

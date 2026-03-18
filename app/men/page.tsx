@@ -58,14 +58,14 @@ export default function MenPage() {
             <Navbar />
 
             {/* Hero banner */}
-            <div className="relative pt-32 pb-16 px-6 overflow-hidden">
+            <div className="relative pt-20 sm:pt-32 pb-10 sm:pb-16 px-4 sm:px-6 overflow-hidden">
                 <div className="absolute inset-0 pointer-events-none">
                     <div className="absolute top-0 left-1/4 w-[400px] h-[400px] rounded-full bg-[#C4724F]/5 blur-[100px]" />
                 </div>
                 <div className="max-w-7xl mx-auto relative z-10">
                     <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
                         <span className="text-[#C4724F] text-xs font-bold uppercase tracking-widest mb-4 block">Men's Collection</span>
-                        <h1 className="text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none mb-4">
+                        <h1 className="text-4xl sm:text-6xl md:text-8xl font-black text-white uppercase tracking-tighter leading-none mb-4">
                             The Edit
                         </h1>
                         <p className="text-white/40 text-lg max-w-xl">Curated essentials and statement pieces for the modern man.</p>

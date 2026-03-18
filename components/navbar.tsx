@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/context/auth-context";
-import { Menu, X, ChevronRight } from "lucide-react";
+
 
 export default function Navbar() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { user, logout } = useAuth();
 
@@ -18,10 +18,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  useEffect(() => {
-    document.body.style.overflow = mobileMenuOpen ? "hidden" : "unset";
-    return () => { document.body.style.overflow = "unset"; };
-  }, [mobileMenuOpen]);
+
 
   const menMenu = [
     { category: "Topwear", items: ["T-Shirt", "Sweatshirt", "Jacket", "Formal Shirt", "Casual Shirt", "Active T-Shirt"] },
@@ -32,7 +29,28 @@ export default function Navbar() {
   const slugify = (t: string) => t.toLowerCase().replace(/\s+/g, "-");
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 pointer-events-none p-5">
+    <>
+      {/* Mobile navbar — simple top bar, no pill */}
+      <nav className={`md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 h-14 transition-all duration-300 ${
+          scrolled ? "bg-[#0A0A0A]/95 backdrop-blur-xl border-b border-white/8" : "bg-transparent"
+      }`}>
+        <Link href="/" className="flex items-center gap-2 font-black tracking-tighter text-white text-lg uppercase outline-none">
+          <Image src="/logo.png" alt="Vesto Logo" width={28} height={28} className="w-7 h-7 rounded-[6px] object-cover shadow-[0_0_12px_rgba(196,114,79,0.3)]" />
+          <span className="text-white font-black tracking-widest text-sm">VESTO</span>
+        </Link>
+
+        {/* Right side — user avatar or nothing */}
+        <Link href="/auth" className="w-8 h-8 rounded-full bg-[#C4724F]/20 border border-[#C4724F]/30 flex items-center justify-center">
+          {user ? (
+            <span className="text-[#C4724F] text-xs font-black">{user.email?.[0].toUpperCase()}</span>
+          ) : (
+            <span className="text-[#C4724F] text-xs font-black">?</span>
+          )}
+        </Link>
+      </nav>
+
+      {/* Desktop navbar — keep the original floating pill */}
+      <nav className="hidden md:block fixed top-0 left-0 right-0 z-50 pointer-events-none p-5">
       <div
         className={`pointer-events-auto mx-auto max-w-fit flex items-center gap-10 px-8 py-3 rounded-full transition-all duration-500 relative ${scrolled
             ? "bg-[#0A0A0A]/90 backdrop-blur-xl border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)]"
@@ -41,10 +59,8 @@ export default function Navbar() {
         onMouseLeave={() => setActiveMenu(null)}
       >
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 font-black tracking-tighter text-white text-xl uppercase">
-          <span className="w-8 h-8 bg-[#C4724F] rounded-lg flex items-center justify-center text-white text-sm font-black italic font-serif shadow-[0_0_15px_rgba(196,114,79,0.5)]">
-            V
-          </span>
+        <Link href="/" className="flex items-center gap-2.5 font-black tracking-tighter text-white text-xl uppercase outline-none">
+          <Image src="/logo.png" alt="Vesto Logo" width={32} height={32} className="w-8 h-8 rounded-lg object-cover shadow-[0_0_15px_rgba(196,114,79,0.3)]" />
           Vesto
         </Link>
 
@@ -106,12 +122,7 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-4">
-          <button
-            onClick={() => setMobileMenuOpen(true)}
-            className="md:hidden p-3 min-w-[44px] min-h-[44px] flex items-center justify-center text-white/60 hover:text-white"
-          >
-            <Menu className="w-5 h-5" />
-          </button>
+
           <div
             className="relative hidden md:flex items-center"
             onMouseEnter={() => setActiveMenu("PROFILE")}
@@ -164,69 +175,8 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile drawer */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[60] pointer-events-auto"
-            />
-            <motion.div
-              initial={{ x: "100%" }}
-              animate={{ x: 0 }}
-              exit={{ x: "100%" }}
-              transition={{ type: "spring", damping: 30, stiffness: 300 }}
-              className="fixed top-0 right-0 bottom-0 w-[80vw] max-w-sm bg-[#0D0D0D] border-l border-white/10 z-[70] pointer-events-auto"
-            >
-              <div className="flex items-center justify-between p-6 border-b border-white/5">
-                <Link href="/" onClick={() => setMobileMenuOpen(false)} className="flex items-center gap-2 text-white font-black text-xl uppercase">
-                  <span className="w-8 h-8 bg-[#C4724F] rounded-lg flex items-center justify-center text-sm font-black italic font-serif">V</span>
-                  Vesto
-                </Link>
-                <button onClick={() => setMobileMenuOpen(false)} className="p-2 text-white/40 hover:text-white">
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
 
-              <nav className="p-6 space-y-1">
-                {[
-                  { label: "MEN", href: "/men" },
-                  { label: "SHOP BY SKINTONE", href: "/shop-by-skin-tone" },
-                  { label: "VIRTUAL WARDROBE", href: "/virtual-wardrobe" },
-                  { label: "PROFILE", href: "/auth" },
-                ].map((item) => (
-                  <Link
-                    key={item.label}
-                    href={item.href}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className="flex items-center justify-between p-4 hover:bg-white/5 rounded-xl transition-colors group"
-                  >
-                    <span className="text-base font-medium text-white/70 group-hover:text-white">{item.label}</span>
-                    <ChevronRight className="w-4 h-4 text-white/20 group-hover:text-[#C4724F] group-hover:translate-x-1 transition-all" />
-                  </Link>
-                ))}
-              </nav>
-
-              {user && (
-                <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-white/5">
-                  <p className="text-xs text-white/30 mb-1">Signed in as</p>
-                  <p className="text-sm text-white/70 truncate mb-4">{user.email}</p>
-                  <button
-                    onClick={() => { logout(); setMobileMenuOpen(false); }}
-                    className="w-full bg-white/5 hover:bg-white/10 border border-white/10 text-white py-3 rounded-lg font-medium transition-colors text-sm"
-                  >
-                    Sign Out
-                  </button>
-                </div>
-              )}
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
     </nav>
+    </>
   );
 }

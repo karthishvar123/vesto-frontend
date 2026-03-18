@@ -81,7 +81,7 @@ export default function RecommendationsPage() {
         <main className="min-h-screen bg-[#0A0A0A] pb-20">
             <Navbar />
 
-            <div className="pt-32 px-4 md:px-8 max-w-7xl mx-auto">
+            <div className="pt-20 sm:pt-32 px-4 md:px-8 max-w-7xl mx-auto">
                 <Link href="/shop-by-skin-tone" className="inline-flex items-center text-sm text-white/40 hover:text-white mb-8 transition-colors">
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Change Skin Tone

@@ -221,7 +221,7 @@ export default function VirtualWardrobePage() {
                                             </div>
                                             <div className="p-3">
                                                 <h3 className="font-bold text-white text-sm truncate">{item.name}</h3>
-                                                <p className="text-white/30 text-xs mt-0.5 capitalize">{item.productStyle?.replace("-", " ")}</p>
+                                                <p className="text-white/30 text-xs mt-0.5 capitalize">{item.brand && `${item.brand} · `}{item.productStyle?.replace("-", " ")}</p>
                                             </div>
                                         </div>
                                     </motion.div>

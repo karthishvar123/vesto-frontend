@@ -13,6 +13,7 @@ export interface WardrobeItem {
     productType: string;
     productStyle: string;
     baseColor: string;
+    brand?: string;
     activityType?: string;
     colorFamily?: string;
 }

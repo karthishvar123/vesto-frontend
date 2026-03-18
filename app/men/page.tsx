@@ -10,7 +10,7 @@ import { ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSkinTone } from "@/context/skin-tone-context";
 
-interface Product { id: string; name: string; price: number; images: string[]; productType: string; productStyle: string; active: boolean; baseColor?: string; }
+interface Product { id: string; name: string; price: number; images: string[]; productType: string; productStyle: string; active: boolean; baseColor?: string; brand?: string; }
 
 const menStructure = [
     { category: "Topwear", slug: "topwear", items: [{ label: "T-Shirt", value: "t-shirt" }, { label: "Sweatshirt", value: "sweatshirt" }, { label: "Jacket", value: "jacket" }, { label: "Formal Shirt", value: "formal-shirt" }, { label: "Casual Shirt", value: "casual-shirt" }, { label: "Active T-Shirt", value: "active-t-shirt" }] },
@@ -52,8 +52,10 @@ export default function MenPage() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeColor, setActiveColor] = useState<string | null>(null);
+    const [brandFilter, setBrandFilter] = useState<string | null>(null);
     const { selectedType } = useSkinTone();
     const recommendedColors = selectedType ? (TONE_COLORS[selectedType] ?? []) : [];
+    const brands = [...new Set(products.map(p => p.brand).filter(Boolean))] as string[];
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -71,7 +73,8 @@ export default function MenPage() {
         products.filter(p =>
             p.productType === cat &&
             p.productStyle === style &&
-            (!activeColor || p.baseColor === activeColor)
+            (!activeColor || p.baseColor === activeColor) &&
+            (!brandFilter || p.brand === brandFilter)
         );
 
     return (
@@ -129,6 +132,34 @@ export default function MenPage() {
                         );
                     })}
                 </div>
+
+                {/* Brand filter chips */}
+                {brands.length > 0 && (
+                    <div className="flex gap-2 overflow-x-auto pb-3 mb-8" style={{ scrollbarWidth: "none" }}>
+                        <button
+                            onClick={() => setBrandFilter(null)}
+                            className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all shrink-0 ${
+                                !brandFilter ? "bg-white/10 border-white/20 text-white" : "border-white/10 text-white/30 hover:text-white"
+                            }`}
+                        >
+                            All Brands
+                        </button>
+                        {brands.map(brand => (
+                            <button
+                                key={brand}
+                                onClick={() => setBrandFilter(brandFilter === brand ? null : brand)}
+                                className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all shrink-0 ${
+                                    brandFilter === brand
+                                        ? "bg-white/10 border-white/20 text-white"
+                                        : "border-white/10 text-white/30 hover:text-white"
+                                }`}
+                            >
+                                {brand}
+                            </button>
+                        ))}
+                    </div>
+                )}
+
                 {loading ? (
                     <div className="space-y-20">
                         {Array.from({ length: 3 }).map((_, i) => <SkeletonRow key={i} />)}
@@ -171,7 +202,10 @@ export default function MenPage() {
                                                                     </div>
                                                                     <div className="p-3">
                                                                         <h4 className="font-bold text-white text-sm truncate group-hover:text-[#E8A87C] transition-colors">{product.name}</h4>
-                                                                        <p className="text-white/40 text-xs mt-0.5">₹{product.price}</p>
+                                                                        {product.brand && (
+                                                                            <p className="text-white/30 text-[10px] mt-0.5">{product.brand}</p>
+                                                                        )}
+                                                                        <p className="text-white/40 text-xs mt-1">₹{product.price}</p>
                                                                     </div>
                                                                 </div>
                                                             </Link>

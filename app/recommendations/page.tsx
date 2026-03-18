@@ -17,6 +17,7 @@ interface Product {
     images: string[];
     productType: string;
     baseColor: string;
+    brand?: string;
 }
 
 const PRIORITY_MAP: Record<number, string[]> = {
@@ -116,6 +117,9 @@ export default function RecommendationsPage() {
                                     </div>
                                     <div className="p-4">
                                         <h3 className="text-sm font-bold text-white mb-1 truncate group-hover:text-[#C4724F] transition-colors">{product.name}</h3>
+                                        {product.brand && (
+                                            <p className="text-white/30 text-[10px] mb-1">{product.brand}</p>
+                                        )}
                                         <div className="flex items-center justify-between">
                                             <span className="text-xs text-white/30 capitalize">{product.baseColor}</span>
                                             <span className="text-sm font-bold text-white">₹{product.price}</span>

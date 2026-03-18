@@ -9,7 +9,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ChevronLeft, SlidersHorizontal } from "lucide-react";
 
-interface Product { id: string; name: string; price: number; images: string[]; productType: string; productStyle: string; baseColor: string; }
+interface Product { id: string; name: string; price: number; images: string[]; productType: string; productStyle: string; baseColor: string; brand?: string; }
 
 const COLOR_DOTS: Record<string, string> = {
     neutral: "#9CA3AF", warm: "#F59E0B", cool: "#60A5FA", earthy: "#92400E", dark: "#374151", light: "#F3F4F6",
@@ -101,6 +101,9 @@ export default function ProductsByCategoryPage({ params }: { params: Promise<{ c
                                         </div>
                                         <div className="p-3">
                                             <h3 className="font-bold text-white text-sm truncate group-hover:text-[#E8A87C] transition-colors">{product.name}</h3>
+                                            {product.brand && (
+                                                <p className="text-white/30 text-[10px] mt-0.5">{product.brand}</p>
+                                            )}
                                             <div className="flex items-center justify-between mt-1">
                                                 {product.baseColor && (
                                                     <span className="flex items-center gap-1 text-xs text-white/30 capitalize">

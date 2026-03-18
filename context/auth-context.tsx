@@ -98,7 +98,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
 
             return user;
-        } catch (error) {
+        } catch (error: unknown) {
+            // User closed the popup — not a real error, just a cancellation
+            if (
+                typeof error === "object" && error !== null &&
+                "code" in error && (error as { code: string }).code === "auth/popup-closed-by-user"
+            ) {
+                return null as unknown as User;
+            }
             console.error("Error signing in with Google", error);
             throw error;
         }

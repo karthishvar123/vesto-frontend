@@ -31,7 +31,7 @@ export default function Navbar() {
   return (
     <>
       {/* Mobile navbar — simple top bar, no pill */}
-      <nav className={`md:hidden fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-4 h-14 transition-all duration-300 ${
+      <nav className={`md:hidden fixed top-0 left-0 right-0 z-[100] flex items-center justify-between px-4 h-14 transition-all duration-300 ${
           scrolled ? "bg-[#0A0A0A]/95 backdrop-blur-xl border-b border-white/8" : "bg-transparent"
       }`}>
         <Link href="/" className="flex items-center gap-2 font-black tracking-tighter text-white text-lg uppercase outline-none">
@@ -50,7 +50,7 @@ export default function Navbar() {
       </nav>
 
       {/* Desktop navbar — keep the original floating pill */}
-      <nav className="hidden md:block fixed top-0 left-0 right-0 z-50 pointer-events-none p-5">
+      <nav className="hidden md:block fixed top-0 left-0 right-0 z-[100] pointer-events-none p-5">
       <div
         className={`pointer-events-auto mx-auto max-w-fit flex items-center gap-10 px-8 py-3 rounded-full transition-all duration-500 relative ${scrolled
             ? "bg-[#0A0A0A]/90 backdrop-blur-xl border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)]"

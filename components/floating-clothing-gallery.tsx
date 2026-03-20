@@ -4,15 +4,20 @@ import React from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-const items = [
-    { id: 1, name: "Shorts", src: "/products/generated/beige-shorts.png", x: -120, y: -120, rotate: -6 },
-    { id: 2, name: "Joggers", src: "/products/generated/grey-joggers.png", x: 120, y: -120, rotate: 6 },
-    { id: 3, name: "Cotton Pants", src: "/products/generated/beige-chinos.png", x: -120, y: 120, rotate: -4 },
-    { id: 4, name: "Sneakers", src: "/products/generated/white-sneakers.png", x: 120, y: 120, rotate: 4 },
-];
+const getItems = (isMobile: boolean) => {
+    const spread = isMobile ? 70 : 120;
+    return [
+        { id: 1, name: "Shorts", src: "/products/generated/beige-shorts.png", x: -spread, y: -spread, rotate: -6 },
+        { id: 2, name: "Joggers", src: "/products/generated/grey-joggers.png", x: spread, y: -spread, rotate: 6 },
+        { id: 3, name: "Cotton Pants", src: "/products/generated/beige-chinos.png", x: -spread, y: spread, rotate: -4 },
+        { id: 4, name: "Sneakers", src: "/products/generated/white-sneakers.png", x: spread, y: spread, rotate: 4 },
+    ];
+};
 
 export default function FloatingClothingGallery() {
     const [isActive, setIsActive] = React.useState(false);
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+    const items = getItems(isMobile);
 
     return (
         <div
@@ -104,8 +109,8 @@ function PolaroidItem({ item, index, isActive }: { item: any, index: number, isA
                     borderRadius: '2px',
                 }}
             >
-                {/* Reduced size from w-40 h-40 to w-32 h-32 */}
-                <div className="relative w-32 h-32 bg-gray-50 border border-gray-100 overflow-hidden">
+                {/* Reduced size from w-40 h-40 to w-24 h-24 on mobile, w-32 h-32 on desktop */}
+                <div className="relative w-24 h-24 sm:w-32 sm:h-32 bg-gray-50 border border-gray-100 overflow-hidden">
                     <Image
                         src={item.src}
                         alt={item.name}
@@ -114,7 +119,7 @@ function PolaroidItem({ item, index, isActive }: { item: any, index: number, isA
                     />
                 </div>
                 <div className="absolute bottom-1.5 left-0 w-full text-center">
-                    <span className="font-handwriting text-gray-600 text-[10px] font-medium uppercase tracking-widest">{item.name}</span>
+                    <span className="font-handwriting text-gray-600 text-[9px] sm:text-[10px] font-medium uppercase tracking-widest">{item.name}</span>
                 </div>
             </div>
 

@@ -25,7 +25,7 @@ export default function CompleteLook() {
 
                     {/* Left: Floating Clothing Gallery */}
                     <motion.div
-                        className="relative h-[380px] sm:h-auto"
+                        className="relative h-[320px] sm:h-auto"
                         initial={{ opacity: 0, x: -40 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
@@ -35,7 +35,7 @@ export default function CompleteLook() {
                     </motion.div>
 
                     {/* Right: Glow Card Text */}
-                    <GlowCard className="p-10 lg:p-14">
+                    <GlowCard className="p-6 sm:p-10 lg:p-14">
                         <div className="space-y-8 relative z-10">
                             <div>
                                 <span className="text-[#C4724F] text-xs font-bold uppercase tracking-widest mb-4 block">

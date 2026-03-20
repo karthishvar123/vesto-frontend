@@ -31,16 +31,20 @@ const WARDROBE_CARDS = [
 ];
 
 function WardrobeCardStack() {
+    const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+    const xSpread = isMobile ? 32 : 46;
+    const rotateSpread = isMobile ? 12 : 8; // Fan out more on mobile to compensate for closer spacing
+
     return (
-        <div className="relative h-[22rem] sm:h-[26rem] flex items-center justify-center">
+        <div className="relative h-[22rem] sm:h-[26rem] flex items-center justify-center w-full max-w-[100vw] overflow-hidden sm:overflow-visible">
             {WARDROBE_CARDS.map((card, i) => (
                 <motion.div
                     key={card.label}
-                    className="absolute w-52 sm:w-64 h-[18rem] sm:h-[22rem] rounded-2xl border border-white/10 overflow-hidden shadow-2xl cursor-grab flex flex-col"
+                    className="absolute w-44 sm:w-64 h-[16rem] sm:h-[22rem] rounded-2xl border border-white/10 overflow-hidden shadow-2xl cursor-grab flex flex-col"
                     style={{ backgroundColor: card.bg }}
-                    initial={{ rotate: (i - 1) * 8, x: (i - 1) * 46, y: (i - 1) * 8, zIndex: i }}
-                    animate={{ rotate: (i - 1) * 8, x: (i - 1) * 46, y: (i - 1) * 8 }}
-                    whileHover={{ y: -24, rotate: 0, scale: 1.06, zIndex: 10 }}
+                    initial={{ rotate: (i - 1) * rotateSpread, x: (i - 1) * xSpread, y: (i - 1) * 8, zIndex: i }}
+                    animate={{ rotate: (i - 1) * rotateSpread, x: (i - 1) * xSpread, y: (i - 1) * 8 }}
+                    whileHover={{ y: -20, rotate: 0, scale: 1.05, zIndex: 10 }}
                     transition={{ type: "spring", stiffness: 200, damping: 20 }}
                 >
                     <div className="relative flex-1 w-full overflow-hidden">
@@ -77,7 +81,7 @@ export default function VirtualWardrobe() {
                     </motion.div>
 
                     {/* Right: Glow Card Text */}
-                    <GlowCard className="p-10 lg:p-14">
+                    <GlowCard className="p-6 sm:p-10 lg:p-14">
                         <div className="space-y-8 relative z-10">
                             <div>
                                 <span className="text-[#C4724F] text-xs font-bold uppercase tracking-widest mb-4 block">

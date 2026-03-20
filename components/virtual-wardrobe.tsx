@@ -65,8 +65,8 @@ function WardrobeCardStack() {
 
 export default function VirtualWardrobe() {
     return (
-        <section className="w-full py-16 sm:py-32 bg-[#0A0A0A] relative overflow-hidden">
-            <div className="container mx-auto px-6 max-w-7xl">
+        <section className="w-full py-12 sm:py-32 bg-[#0A0A0A] relative overflow-hidden">
+            <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-16 items-center">
 
                     {/* Left: Flip Card Stack */}
@@ -75,19 +75,19 @@ export default function VirtualWardrobe() {
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
                         transition={{ duration: 0.8, ease: "easeOut" }}
-                        className="flex items-center justify-center"
+                        className="hidden md:flex items-center justify-center"
                     >
                         <WardrobeCardStack />
                     </motion.div>
 
                     {/* Right: Glow Card Text */}
-                    <GlowCard className="p-6 sm:p-10 lg:p-14">
+                    <GlowCard className="p-5 sm:p-10 lg:p-14">
                         <div className="space-y-8 relative z-10">
                             <div>
                                 <span className="text-[#C4724F] text-xs font-bold uppercase tracking-widest mb-4 block">
                                     Step 03 — Your Wardrobe
                                 </span>
-                                <h2 className="text-5xl md:text-6xl font-black text-white tracking-tight leading-[0.88]">
+                                <h2 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-[1]">
                                     <motion.span
                                         className="block"
                                         initial={{ opacity: 0, x: 40 }}
@@ -127,7 +127,7 @@ export default function VirtualWardrobe() {
                                 </h2>
                             </div>
 
-                            <p className="text-white/50 text-lg leading-relaxed font-light">
+                            <p className="text-white/50 text-sm sm:text-lg leading-relaxed font-light">
                                 Your digital closet. Organised by category, styled intelligently, and always ready to help you decide what to wear.
                             </p>
 

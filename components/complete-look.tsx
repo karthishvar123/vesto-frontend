@@ -16,16 +16,16 @@ const FEATURES = [
 
 export default function CompleteLook() {
     return (
-        <section className="w-full py-16 sm:py-32 bg-[#0D0D0D] relative overflow-hidden">
+        <section className="w-full py-12 sm:py-32 bg-[#0D0D0D] relative overflow-hidden">
             {/* Accent line */}
             <div className="absolute left-0 top-0 w-px h-full bg-gradient-to-b from-transparent via-[#C4724F]/30 to-transparent" />
 
-            <div className="container mx-auto px-6 max-w-7xl">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 sm:gap-16 items-center">
+            <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-16 items-center">
 
                     {/* Left: Floating Clothing Gallery */}
                     <motion.div
-                        className="relative h-[320px] sm:h-auto"
+                        className="hidden md:block relative h-[320px] sm:h-auto"
                         initial={{ opacity: 0, x: -40 }}
                         whileInView={{ opacity: 1, x: 0 }}
                         viewport={{ once: true }}
@@ -41,7 +41,7 @@ export default function CompleteLook() {
                                 <span className="text-[#C4724F] text-xs font-bold uppercase tracking-widest mb-4 block">
                                     Step 02 — Outfit Building
                                 </span>
-                                <h2 className="text-5xl md:text-6xl font-black text-white uppercase tracking-tighter leading-[0.88]">
+                                <h2 className="text-4xl sm:text-5xl md:text-6xl font-black text-white uppercase tracking-tighter leading-[0.88]">
                                     COMPLETE<br />
                                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#C4724F] to-[#E8A87C]">YOUR LOOK</span>
                                 </h2>

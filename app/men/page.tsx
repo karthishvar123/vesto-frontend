@@ -279,7 +279,7 @@ function MenContent() {
                                                             {style.label}
                                                         </h3>
                                                         <Link href={`/products/${section.slug}/${style.value}`} className="text-xs font-bold text-[#C4724F] hover:text-[#E8A87C] flex items-center gap-1 transition-colors group uppercase tracking-wider">
-                                                            View all <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+                                                            View all <span className="sr-only"> {style.label}</span> <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                                                         </Link>
                                                     </div>
                                                     <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">

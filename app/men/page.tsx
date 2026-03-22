@@ -83,11 +83,17 @@ export default function MenPage() {
             // Then check search query if present
             if (searchQuery.trim() === "") return true;
             
-            const q = searchQuery.toLowerCase();
-            const matchesName = p.name.toLowerCase().includes(q);
-            const matchesColorName = p.colorFamily?.toLowerCase().includes(q) || p.baseColor?.toLowerCase().includes(q);
+            const keywords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
             
-            return matchesName || matchesColorName;
+            // For a product to match, every keyword must be found in at least one of its fields
+            return keywords.every(kw => {
+                const matchesName = p.name.toLowerCase().includes(kw);
+                const matchesColorName = p.colorFamily?.toLowerCase().includes(kw) || p.baseColor?.toLowerCase().includes(kw);
+                const matchesBrand = p.brand?.toLowerCase().includes(kw);
+                const matchesType = p.productType.toLowerCase().includes(kw) || p.productStyle.toLowerCase().replace("-", " ").includes(kw);
+                
+                return matchesName || matchesColorName || matchesBrand || matchesType;
+            });
         });
 
     return (

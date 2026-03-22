@@ -84,15 +84,15 @@ export default function VirtualWardrobePage() {
                             <Info className="w-4 h-4 text-[#C4724F] shrink-0 mt-0.5" />
                             <div className="flex-1 min-w-0">
                                 <p className="text-white/60 text-xs font-bold mb-2 uppercase tracking-wider">How to use your wardrobe</p>
-                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                <div className="flex flex-col sm:flex-row gap-3 mt-1">
                                     {[
-                                        { icon: "🗂️", text: "Use the tabs to filter by Topwear, Bottomwear or Footwear" },
-                                        { icon: "✨", text: "Tap \"Style It\" on any item to get a full outfit suggestion" },
-                                        { icon: "📅", text: "Check the Daily Outfit card above for 3 outfit ideas every morning" },
+                                        { icon: "🗂️", text: "Tabs filter by Top, Bottom, Footwear" },
+                                        { icon: "✨", text: "Tap \"Style It\" to build a full look" },
+                                        { icon: "📅", text: "Check Daily Outfit for 3 ideas daily" },
                                     ].map((tip, i) => (
-                                        <div key={i} className="flex items-start gap-2">
+                                        <div key={i} className="flex items-start sm:items-center gap-2 flex-1">
                                             <span className="text-sm shrink-0">{tip.icon}</span>
-                                            <p className="text-white/40 text-xs leading-relaxed">{tip.text}</p>
+                                            <p className="text-white/50 text-xs leading-snug">{tip.text}</p>
                                         </div>
                                     ))}
                                 </div>

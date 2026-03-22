@@ -71,13 +71,13 @@ export default function ShopBySkinTonePage() {
                     </p>
 
                     {/* How it works */}
-                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 text-left">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 mb-8 text-left max-w-sm sm:max-w-none mx-auto">
                         {[
                             { num: "01", text: "Pick your skin tone type or use the AI camera" },
                             { num: "02", text: "We match color palettes that suit your complexion" },
                             { num: "03", text: "Browse and build outfits made for you" },
                         ].map((step) => (
-                            <div key={step.num} className="flex items-start gap-3 bg-white/3 border border-white/8 rounded-xl px-4 py-3 max-w-[180px]">
+                            <div key={step.num} className="flex items-start gap-3 bg-white/3 border border-white/8 rounded-xl px-4 py-3 w-full sm:w-[180px]">
                                 <span className="text-[#C4724F] font-black text-xs shrink-0 mt-0.5">{step.num}</span>
                                 <p className="text-white/50 text-xs leading-relaxed">{step.text}</p>
                             </div>

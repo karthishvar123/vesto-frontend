@@ -9,6 +9,8 @@ import Image from "next/image";
 import { ArrowRight, Search, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSkinTone } from "@/context/skin-tone-context";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 interface Product { id: string; name: string; price: number; images: string[]; productType: string; productStyle: string; active: boolean; baseColor?: string; colorFamily?: string; brand?: string; }
 
@@ -96,12 +98,14 @@ const COLOR_META: Record<string, { label: string; dot: string }> = {
     earthy:  { label: "Earthy",  dot: "#92400E" },
 };
 
-export default function MenPage() {
+function MenContent() {
+    const searchParams = useSearchParams();
+    const searchQuery = searchParams.get("q") || "";
+    
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
     const [activeColor, setActiveColor] = useState<string | null>(null);
     const [brandFilter, setBrandFilter] = useState<string | null>(null);
-    const [searchQuery, setSearchQuery] = useState("");
     const { selectedType } = useSkinTone();
     const recommendedColors = selectedType ? (TONE_COLORS[selectedType] ?? []) : [];
     const brands = [...new Set(products.map(p => p.brand).filter(Boolean))] as string[];
@@ -167,27 +171,14 @@ export default function MenPage() {
             {/* Filters Section */}
             <div className="pb-24 px-4 md:px-8 max-w-7xl mx-auto">
                 
-                {/* Search Bar */}
-                <div className="relative mb-8 max-w-md">
-                    <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
-                        <Search className="w-4 h-4 text-white/40" />
+                {/* Search Term Indicator */}
+                {searchQuery && (
+                    <div className="mb-8 flex items-center gap-2">
+                        <span className="text-white/40 text-sm">Showing results for:</span>
+                        <span className="text-white font-bold text-sm bg-white/10 px-3 py-1 rounded-full">{searchQuery}</span>
+                        <Link href="/men" className="text-[#C4724F] text-xs hover:text-white ml-2 transition-colors">Clear</Link>
                     </div>
-                    <input
-                        type="text"
-                        placeholder="Search by name or color..."
-                        value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
-                        className="w-full bg-white/5 border border-white/10 rounded-full py-3.5 pl-11 pr-11 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#C4724F]/50 focus:bg-[#C4724F]/5 transition-all"
-                    />
-                    {searchQuery && (
-                        <button 
-                            onClick={() => setSearchQuery("")}
-                            className="absolute inset-y-0 right-4 flex items-center text-white/40 hover:text-white"
-                        >
-                            <X className="w-4 h-4" />
-                        </button>
-                    )}
-                </div>
+                )}
 
                 {/* Color filter chips */}
                 <div className="flex gap-2 overflow-x-auto pb-3 mb-6" style={{ scrollbarWidth: "none" }}>
@@ -313,5 +304,18 @@ export default function MenPage() {
                 )}
             </div>
         </main>
+    );
+}
+
+export default function MenPage() {
+    return (
+        <Suspense fallback={
+            <main className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
+                <Navbar />
+                <div className="text-[#C4724F] animate-pulse font-black tracking-widest text-sm">LOADING VESTO...</div>
+            </main>
+        }>
+            <MenContent />
+        </Suspense>
     );
 }

@@ -5,7 +5,80 @@ import Image from "next/image";
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "@/context/auth-context";
+import { Search, X } from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
+function SearchInput({ isMobile = false }: { isMobile?: boolean }) {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const [query, setQuery] = useState("");
+  const [expanded, setExpanded] = useState(false);
+
+  useEffect(() => {
+    setQuery(searchParams.get("q") || "");
+  }, [searchParams]);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (query.trim()) {
+      router.push(`/men?q=${encodeURIComponent(query.trim())}`);
+      if (isMobile) setExpanded(false);
+    } else {
+      router.push(`/men`);
+    }
+  };
+
+  if (isMobile) {
+    if (expanded) {
+      return (
+        <form onSubmit={handleSubmit} className="absolute inset-0 bg-[#0A0A0A] z-50 flex items-center px-4 gap-3">
+          <Search className="w-5 h-5 text-white/50" />
+          <input 
+            autoFocus
+            type="text" 
+            placeholder="Search products..." 
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="flex-1 bg-transparent text-white focus:outline-none text-sm"
+          />
+          <button type="button" onClick={() => { setExpanded(false); setQuery(searchParams.get("q") || ""); }}>
+            <X className="w-5 h-5 text-white/50" />
+          </button>
+        </form>
+      );
+    }
+    return (
+      <button onClick={() => setExpanded(true)} className="p-2 -mr-2 text-white/70 hover:text-white transition-colors">
+        <Search className="w-5 h-5" />
+      </button>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="relative flex items-center group">
+      <div className={`flex items-center bg-white/5 border border-white/10 rounded-full transition-all duration-300 overflow-hidden ${expanded || query ? 'w-48 px-3 opacity-100' : 'w-9 opacity-70 hover:opacity-100'} h-9`}>
+        <button type="button" onClick={() => { if(!expanded && !query) setExpanded(true); else handleSubmit({preventDefault:()=>{}} as any); }} className="shrink-0 flex items-center justify-center w-5 h-5">
+           <Search className="w-4 h-4 text-white/50 group-hover:text-white/80 transition-colors" />
+        </button>
+        <input 
+          type="text" 
+          placeholder="Search..." 
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => setExpanded(true)}
+          onBlur={() => { if(!query) setExpanded(false); }}
+          className={`bg-transparent text-white text-xs font-medium focus:outline-none transition-all duration-300 ${expanded || query ? 'w-full ml-2 opacity-100' : 'w-0 opacity-0'}`}
+        />
+        {(expanded || !!query) && query && (
+          <button type="button" onClick={() => { setQuery(""); setExpanded(false); router.push('/men'); }} className="shrink-0 ml-1">
+            <X className="w-3.5 h-3.5 text-white/40 hover:text-white" />
+          </button>
+        )}
+      </div>
+    </form>
+  );
+}
 
 export default function Navbar() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -44,14 +117,20 @@ export default function Navbar() {
           <span className="text-white font-black tracking-widest text-sm">VESTO</span>
         </Link>
 
-        {/* Right side — user avatar, shown only after auth settles */}
-        <Link href="/auth" className="w-8 h-8 rounded-full bg-[#C4724F]/20 border border-[#C4724F]/30 flex items-center justify-center">
-          {mounted && !authLoading && user ? (
-            <span className="text-[#C4724F] text-xs font-black">{user.email?.[0].toUpperCase()}</span>
-          ) : (
-            <span className="text-[#C4724F] text-xs font-black">?</span>
-          )}
-        </Link>
+        {/* Right side */}
+        <div className="flex items-center gap-3">
+          <Suspense fallback={<div className="w-9 h-9" />}>
+            <SearchInput isMobile={true} />
+          </Suspense>
+          
+          <Link href="/auth" className="w-8 h-8 rounded-full bg-[#C4724F]/20 border border-[#C4724F]/30 flex items-center justify-center ml-1">
+            {mounted && !authLoading && user ? (
+              <span className="text-[#C4724F] text-xs font-black">{user.email?.[0].toUpperCase()}</span>
+            ) : (
+              <span className="text-[#C4724F] text-xs font-black">?</span>
+            )}
+          </Link>
+        </div>
       </nav>
 
       {/* Desktop navbar — keep the original floating pill */}
@@ -127,6 +206,10 @@ export default function Navbar() {
 
         {/* Right side */}
         <div className="flex items-center gap-4">
+          
+          <Suspense fallback={<div className="w-9 h-9" />}>
+            <SearchInput />
+          </Suspense>
 
           <div
             className="relative hidden md:flex items-center"

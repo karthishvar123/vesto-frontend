@@ -246,6 +246,17 @@ function MenContent() {
                     <div className="space-y-20">
                         {Array.from({ length: 3 }).map((_, i) => <SkeletonRow key={i} />)}
                     </div>
+                ) : !menStructure.some(section => section.items.some(s => getProductsForStyle(section.slug, s.value).length > 0)) && searchQuery ? (
+                    <div className="flex flex-col items-center justify-center py-32 px-4 text-center">
+                        <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mb-6">
+                            <Search className="w-8 h-8 text-white/20" />
+                        </div>
+                        <h3 className="text-xl font-bold text-white mb-2">No results found</h3>
+                        <p className="text-white/40 text-sm max-w-md mb-8">We couldn't find anything matching "{searchQuery}". Try checking for typos or searching with different keywords.</p>
+                        <Link href="/men" className="px-6 py-3 rounded-full bg-white text-black font-bold text-xs uppercase tracking-wider hover:bg-[#E8A87C] transition-colors">
+                            Clear Search
+                        </Link>
+                    </div>
                 ) : (
                     <div className="space-y-24">
                         {menStructure.map((section) => {

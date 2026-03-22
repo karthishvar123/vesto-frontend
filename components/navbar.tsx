@@ -14,14 +14,30 @@ function SearchInput({ isMobile = false }: { isMobile?: boolean }) {
   const searchParams = useSearchParams();
   const [query, setQuery] = useState("");
   const [expanded, setExpanded] = useState(false);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
   useEffect(() => {
     setQuery(searchParams.get("q") || "");
   }, [searchParams]);
 
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem("vesto_recent_searches");
+      if (stored) setRecentSearches(JSON.parse(stored));
+    } catch(e) {}
+  }, []);
+
+  const saveRecentSearch = (term: string) => {
+    if (!term.trim()) return;
+    const updated = [term.trim(), ...recentSearches.filter(r => r !== term.trim())].slice(0, 5);
+    setRecentSearches(updated);
+    localStorage.setItem("vesto_recent_searches", JSON.stringify(updated));
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (query.trim()) {
+      saveRecentSearch(query);
       router.push(`/men?q=${encodeURIComponent(query.trim())}`);
       if (isMobile) setExpanded(false);
     } else {
@@ -29,22 +45,48 @@ function SearchInput({ isMobile = false }: { isMobile?: boolean }) {
     }
   };
 
+  const handleRecentClick = (term: string) => {
+    setQuery(term);
+    saveRecentSearch(term);
+    router.push(`/men?q=${encodeURIComponent(term)}`);
+    if (isMobile) setExpanded(false);
+  };
+
   if (isMobile) {
     if (expanded) {
       return (
-        <form onSubmit={handleSubmit} className="absolute inset-0 bg-[#0A0A0A] z-50 flex items-center px-4 gap-3">
-          <Search className="w-5 h-5 text-white/50" />
-          <input 
-            autoFocus
-            type="text" 
-            placeholder="Search products..." 
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="flex-1 bg-transparent text-white focus:outline-none text-sm"
-          />
-          <button type="button" onClick={() => { setExpanded(false); setQuery(searchParams.get("q") || ""); }}>
-            <X className="w-5 h-5 text-white/50" />
-          </button>
+        <form onSubmit={handleSubmit} className="fixed inset-0 bg-[#0A0A0A] z-[200] flex flex-col animate-in fade-in duration-200">
+          <div className="flex items-center px-4 gap-3 h-16 border-b border-white/10">
+            <Search className="w-5 h-5 text-white/50" />
+            <input 
+              autoFocus
+              type="text" 
+              placeholder="Search products..." 
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              className="flex-1 bg-transparent text-white focus:outline-none text-base"
+            />
+            <button type="button" onClick={() => { setExpanded(false); setQuery(searchParams.get("q") || ""); }} className="p-2">
+              <X className="w-6 h-6 text-white/50" />
+            </button>
+          </div>
+          
+          {recentSearches.length > 0 && !query && (
+            <div className="p-5 flex flex-col gap-1">
+              <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest mb-3 px-2">Recent Searches</span>
+              {recentSearches.map(term => (
+                <button 
+                  key={term} 
+                  type="button" 
+                  onClick={() => handleRecentClick(term)} 
+                  className="flex items-center gap-3 text-sm text-white/70 hover:text-white hover:bg-white/5 px-2 py-3 rounded-lg transition-colors text-left"
+                >
+                  <Search className="w-4 h-4 text-white/30" />
+                  {term}
+                </button>
+              ))}
+            </div>
+          )}
         </form>
       );
     }
@@ -75,6 +117,33 @@ function SearchInput({ isMobile = false }: { isMobile?: boolean }) {
           </button>
         )}
       </div>
+
+      <AnimatePresence>
+        {expanded && !query && recentSearches.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.2 }}
+            className="absolute top-[52px] right-0 w-64 bg-[#111]/95 backdrop-blur-xl border border-white/10 shadow-2xl rounded-2xl p-4 z-50"
+          >
+            <span className="text-[10px] font-bold text-[#C4724F] uppercase tracking-widest mb-2 block px-2">Recent Searches</span>
+            <div className="flex flex-col">
+                {recentSearches.map(term => (
+                    <button 
+                      key={term} 
+                      type="button" 
+                      onMouseDown={(e) => { e.preventDefault(); handleRecentClick(term); }} 
+                      className="flex items-center gap-3 text-sm text-white/60 hover:text-white hover:bg-white/5 rounded-lg px-2 py-2.5 transition-colors text-left"
+                    >
+                        <Search className="w-3.5 h-3.5 text-white/30" />
+                        {term}
+                    </button>
+                ))}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </form>
   );
 }

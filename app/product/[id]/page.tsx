@@ -95,7 +95,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                 <div className="grid md:grid-cols-2 gap-12 lg:gap-20 items-start">
                     {/* Images */}
                     <div className="space-y-4">
-                        <motion.div layoutId={`product-image-${product.id}`} className="relative aspect-[3/4] bg-[#111] rounded-2xl overflow-hidden border border-white/5">
+                        <motion.div layoutId={`product-image-${product.id}`} className="relative aspect-[3/4] bg-[#111] rounded-2xl overflow-hidden border border-white/5 group/gallery">
                             <AnimatePresence mode="wait">
                                 <motion.div key={activeImage} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.25 }} className="absolute inset-0">
                                     {product.images?.[activeImage] && (
@@ -103,6 +103,35 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                                     )}
                                 </motion.div>
                             </AnimatePresence>
+
+                            {/* Carousel Scroller UI */}
+                            {product.images?.length > 1 && (
+                                <>
+                                    <button 
+                                        onClick={(e) => { e.preventDefault(); setActiveImage(prev => prev > 0 ? prev - 1 : product.images.length - 1); }}
+                                        className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white opacity-0 group-hover/gallery:opacity-100 transition-all hover:bg-[#C4724F] hover:border-[#C4724F]"
+                                    >
+                                        <ChevronLeft className="w-5 h-5 -ml-0.5" />
+                                    </button>
+                                    <button 
+                                        onClick={(e) => { e.preventDefault(); setActiveImage(prev => prev < product.images.length - 1 ? prev + 1 : 0); }}
+                                        className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/10 flex items-center justify-center text-white opacity-0 group-hover/gallery:opacity-100 transition-all hover:bg-[#C4724F] hover:border-[#C4724F]"
+                                    >
+                                        <ChevronLeft className="w-5 h-5 rotate-180 -mr-0.5" />
+                                    </button>
+
+                                    <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5">
+                                        {product.images.map((_, i) => (
+                                            <button 
+                                                key={i} 
+                                                onClick={() => setActiveImage(i)}
+                                                className={`h-1.5 rounded-full transition-all duration-300 ${activeImage === i ? "w-5 bg-[#C4724F]" : "w-1.5 bg-white/40 hover:bg-white"}`}
+                                            />
+                                        ))}
+                                    </div>
+                                </>
+                            )}
+                            
                             {/* Corner accents */}
                             {["top-0 left-0", "top-0 right-0", "bottom-0 left-0", "bottom-0 right-0"].map((pos, i) => (
                                 <div key={i} className={`absolute ${pos} w-5 h-5`}>
@@ -159,7 +188,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                                     href={product.affiliateLink}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="group w-full flex items-center justify-center gap-3 px-6 py-4 bg-white text-black hover:bg-white/90 font-black tracking-widest uppercase rounded-full transition-all duration-300 shadow-[0_4px_20px_rgba(255,255,255,0.1)] hover:shadow-[0_4px_25px_rgba(255,255,255,0.2)]"
+                                    className="group w-full flex items-center justify-center gap-3 px-6 py-4 bg-[#C4724F] hover:bg-[#e6845a] text-white font-black tracking-widest uppercase rounded-full transition-all duration-300 shadow-[0_4px_20px_rgba(196,114,79,0.2)] hover:shadow-[0_4px_30px_rgba(196,114,79,0.4)]"
                                 >
                                     <ShoppingCart className="w-5 h-5 group-hover:-rotate-6 transition-transform" />
                                     Get it from {product.brand || "Store"}
@@ -168,14 +197,14 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                             <div>
                                 <Link
                                     href={`/complete-your-look/${encodeURIComponent(product.id)}`}
-                                    className="group w-full flex items-center justify-center gap-3 px-6 py-4 bg-[#C4724F] hover:bg-[#d4845f] text-white font-bold rounded-full transition-all duration-300 hover:shadow-[0_0_30px_rgba(196,114,79,0.3)]"
+                                    className="group w-full flex items-center justify-center gap-3 px-6 py-4 bg-white/5 border border-[#C4724F]/40 hover:bg-[#C4724F]/10 hover:border-[#C4724F] text-white font-bold rounded-full transition-all duration-300"
                                 >
-                                    <Sparkles className="w-4 h-4" />
+                                    <Sparkles className="w-4 h-4 text-[#C4724F]" />
                                     Complete Your Look
-                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-[#C4724F]" />
                                 </Link>
                                 <p className="text-white/25 text-[10px] text-center mt-2 leading-relaxed">
-                                    Vesto pairs this item with compatible bottoms, shoes &amp; layers based on color rules
+                                    Vesto pairs this item with compatible bottoms, shoes &amp; layers
                                 </p>
                             </div>
                             <button

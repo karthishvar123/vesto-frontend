@@ -343,62 +343,65 @@ export default function ProductsByCategoryPage({
                     <>
                         <motion.div
                             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                            className="fixed inset-0 bg-black/70 z-50 backdrop-blur-sm"
+                            className="fixed inset-0 bg-black/80 z-[110] backdrop-blur-md"
                             onClick={() => setShowFilterSheet(false)}
                         />
                         <motion.div
                             initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }}
-                            transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                            className="fixed top-0 right-0 bottom-0 z-50 bg-[#111] border-l border-white/10 w-full sm:w-[360px] flex flex-col overflow-hidden"
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            className="fixed top-0 right-0 bottom-0 z-[120] bg-[#0A0A0A] border-l border-white/10 w-full sm:w-[400px] flex flex-col shadow-2xl"
                         >
                             {/* Header */}
-                            <div className="flex items-center justify-between px-5 py-4 border-b border-white/10 shrink-0">
-                                <h3 className="text-white font-black text-lg uppercase tracking-tight">Filter</h3>
-                                <div className="flex items-center gap-3">
+                            <div className="flex items-center justify-between px-6 py-5 border-b border-white/5 bg-[#0A0A0A] shrink-0">
+                                <div className="flex flex-col">
+                                    <h3 className="text-white font-black text-xl uppercase tracking-widest">Filter</h3>
+                                    <p className="text-white/40 text-xs mt-0.5">{filtered.length} products</p>
+                                </div>
+                                <div className="flex items-center gap-4">
                                     {activeFilterCount > 0 && (
                                         <button onClick={clearAllFilters}
-                                            className="text-white/40 text-sm hover:text-white transition-colors">
+                                            className="text-[#C4724F] text-xs font-bold uppercase tracking-wider hover:text-white transition-colors">
                                             Clear all
                                         </button>
                                     )}
                                     <button onClick={() => setShowFilterSheet(false)}
-                                        className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                                        <X className="w-4 h-4 text-white" />
+                                        className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
+                                        <X className="w-5 h-5 text-white" />
                                     </button>
                                 </div>
                             </div>
 
                             {/* Scrollable content */}
-                            <div className="flex-1 overflow-y-auto px-5 py-5 space-y-7">
+                            <div className="flex-1 overflow-y-auto px-6 py-8 space-y-10">
 
                                 {/* Color filter */}
                                 {availableColors.length > 0 && (
                                     <div>
-                                        <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-3">
+                                        <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em] mb-4">
                                             Color Family
                                         </p>
-                                        <div className="flex flex-wrap gap-2">
+                                        <div className="flex flex-wrap gap-2.5">
                                             {availableColors.map(color => {
                                                 const isRecommended = recommendedColors.includes(color);
                                                 const isActive = activeColors.includes(color);
                                                 return (
                                                     <button key={color} onClick={() => toggleColor(color)}
-                                                        className={`flex items-center gap-2 px-3 py-2 rounded-full text-xs font-bold border transition-all capitalize ${
+                                                        className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold border transition-all capitalize ${
                                                             isActive
-                                                                ? "bg-[#C4724F] border-[#C4724F] text-white"
+                                                                ? "bg-[#C4724F] border-[#C4724F] text-white shadow-[0_0_15px_rgba(196,114,79,0.3)]"
                                                                 : isRecommended
-                                                                ? "border-[#C4724F]/50 text-[#C4724F] bg-[#C4724F]/10"
-                                                                : "border-white/10 text-white/60"
+                                                                ? "border-[#C4724F]/50 text-[#C4724F] bg-[#C4724F]/5 hover:bg-[#C4724F]/10"
+                                                                : "border-white/10 text-white/60 hover:border-white/30 hover:text-white bg-white/5"
                                                         }`}>
-                                                        <span className="w-2 h-2 rounded-full"
+                                                        <span className={`w-2 h-2 rounded-full ${isActive ? 'ring-2 ring-white/30 ring-offset-1 ring-offset-[#C4724F]' : ''}`}
                                                             style={{ backgroundColor: COLOR_DOTS[color] || "#888" }} />
                                                         {color}
                                                         {isRecommended && !isActive && (
-                                                            <span className="text-[8px] bg-[#C4724F] text-white px-1.5 py-0.5 rounded-full">
+                                                            <span className="text-[9px] bg-[#C4724F] text-white px-2 py-0.5 rounded-full font-black tracking-wider">
                                                                 FOR YOU
                                                             </span>
                                                         )}
-                                                        {isActive && <Check className="w-3 h-3" />}
+                                                        {isActive && <Check className="w-3.5 h-3.5 ml-1" />}
                                                     </button>
                                                 );
                                             })}
@@ -409,19 +412,19 @@ export default function ProductsByCategoryPage({
                                 {/* Brand filter */}
                                 {availableBrands.length > 0 && (
                                     <div>
-                                        <p className="text-white/40 text-xs font-bold uppercase tracking-widest mb-3">Brand</p>
-                                        <div className="flex flex-wrap gap-2">
+                                        <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em] mb-4">Brand</p>
+                                        <div className="flex flex-wrap gap-2.5">
                                             {availableBrands.map(brand => {
                                                 const isActive = activeBrands.includes(brand);
                                                 return (
                                                     <button key={brand} onClick={() => toggleBrand(brand)}
-                                                        className={`flex items-center gap-2 px-3 py-2 rounded-full text-xs font-medium border transition-all ${
+                                                        className={`flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold border transition-all ${
                                                             isActive
-                                                                ? "bg-white text-black border-white"
-                                                                : "border-white/10 text-white/60"
+                                                                ? "bg-white text-black border-white shadow-[0_0_15px_rgba(255,255,255,0.2)]"
+                                                                : "border-white/10 text-white/60 hover:border-white/30 hover:text-white bg-white/5"
                                                         }`}>
                                                         {brand}
-                                                        {isActive && <Check className="w-3 h-3" />}
+                                                        {isActive && <Check className="w-3.5 h-3.5 ml-1" />}
                                                     </button>
                                                 );
                                             })}
@@ -431,25 +434,32 @@ export default function ProductsByCategoryPage({
 
                                 {/* Price range */}
                                 <div>
-                                    <div className="flex items-center justify-between mb-3">
-                                        <p className="text-white/40 text-xs font-bold uppercase tracking-widest">Price Range</p>
-                                        <p className="text-white text-xs font-bold">
+                                    <div className="flex items-center justify-between mb-6">
+                                        <p className="text-white/40 text-[10px] font-black uppercase tracking-[0.2em]">Price Range</p>
+                                        <p className="text-[#E8A87C] text-sm font-black tracking-wider">
                                             ₹{priceRange[0]} — ₹{priceRange[1]}
                                         </p>
                                     </div>
-                                    <div className="space-y-3">
-                                        <input type="range" min={0} max={maxPrice}
+                                    <div className="relative h-2 bg-white/10 rounded-full mb-6">
+                                        <div 
+                                            className="absolute h-full bg-[#C4724F] rounded-full"
+                                            style={{ 
+                                                left: `${(priceRange[0] / maxPrice) * 100}%`,
+                                                right: `${100 - (priceRange[1] / maxPrice) * 100}%` 
+                                            }}
+                                        />
+                                        <input type="range" min={0} max={maxPrice} step={100}
                                             value={priceRange[0]}
                                             onChange={e => setPriceRange([Math.min(Number(e.target.value), priceRange[1] - 100), priceRange[1]])}
-                                            className="w-full accent-[#C4724F]"
+                                            className="absolute w-full h-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg"
                                         />
-                                        <input type="range" min={0} max={maxPrice}
+                                        <input type="range" min={0} max={maxPrice} step={100}
                                             value={priceRange[1]}
                                             onChange={e => setPriceRange([priceRange[0], Math.max(Number(e.target.value), priceRange[0] + 100)])}
-                                            className="w-full accent-[#C4724F]"
+                                            className="absolute w-full h-full appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:bg-white [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:shadow-lg"
                                         />
                                     </div>
-                                    <div className="flex justify-between text-xs text-white/30 mt-1">
+                                    <div className="flex justify-between text-xs font-medium text-white/30">
                                         <span>₹0</span>
                                         <span>₹{maxPrice}</span>
                                     </div>
@@ -457,10 +467,10 @@ export default function ProductsByCategoryPage({
                             </div>
 
                             {/* Sticky apply button */}
-                            <div className="px-5 py-4 border-t border-white/10 shrink-0">
+                            <div className="px-6 py-5 border-t border-white/5 bg-[#0A0A0A] shrink-0 pt-4 pb-8 sm:pb-6">
                                 <button
                                     onClick={() => setShowFilterSheet(false)}
-                                    className="w-full py-3.5 bg-[#C4724F] hover:bg-[#d4845f] text-white font-bold rounded-full transition-colors"
+                                    className="group w-full py-4 bg-[#C4724F] hover:bg-[#d4845f] text-white font-black tracking-widest uppercase text-sm rounded-full transition-all shadow-[0_0_20px_rgba(196,114,79,0.2)] hover:shadow-[0_0_30px_rgba(196,114,79,0.4)]"
                                 >
                                     Show {filtered.length} result{filtered.length !== 1 ? "s" : ""}
                                 </button>
@@ -476,43 +486,45 @@ export default function ProductsByCategoryPage({
                     <>
                         <motion.div
                             initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                            className="fixed inset-0 bg-black/70 z-50 backdrop-blur-sm"
+                            className="fixed inset-0 bg-black/80 z-[110] backdrop-blur-md"
                             onClick={() => setShowSortSheet(false)}
                         />
                         <motion.div
                             initial={{ y: "100%" }} animate={{ y: 0 }} exit={{ y: "100%" }}
-                            transition={{ type: "spring", damping: 30, stiffness: 300 }}
-                            className="fixed bottom-0 left-0 right-0 z-50 bg-[#111] rounded-t-3xl border-t border-white/10"
+                            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                            className="fixed bottom-0 left-0 right-0 z-[120] bg-[#0A0A0A] rounded-t-3xl border-t border-white/10 shadow-2xl"
                         >
-                            <div className="flex justify-center pt-3 pb-1">
-                                <div className="w-10 h-1 rounded-full bg-white/20" />
+                            <div className="flex justify-center pt-4 pb-2">
+                                <div className="w-12 h-1.5 rounded-full bg-white/10" />
                             </div>
 
-                            <div className="px-5 pb-10">
-                                <div className="flex items-center justify-between py-4 border-b border-white/10 mb-2">
-                                    <h3 className="text-white font-black text-lg uppercase tracking-tight">Sort By</h3>
+                            <div className="px-6 pb-12">
+                                <div className="flex items-center justify-between py-5 border-b border-white/5 mb-4">
+                                    <h3 className="text-white font-black text-xl uppercase tracking-widest">Sort By</h3>
                                     <button onClick={() => setShowSortSheet(false)}
-                                        className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center">
-                                        <X className="w-4 h-4 text-white" />
+                                        className="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 flex items-center justify-center transition-colors">
+                                        <X className="w-5 h-5 text-white" />
                                     </button>
                                 </div>
 
-                                {SORT_OPTIONS.map(opt => (
-                                    <button key={opt.value}
-                                        onClick={() => { setSortBy(opt.value); setShowSortSheet(false); }}
-                                        className={`w-full flex items-center justify-between px-4 py-4 rounded-xl transition-colors text-sm font-medium ${
-                                            sortBy === opt.value
-                                                ? "bg-[#C4724F]/10 text-[#E8A87C]"
-                                                : "text-white/60 hover:text-white hover:bg-white/5"
-                                        }`}>
-                                        {opt.label}
-                                        {sortBy === opt.value && (
-                                            <div className="w-5 h-5 rounded-full bg-[#C4724F] flex items-center justify-center">
-                                                <Check className="w-3 h-3 text-white" />
-                                            </div>
-                                        )}
-                                    </button>
-                                ))}
+                                <div className="space-y-2">
+                                    {SORT_OPTIONS.map(opt => (
+                                        <button key={opt.value}
+                                            onClick={() => { setSortBy(opt.value); setShowSortSheet(false); }}
+                                            className={`w-full flex items-center justify-between px-5 py-4 rounded-2xl transition-all font-bold ${
+                                                sortBy === opt.value
+                                                    ? "bg-[#C4724F]/10 text-white shadow-[inset_0_0_0_1px_rgba(196,114,79,0.5)] bg-gradient-to-r from-[#C4724F]/20 to-transparent"
+                                                    : "text-white/60 hover:text-white hover:bg-white/5"
+                                            }`}>
+                                            {opt.label}
+                                            {sortBy === opt.value && (
+                                                <div className="w-6 h-6 rounded-full bg-[#C4724F] flex items-center justify-center shadow-[0_0_10px_rgba(196,114,79,0.5)]">
+                                                    <Check className="w-3.5 h-3.5 text-white" />
+                                                </div>
+                                            )}
+                                        </button>
+                                    ))}
+                                </div>
                             </div>
                         </motion.div>
                     </>

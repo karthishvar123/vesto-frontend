@@ -4,7 +4,7 @@ import Navbar from "@/components/navbar";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { useSkinTone } from "@/context/skin-tone-context";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Camera, Sparkles, CheckCircle2 } from "lucide-react";
+import { ArrowRight, Camera, Sparkles, CheckCircle2, Info } from "lucide-react";
 import { useState } from "react";
 import dynamic from "next/dynamic";
 
@@ -52,7 +52,13 @@ export default function ShopBySkinTonePage() {
             <div className="relative z-10 pt-20 sm:pt-28 pb-16 px-4 md:px-8 max-w-7xl mx-auto">
 
                 {/* Header */}
-                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center mb-16 max-w-3xl mx-auto">
+                <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }} className="text-center mb-12 max-w-3xl mx-auto">
+                    {/* Step indicator */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/40 text-[10px] font-bold uppercase tracking-widest mb-4">
+                        <span className="w-4 h-4 rounded-full bg-[#C4724F] text-white flex items-center justify-center text-[8px] font-black">1</span>
+                        Step 1 of 3 — Identify Your Skin Tone
+                    </div>
+
                     <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#C4724F]/30 bg-[#C4724F]/10 text-[#E8A87C] text-xs font-bold uppercase tracking-widest mb-6">
                         <Sparkles className="w-3 h-3" /> Personalized Styling
                     </span>
@@ -60,9 +66,23 @@ export default function ShopBySkinTonePage() {
                         Find Your<br />
                         <span className="text-[#E8A87C]">Perfect Match.</span>
                     </h1>
-                    <p className="text-white/40 text-lg max-w-xl mx-auto mb-10 leading-relaxed">
+                    <p className="text-white/40 text-lg max-w-xl mx-auto mb-8 leading-relaxed">
                         Select your Fitzpatrick skin type below, or let the AI camera detect it automatically.
                     </p>
+
+                    {/* How it works */}
+                    <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-8 text-left">
+                        {[
+                            { num: "01", text: "Pick your skin tone type or use the AI camera" },
+                            { num: "02", text: "We match color palettes that suit your complexion" },
+                            { num: "03", text: "Browse and build outfits made for you" },
+                        ].map((step) => (
+                            <div key={step.num} className="flex items-start gap-3 bg-white/3 border border-white/8 rounded-xl px-4 py-3 max-w-[180px]">
+                                <span className="text-[#C4724F] font-black text-xs shrink-0 mt-0.5">{step.num}</span>
+                                <p className="text-white/50 text-xs leading-relaxed">{step.text}</p>
+                            </div>
+                        ))}
+                    </div>
 
                     {/* AI Camera button */}
                     <button

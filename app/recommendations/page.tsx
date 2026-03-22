@@ -7,7 +7,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import Navbar from "@/components/navbar";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Info, Sparkles } from "lucide-react";
 import Image from "next/image";
 
 interface Product {
@@ -91,14 +91,29 @@ export default function RecommendationsPage() {
                 <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-12 text-center"
+                    className="mb-10 text-center"
                 >
+                    {/* Step indicator */}
+                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 text-white/40 text-[10px] font-bold uppercase tracking-widest mb-5">
+                        <span className="w-4 h-4 rounded-full bg-[#C4724F] text-white flex items-center justify-center text-[8px] font-black">2</span>
+                        Step 2 of 3 — Your Matched Tops
+                    </div>
+
                     <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter mb-4">
                         Curated for <span className="vesto-accent-text">Your Tone</span>
                     </h1>
-                    <p className="text-white/40 max-w-xl mx-auto">
+                    <p className="text-white/40 max-w-xl mx-auto mb-6">
                         Choose a top, then use <span className="text-white font-bold">Complete Your Look</span> to build the full outfit.
                     </p>
+
+                    {/* Tip banner */}
+                    <div className="inline-flex items-start gap-3 bg-[#C4724F]/8 border border-[#C4724F]/20 rounded-xl px-5 py-3 text-left max-w-lg mx-auto">
+                        <Info className="w-4 h-4 text-[#C4724F] shrink-0 mt-0.5" />
+                        <p className="text-white/50 text-xs leading-relaxed">
+                            These tops are sorted by color compatibility with your skin tone.
+                            <span className="text-[#E8A87C] font-bold"> Cool, Warm, Earthy and Neutral</span> palettes are matched to your Fitzpatrick type.
+                        </p>
+                    </div>
                 </motion.div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10">

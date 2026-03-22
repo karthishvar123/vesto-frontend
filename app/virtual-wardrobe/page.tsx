@@ -6,7 +6,7 @@ import Navbar from "@/components/navbar";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
-import { Shirt, HeartOff, Sparkles, ArrowRight, Upload, Pencil, ScanFace, Plus } from "lucide-react";
+import { Shirt, HeartOff, Sparkles, ArrowRight, Upload, Pencil, ScanFace, Plus, Info, X } from "lucide-react";
 import ProtectedRoute from "@/components/protected-route";
 import UploadClothesModal from "@/components/upload-clothes-modal";
 import EditClothesModal from "@/components/edit-clothes-modal";
@@ -20,6 +20,7 @@ export default function VirtualWardrobePage() {
     const [removingId, setRemovingId] = useState<string | null>(null);
     const [uploadOpen, setUploadOpen] = useState(false);
     const [editingItem, setEditingItem] = useState<WardrobeItem | null>(null);
+    const [tipDismissed, setTipDismissed] = useState(false);
 
     const filtered = activeTab === "All" ? items : items.filter(i => i.productType?.toLowerCase() === activeTab.toLowerCase());
 
@@ -71,6 +72,39 @@ export default function VirtualWardrobePage() {
                             </div>
                         </div>
                     </motion.div>
+
+                    {/* Guidance tip card */}
+                    {!tipDismissed && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -8 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -8 }}
+                            className="mb-8 bg-[#C4724F]/8 border border-[#C4724F]/20 rounded-2xl p-4 flex items-start gap-4"
+                        >
+                            <Info className="w-4 h-4 text-[#C4724F] shrink-0 mt-0.5" />
+                            <div className="flex-1 min-w-0">
+                                <p className="text-white/60 text-xs font-bold mb-2 uppercase tracking-wider">How to use your wardrobe</p>
+                                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                                    {[
+                                        { icon: "🗂️", text: "Use the tabs to filter by Topwear, Bottomwear or Footwear" },
+                                        { icon: "✨", text: "Tap \"Style It\" on any item to get a full outfit suggestion" },
+                                        { icon: "📅", text: "Check the Daily Outfit card above for 3 outfit ideas every morning" },
+                                    ].map((tip, i) => (
+                                        <div key={i} className="flex items-start gap-2">
+                                            <span className="text-sm shrink-0">{tip.icon}</span>
+                                            <p className="text-white/40 text-xs leading-relaxed">{tip.text}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <button
+                                onClick={() => setTipDismissed(true)}
+                                className="shrink-0 text-white/20 hover:text-white/50 transition-colors"
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        </motion.div>
+                    )}
 
                     {/* Daily Outfit Suggestions */}
                     <DailyOutfitCard items={items} loading={loading} />

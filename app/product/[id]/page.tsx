@@ -153,14 +153,19 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
 
                         {/* Actions */}
                         <div className="space-y-3 pt-2">
-                            <Link
-                                href={`/complete-your-look/${encodeURIComponent(product.id)}`}
-                                className="group w-full flex items-center justify-center gap-3 px-6 py-4 bg-[#C4724F] hover:bg-[#d4845f] text-white font-bold rounded-full transition-all duration-300 hover:shadow-[0_0_30px_rgba(196,114,79,0.3)]"
-                            >
-                                <Sparkles className="w-4 h-4" />
-                                Complete Your Look
-                                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                            </Link>
+                            <div>
+                                <Link
+                                    href={`/complete-your-look/${encodeURIComponent(product.id)}`}
+                                    className="group w-full flex items-center justify-center gap-3 px-6 py-4 bg-[#C4724F] hover:bg-[#d4845f] text-white font-bold rounded-full transition-all duration-300 hover:shadow-[0_0_30px_rgba(196,114,79,0.3)]"
+                                >
+                                    <Sparkles className="w-4 h-4" />
+                                    Complete Your Look
+                                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                </Link>
+                                <p className="text-white/25 text-[10px] text-center mt-2 leading-relaxed">
+                                    Vesto pairs this item with compatible bottoms, shoes &amp; layers based on color rules
+                                </p>
+                            </div>
                             <button
                                 onClick={handleWardrobeToggle}
                                 className={`w-full flex items-center justify-center gap-3 px-6 py-4 rounded-full font-bold border transition-all duration-300 ${inWardrobe ? "bg-[#C4724F]/10 border-[#C4724F]/40 text-[#E8A87C] hover:bg-red-500/10 hover:border-red-500/30 hover:text-red-400" : "bg-white/5 border-white/10 text-white hover:bg-white/10 hover:border-white/20"}`}

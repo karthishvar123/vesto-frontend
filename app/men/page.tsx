@@ -10,7 +10,7 @@ import { ArrowRight, Search, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSkinTone } from "@/context/skin-tone-context";
 
-interface Product { id: string; name: string; price: number; images: string[]; productType: string; productStyle: string; active: boolean; baseColor?: string; brand?: string; }
+interface Product { id: string; name: string; price: number; images: string[]; productType: string; productStyle: string; active: boolean; baseColor?: string; colorFamily?: string; brand?: string; }
 
 const menStructure = [
     { category: "Topwear", slug: "topwear", items: [{ label: "T-Shirt", value: "t-shirt" }, { label: "Sweatshirt", value: "sweatshirt" }, { label: "Jacket", value: "jacket" }, { label: "Formal Shirt", value: "formal-shirt" }, { label: "Casual Shirt", value: "casual-shirt" }, { label: "Active T-Shirt", value: "active-t-shirt" }] },
@@ -85,9 +85,9 @@ export default function MenPage() {
             
             const q = searchQuery.toLowerCase();
             const matchesName = p.name.toLowerCase().includes(q);
-            const matchesBaseColor = p.baseColor?.toLowerCase().includes(q);
+            const matchesColorName = p.colorFamily?.toLowerCase().includes(q) || p.baseColor?.toLowerCase().includes(q);
             
-            return matchesName || matchesBaseColor;
+            return matchesName || matchesColorName;
         });
 
     return (

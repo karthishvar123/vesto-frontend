@@ -181,11 +181,11 @@ function MenContent() {
                 )}
 
                 {/* Color filter chips */}
-                <div className="flex gap-2 overflow-x-auto pb-3 mb-6" style={{ scrollbarWidth: "none" }}>
+                <div className="-mx-4 px-4 md:mx-0 md:px-0 flex gap-2.5 overflow-x-auto pb-1 mb-8 [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: "none" }}>
                     <button
                         onClick={() => setActiveColor(null)}
-                        className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all shrink-0 ${
-                            !activeColor ? "bg-[#C4724F] border-[#C4724F] text-white" : "border-white/10 text-white/40 hover:text-white"
+                        className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest whitespace-nowrap border transition-all shrink-0 ${
+                            !activeColor ? "bg-[#C4724F] border-[#C4724F] text-white shadow-[0_0_15px_rgba(196,114,79,0.3)]" : "border-white/10 text-white/40 hover:text-white bg-white/5"
                         }`}
                     >
                         All
@@ -197,13 +197,13 @@ function MenContent() {
                             <button
                                 key={key}
                                 onClick={() => setActiveColor(isActive ? null : key)}
-                                className={`flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all shrink-0 ${
-                                    isActive ? "bg-[#C4724F] border-[#C4724F] text-white"
-                                    : isRecommended ? "border-[#C4724F]/50 text-[#C4724F] bg-[#C4724F]/10"
-                                    : "border-white/10 text-white/40 hover:text-white"
+                                className={`flex items-center gap-2.5 px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest whitespace-nowrap border transition-all shrink-0 ${
+                                    isActive ? "bg-[#C4724F] border-[#C4724F] text-white shadow-[0_0_15px_rgba(196,114,79,0.3)]"
+                                    : isRecommended ? "border-[#C4724F]/50 text-[#C4724F] bg-[#C4724F]/10 hover:bg-[#C4724F]/15"
+                                    : "border-white/10 text-white/40 hover:text-white bg-white/5"
                                 }`}
                             >
-                                <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: meta.dot }} />
+                                <span className={`w-2 h-2 rounded-full shrink-0 ${isActive ? 'ring-2 ring-white/30 ring-offset-1 ring-offset-[#C4724F]' : ''}`} style={{ backgroundColor: meta.dot }} />
                                 {meta.label}
                                 {isRecommended && !isActive && (
                                     <span className="text-[8px] bg-[#C4724F] text-white px-1.5 py-0.5 rounded-full leading-none">
@@ -217,11 +217,11 @@ function MenContent() {
 
                 {/* Brand filter chips */}
                 {brands.length > 0 && (
-                    <div className="flex gap-2 overflow-x-auto pb-3 mb-8" style={{ scrollbarWidth: "none" }}>
+                    <div className="-mx-4 px-4 md:mx-0 md:px-0 flex gap-2.5 overflow-x-auto pb-1 mb-10 [&::-webkit-scrollbar]:hidden" style={{ scrollbarWidth: "none" }}>
                         <button
                             onClick={() => setBrandFilter(null)}
-                            className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all shrink-0 ${
-                                !brandFilter ? "bg-white/10 border-white/20 text-white" : "border-white/10 text-white/30 hover:text-white"
+                            className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest whitespace-nowrap border transition-all shrink-0 ${
+                                !brandFilter ? "bg-white border-white text-black shadow-[0_0_15px_rgba(255,255,255,0.2)]" : "border-white/10 text-white/40 hover:text-white bg-white/5"
                             }`}
                         >
                             All Brands
@@ -230,10 +230,10 @@ function MenContent() {
                             <button
                                 key={brand}
                                 onClick={() => setBrandFilter(brandFilter === brand ? null : brand)}
-                                className={`px-4 py-2 rounded-full text-xs font-bold whitespace-nowrap border transition-all shrink-0 ${
+                                className={`px-5 py-2.5 rounded-full text-xs font-bold uppercase tracking-widest whitespace-nowrap border transition-all shrink-0 ${
                                     brandFilter === brand
-                                        ? "bg-white/10 border-white/20 text-white"
-                                        : "border-white/10 text-white/30 hover:text-white"
+                                        ? "bg-white border-white text-black shadow-[0_0_15px_rgba(255,255,255,0.2)]"
+                                        : "border-white/10 text-white/40 hover:text-white bg-white/5"
                                 }`}
                             >
                                 {brand}
@@ -264,10 +264,10 @@ function MenContent() {
                             if (!hasProducts) return null;
                             return (
                                 <motion.section key={section.category} initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.6 }}>
-                                    <div className="flex items-end justify-between border-b border-white/5 pb-4 mb-10">
+                                    <div className="flex items-end justify-between border-b border-white/5 pb-4 mb-6 sm:mb-10">
                                         <h2 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tighter">{section.category}</h2>
                                     </div>
-                                    <div className="space-y-14">
+                                    <div className="space-y-10 sm:space-y-14">
                                         {section.items.map((style) => {
                                             const styleProducts = getProductsForStyle(section.slug, style.value);
                                             if (styleProducts.length === 0) return null;
@@ -282,7 +282,7 @@ function MenContent() {
                                                             View all <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
                                                         </Link>
                                                     </div>
-                                                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                                                    <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
                                                         {styleProducts.slice(0, 5).map((product) => (
                                                             <Link key={product.id} href={`/product/${encodeURIComponent(product.id)}`}>
                                                                 <div className="group product-card cursor-pointer">
@@ -293,12 +293,12 @@ function MenContent() {
                                                                             <div className="w-full h-full flex items-center justify-center text-white/10 text-xs">No Image</div>
                                                                         )}
                                                                     </div>
-                                                                    <div className="p-3">
-                                                                        <h4 className="font-bold text-white text-sm truncate group-hover:text-[#E8A87C] transition-colors">{product.name}</h4>
+                                                                    <div className="p-2 sm:p-3 mt-1">
+                                                                        <h4 className="font-bold text-white text-[11px] sm:text-sm line-clamp-2 leading-snug group-hover:text-[#E8A87C] transition-colors">{product.name}</h4>
                                                                         {product.brand && (
-                                                                            <p className="text-white/30 text-[10px] mt-0.5">{product.brand}</p>
+                                                                            <p className="text-white/30 text-[9px] sm:text-[10px] mt-1 font-bold tracking-wider uppercase">{product.brand}</p>
                                                                         )}
-                                                                        <p className="text-white/40 text-xs mt-1">₹{product.price}</p>
+                                                                        <p className="text-[#C4724F] font-black text-xs sm:text-sm mt-1.5 sm:mt-2 tracking-wide">₹{product.price}</p>
                                                                     </div>
                                                                 </div>
                                                             </Link>

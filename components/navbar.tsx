@@ -55,24 +55,23 @@ function SearchInput({ isMobile = false }: { isMobile?: boolean }) {
     );
   }
 
+  // Desktop
   return (
-    <form onSubmit={handleSubmit} className="relative flex items-center group">
-      <div className={`flex items-center bg-white/5 border border-white/10 rounded-full transition-all duration-300 overflow-hidden ${expanded || query ? 'w-48 px-3 opacity-100' : 'w-9 opacity-70 hover:opacity-100'} h-9`}>
-        <button type="button" onClick={() => { if(!expanded && !query) setExpanded(true); else handleSubmit({preventDefault:()=>{}} as any); }} className="shrink-0 flex items-center justify-center w-5 h-5">
-           <Search className="w-4 h-4 text-white/50 group-hover:text-white/80 transition-colors" />
-        </button>
+    <form onSubmit={handleSubmit} className="relative flex items-center">
+      <div className="relative flex items-center">
+        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+          <Search className="w-4 h-4 text-white/40" />
+        </div>
         <input 
           type="text" 
           placeholder="Search..." 
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          onFocus={() => setExpanded(true)}
-          onBlur={() => { if(!query) setExpanded(false); }}
-          className={`bg-transparent text-white text-xs font-medium focus:outline-none transition-all duration-300 ${expanded || query ? 'w-full ml-2 opacity-100' : 'w-0 opacity-0'}`}
+          className="w-32 lg:w-40 focus:w-56 bg-transparent hover:bg-white/5 focus:bg-[#0A0A0A]/80 border border-transparent focus:border-[#C4724F]/40 rounded-full py-2 pl-9 pr-8 text-xs text-white font-medium placeholder:text-white/30 outline-none transition-all duration-500 ease-out"
         />
-        {(expanded || !!query) && query && (
-          <button type="button" onClick={() => { setQuery(""); setExpanded(false); router.push('/men'); }} className="shrink-0 ml-1">
-            <X className="w-3.5 h-3.5 text-white/40 hover:text-white" />
+        {query && (
+          <button type="button" onClick={() => { setQuery(""); router.push('/men'); }} className="absolute inset-y-0 right-0 pr-3 flex items-center">
+            <X className="w-3.5 h-3.5 text-white/40 hover:text-white transition-colors" />
           </button>
         )}
       </div>

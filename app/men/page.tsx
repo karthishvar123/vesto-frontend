@@ -6,7 +6,7 @@ import { collection, query, where, getDocs } from "firebase/firestore";
 import Navbar from "@/components/navbar";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Search, X } from "lucide-react";
 import { motion } from "framer-motion";
 import { useSkinTone } from "@/context/skin-tone-context";
 
@@ -53,6 +53,7 @@ export default function MenPage() {
     const [loading, setLoading] = useState(true);
     const [activeColor, setActiveColor] = useState<string | null>(null);
     const [brandFilter, setBrandFilter] = useState<string | null>(null);
+    const [searchQuery, setSearchQuery] = useState("");
     const { selectedType } = useSkinTone();
     const recommendedColors = selectedType ? (TONE_COLORS[selectedType] ?? []) : [];
     const brands = [...new Set(products.map(p => p.brand).filter(Boolean))] as string[];
@@ -70,12 +71,24 @@ export default function MenPage() {
     }, []);
 
     const getProductsForStyle = (cat: string, style: string) =>
-        products.filter(p =>
-            p.productType === cat &&
-            p.productStyle === style &&
-            (!activeColor || p.baseColor === activeColor) &&
-            (!brandFilter || p.brand === brandFilter)
-        );
+        products.filter(p => {
+            // First check standard filters
+            const matchesCat = p.productType === cat;
+            const matchesStyle = p.productStyle === style;
+            const matchesColor = !activeColor || p.baseColor === activeColor;
+            const matchesBrand = !brandFilter || p.brand === brandFilter;
+
+            if (!matchesCat || !matchesStyle || !matchesColor || !matchesBrand) return false;
+
+            // Then check search query if present
+            if (searchQuery.trim() === "") return true;
+            
+            const q = searchQuery.toLowerCase();
+            const matchesName = p.name.toLowerCase().includes(q);
+            const matchesBaseColor = p.baseColor?.toLowerCase().includes(q);
+            
+            return matchesName || matchesBaseColor;
+        });
 
     return (
         <main className="min-h-screen bg-[#0A0A0A]">
@@ -97,9 +110,33 @@ export default function MenPage() {
                 </div>
             </div>
 
-            {/* Color filter chips */}
+            {/* Filters Section */}
             <div className="pb-24 px-4 md:px-8 max-w-7xl mx-auto">
-                <div className="flex gap-2 overflow-x-auto pb-3 mb-8" style={{ scrollbarWidth: "none" }}>
+                
+                {/* Search Bar */}
+                <div className="relative mb-8 max-w-md">
+                    <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+                        <Search className="w-4 h-4 text-white/40" />
+                    </div>
+                    <input
+                        type="text"
+                        placeholder="Search by name or color..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-full py-3.5 pl-11 pr-11 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#C4724F]/50 focus:bg-[#C4724F]/5 transition-all"
+                    />
+                    {searchQuery && (
+                        <button 
+                            onClick={() => setSearchQuery("")}
+                            className="absolute inset-y-0 right-4 flex items-center text-white/40 hover:text-white"
+                        >
+                            <X className="w-4 h-4" />
+                        </button>
+                    )}
+                </div>
+
+                {/* Color filter chips */}
+                <div className="flex gap-2 overflow-x-auto pb-3 mb-6" style={{ scrollbarWidth: "none" }}>
                     <button
                         onClick={() => setActiveColor(null)}
                         className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap border transition-all shrink-0 ${

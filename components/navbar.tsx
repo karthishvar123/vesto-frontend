@@ -10,7 +10,12 @@ import { useAuth } from "@/context/auth-context";
 export default function Navbar() {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const [scrolled, setScrolled] = useState(false);
-  const { user, logout } = useAuth();
+  const [mounted, setMounted] = useState(false);
+  const { user, loading: authLoading, logout } = useAuth();
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -39,9 +44,9 @@ export default function Navbar() {
           <span className="text-white font-black tracking-widest text-sm">VESTO</span>
         </Link>
 
-        {/* Right side — user avatar or nothing */}
+        {/* Right side — user avatar, shown only after auth settles */}
         <Link href="/auth" className="w-8 h-8 rounded-full bg-[#C4724F]/20 border border-[#C4724F]/30 flex items-center justify-center">
-          {user ? (
+          {mounted && !authLoading && user ? (
             <span className="text-[#C4724F] text-xs font-black">{user.email?.[0].toUpperCase()}</span>
           ) : (
             <span className="text-[#C4724F] text-xs font-black">?</span>
@@ -130,7 +135,7 @@ export default function Navbar() {
             <button
               className="flex items-center gap-2 text-sm font-medium text-white/60 hover:text-white transition-colors uppercase tracking-wide py-3"
             >
-              {user ? (
+              {mounted && !authLoading && user ? (
                 <span className="w-7 h-7 rounded-full bg-[#C4724F]/20 border border-[#C4724F]/40 flex items-center justify-center text-[#C4724F] text-xs font-bold">
                   {user.email?.[0].toUpperCase()}
                 </span>

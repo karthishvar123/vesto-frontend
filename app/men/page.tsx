@@ -18,6 +18,54 @@ const menStructure = [
     { category: "Footwear", slug: "footwear", items: [{ label: "Casual Shoe", value: "casual-shoe" }, { label: "Sneakers", value: "sneakers" }, { label: "Formal Shoe", value: "formal-shoe" }, { label: "Loafer", value: "loafer" }, { label: "Sports Shoe", value: "sports-shoe" }] },
 ];
 
+// --- Fuzzy Search Utilities ---
+function levenshtein(a: string, b: string): number {
+    if (a.length === 0) return b.length;
+    if (b.length === 0) return a.length;
+    
+    const matrix = [];
+    for (let i = 0; i <= b.length; i++) matrix[i] = [i];
+    for (let j = 0; j <= a.length; j++) matrix[0][j] = j;
+
+    for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+            if (b.charAt(i - 1) === a.charAt(j - 1)) {
+                matrix[i][j] = matrix[i - 1][j - 1];
+            } else {
+                matrix[i][j] = Math.min(
+                    matrix[i - 1][j - 1] + 1, // substitution
+                    Math.min(matrix[i][j - 1] + 1, matrix[i - 1][j] + 1) // insert or delete
+                );
+            }
+        }
+    }
+    return matrix[b.length][a.length];
+}
+
+function fuzzyMatch(query: string, target: string | undefined | null): boolean {
+    if (!target) return false;
+    
+    // Normalise: lowercase and remove hyphens (so "tshirt" matches "t-shirt")
+    const cleanTarget = target.toLowerCase().replace(/-/g, "");
+    const cleanQuery = query.replace(/-/g, "");
+    
+    // Exact substring match
+    if (cleanTarget.includes(cleanQuery)) return true;
+    
+    // Apply typo tolerance (1 mistake for words 4+, 2 for 7+)
+    const maxTypos = cleanQuery.length >= 7 ? 2 : (cleanQuery.length >= 4 ? 1 : 0);
+    if (maxTypos === 0) return false;
+
+    // Check each word in the target separately
+    const targetWords = cleanTarget.split(/\s+/);
+    for (const tw of targetWords) {
+        if (Math.abs(tw.length - cleanQuery.length) > maxTypos) continue;
+        if (levenshtein(cleanQuery, tw) <= maxTypos) return true;
+    }
+    return false;
+}
+// ------------------------------
+
 function SkeletonRow() {
     return (
         <div className="space-y-4">
@@ -85,12 +133,12 @@ export default function MenPage() {
             
             const keywords = searchQuery.toLowerCase().split(/\s+/).filter(Boolean);
             
-            // For a product to match, every keyword must be found in at least one of its fields
+            // For a product to match, every keyword must be found (with fuzzy matching) in at least one of its fields
             return keywords.every(kw => {
-                const matchesName = p.name.toLowerCase().includes(kw);
-                const matchesColorName = p.colorFamily?.toLowerCase().includes(kw) || p.baseColor?.toLowerCase().includes(kw);
-                const matchesBrand = p.brand?.toLowerCase().includes(kw);
-                const matchesType = p.productType.toLowerCase().includes(kw) || p.productStyle.toLowerCase().replace("-", " ").includes(kw);
+                const matchesName = fuzzyMatch(kw, p.name);
+                const matchesColorName = fuzzyMatch(kw, p.colorFamily) || fuzzyMatch(kw, p.baseColor);
+                const matchesBrand = fuzzyMatch(kw, p.brand);
+                const matchesType = fuzzyMatch(kw, p.productType) || fuzzyMatch(kw, p.productStyle);
                 
                 return matchesName || matchesColorName || matchesBrand || matchesType;
             });

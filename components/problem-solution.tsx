@@ -36,7 +36,7 @@ const items: FluidCardItem[] = [
 
 export default function ProblemSolution() {
     return (
-        <section className="relative w-full py-32 px-6 lg:px-20 overflow-hidden bg-black">
+        <section className="relative w-full py-14 sm:py-32 px-4 sm:px-6 lg:px-20 overflow-hidden bg-black">
 
             {/* Background Ambience */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-blue-900/20 blur-[120px] rounded-full pointer-events-none" />

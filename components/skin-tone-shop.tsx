@@ -15,7 +15,7 @@ const TONES = [
 
 export default function SkinToneShop() {
     return (
-        <section id="how-it-works" className="relative w-full py-32 bg-[#0A0A0A] overflow-hidden">
+        <section id="how-it-works" className="relative w-full py-14 sm:py-32 bg-[#0A0A0A] overflow-hidden">
             {/* Background glow */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-[#C4724F]/5 blur-[100px] pointer-events-none" />
 

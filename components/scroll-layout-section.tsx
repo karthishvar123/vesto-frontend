@@ -50,7 +50,7 @@ export default function ScrollLayoutSection() {
                 viewport={{ once: true }}
             >
                 <div className="w-full max-w-xl">
-                    <GlowCard className="p-12 border border-white/10 bg-black/40 backdrop-blur-md">
+                    <GlowCard className="p-6 sm:p-12 border border-white/10 bg-black/40 backdrop-blur-md">
                         <h2 className="text-5xl md:text-6xl font-serif text-white mb-6 leading-tight">
                             Your <span className="italic text-white">Digital</span> <br />
                             Wardrobe.

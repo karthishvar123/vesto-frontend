@@ -39,6 +39,7 @@ export default function Hero() {
 
         let animationId: number;
         const particles: { x: number; y: number; vx: number; vy: number; r: number; alpha: number }[] = [];
+        const isMobile = window.innerWidth < 768;
 
         const resize = () => {
             canvas.width = window.innerWidth;
@@ -47,7 +48,8 @@ export default function Hero() {
         resize();
         window.addEventListener("resize", resize);
 
-        for (let i = 0; i < 80; i++) {
+        const particleCount = isMobile ? 30 : 80;
+        for (let i = 0; i < particleCount; i++) {
             particles.push({
                 x: Math.random() * canvas.width,
                 y: Math.random() * canvas.height,
@@ -74,19 +76,21 @@ export default function Hero() {
                 ctx.fill();
             });
 
-            // Draw connecting lines
-            for (let i = 0; i < particles.length; i++) {
-                for (let j = i + 1; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist < 120) {
-                        ctx.beginPath();
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = `rgba(180,140,100,${0.08 * (1 - dist / 120)})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.stroke();
+            // Draw connecting lines (skip on mobile — O(n²) kills frame rate)
+            if (!isMobile) {
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy);
+                        if (dist < 120) {
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.strokeStyle = `rgba(180,140,100,${0.08 * (1 - dist / 120)})`;
+                            ctx.lineWidth = 0.5;
+                            ctx.stroke();
+                        }
                     }
                 }
             }

@@ -8,12 +8,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWardrobe } from "@/context/wardrobe-context";
-import { ArrowRight, Heart, HeartOff, ChevronLeft, Sparkles, Tag, Palette } from "lucide-react";
+import { ArrowRight, Heart, HeartOff, ChevronLeft, Sparkles, Tag, Palette, ShoppingCart } from "lucide-react";
 
 interface Product {
     id: string; name: string; price: number; description: string;
     images: string[]; productType: string; productStyle: string;
     baseColor: string; activityType: string; skinToneCompatibility: string[]; colorFamily?: string;
+    brand?: string; affiliateLink?: string;
 }
 
 function SkeletonProduct() {
@@ -152,7 +153,18 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
                         </div>
 
                         {/* Actions */}
-                        <div className="space-y-3 pt-2">
+                        <div className="space-y-4 pt-4 mt-2 border-t border-white/5">
+                            {product.affiliateLink && (
+                                <a 
+                                    href={product.affiliateLink}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="group w-full flex items-center justify-center gap-3 px-6 py-4 bg-white text-black hover:bg-white/90 font-black tracking-widest uppercase rounded-full transition-all duration-300 shadow-[0_4px_20px_rgba(255,255,255,0.1)] hover:shadow-[0_4px_25px_rgba(255,255,255,0.2)]"
+                                >
+                                    <ShoppingCart className="w-5 h-5 group-hover:-rotate-6 transition-transform" />
+                                    Get it from {product.brand || "Store"}
+                                </a>
+                            )}
                             <div>
                                 <Link
                                     href={`/complete-your-look/${encodeURIComponent(product.id)}`}

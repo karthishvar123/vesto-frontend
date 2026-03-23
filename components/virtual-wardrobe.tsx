@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -31,7 +32,15 @@ const WARDROBE_CARDS = [
 ];
 
 function WardrobeCardStack() {
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+    const [isMobile, setIsMobile] = useState(false);
+
+    useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth < 640);
+        check();
+        window.addEventListener('resize', check);
+        return () => window.removeEventListener('resize', check);
+    }, []);
+
     const xSpread = isMobile ? 32 : 46;
     const rotateSpread = isMobile ? 12 : 8; // Fan out more on mobile to compensate for closer spacing
 

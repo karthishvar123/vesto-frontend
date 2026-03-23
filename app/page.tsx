@@ -1,6 +1,7 @@
 import Navbar from "@/components/navbar";
 import Hero from "@/components/hero";
 import UnifiedShopLook from "@/components/unified-shop-look";
+import SocialProof from "@/components/social-proof";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
       <Navbar />
       <Hero />
       <UnifiedShopLook />
+      <SocialProof />
     </main>
   );
 }

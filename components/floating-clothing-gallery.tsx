@@ -16,7 +16,15 @@ const getItems = (isMobile: boolean) => {
 
 export default function FloatingClothingGallery() {
     const [isActive, setIsActive] = React.useState(false);
-    const isMobile = typeof window !== "undefined" && window.innerWidth < 640;
+    const [isMobile, setIsMobile] = React.useState(false);
+
+    React.useEffect(() => {
+        const check = () => setIsMobile(window.innerWidth < 640);
+        check();
+        window.addEventListener('resize', check);
+        return () => window.removeEventListener('resize', check);
+    }, []);
+
     const items = getItems(isMobile);
 
     return (

@@ -143,7 +143,7 @@ export default function Hero() {
                 </h1>
 
                 <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto mb-12 leading-relaxed font-light">
-                    Vesto analyses your skin tone, builds your wardrobe, and pairs every outfit — so you always look intentional.
+                    Tell Vesto your skin tone. It shows you exactly which colors suit you, builds your digital wardrobe, and suggests a fresh outfit every morning. Free.
                 </p>
 
                 {/* CTA buttons */}
@@ -164,25 +164,21 @@ export default function Hero() {
                 </div>
 
                 {/* Stats bar */}
-                <div className="flex items-center justify-center gap-6 sm:gap-12 text-center border-t border-white/5 pt-10">
+                <div className="grid grid-cols-3 gap-2 sm:gap-12 text-center border-t border-white/5 pt-8 sm:pt-10 w-full mb-8 sm:mb-0">
                     {[
-                        { num: "6", label: "Skin Tone Types" },
-                        { num: "3", label: "Smart Categories" },
-                        { num: "AI", label: "Camera Detection" },
+                        { num: "6", label: "Skin Types" },
+                        { num: "∞", label: "Outfits" },
+                        { num: "Free", label: "Always" },
                     ].map((s) => (
-                        <div key={s.label}>
-                            <div className="text-3xl font-black text-white mb-1">{s.num}</div>
-                            <div className="text-xs text-gray-500 uppercase tracking-widest">{s.label}</div>
+                        <div key={s.label} className="flex flex-col items-center justify-center">
+                            <div className="text-2xl sm:text-3xl font-black text-white mb-1">{s.num}</div>
+                            <div className="text-[10px] sm:text-xs text-gray-500 uppercase tracking-widest leading-tight w-full max-w-[100px]">{s.label}</div>
                         </div>
                     ))}
                 </div>
             </div>
 
-            {/* Scroll indicator */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-gray-600 text-xs tracking-widest uppercase">
-                <span>Scroll</span>
-                <div className="w-px h-12 bg-gradient-to-b from-gray-600 to-transparent animate-pulse" />
-            </div>
+
         </section>
     );
 }

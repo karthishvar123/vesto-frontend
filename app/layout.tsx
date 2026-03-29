@@ -20,7 +20,7 @@ const dmSerif = DM_Serif_Display({
 });
 
 export const metadata: Metadata = {
-  title: "Vesto | AI-Powered Style Intelligence",
+  title: "Vesto | Smart Style Intelligence",
   description: "Dress for your skin tone. Vesto analyses your complexion, builds your wardrobe, and pairs every outfit — so you always look intentional.",
   manifest: "/manifest.json",
   appleWebApp: {

@@ -67,13 +67,13 @@ export default function ShopBySkinTonePage() {
                         <span className="text-[#E8A87C]">Perfect Match.</span>
                     </h1>
                     <p className="text-white/40 text-lg max-w-xl mx-auto mb-8 leading-relaxed">
-                        Select your Fitzpatrick skin type below, or let the AI camera detect it automatically.
+                        Select your Fitzpatrick skin type below, or let camera detection find it automatically.
                     </p>
 
                     {/* How it works */}
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 mb-8 text-left max-w-sm sm:max-w-none mx-auto">
                         {[
-                            { num: "01", text: "Pick your skin tone type or use the AI camera" },
+                            { num: "01", text: "Pick your skin tone type or use camera detection" },
                             { num: "02", text: "We match color palettes that suit your complexion" },
                             { num: "03", text: "Browse and build outfits made for you" },
                         ].map((step) => (
@@ -90,8 +90,8 @@ export default function ShopBySkinTonePage() {
                         className="group inline-flex items-center justify-center gap-3 px-5 sm:px-8 py-3 sm:py-4 w-full sm:w-auto bg-white/5 hover:bg-white/10 border border-white/10 hover:border-[#C4724F]/40 text-white font-bold rounded-full transition-all duration-300"
                     >
                         <Camera className="w-5 h-5 text-[#C4724F]" />
-                        Analyse with AI Camera
-                        <span className="bg-[#C4724F]/20 border border-[#C4724F]/30 text-[#E8A87C] text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">AI</span>
+                        Scan Your Skin Tone
+                        <span className="bg-[#C4724F]/20 border border-[#C4724F]/30 text-[#E8A87C] text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">SCAN</span>
                     </button>
                 </motion.div>
 

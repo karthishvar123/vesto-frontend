@@ -130,7 +130,7 @@ export default function Hero() {
                 {/* Badge */}
                 <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-[#C4724F]/30 bg-[#C4724F]/10 text-[#C4724F] text-xs font-bold uppercase tracking-widest mb-10">
                     <Sparkles className="w-3 h-3" />
-                    AI-Powered Style Intelligence
+                    Smart Style. Built For You.
                 </div>
 
                 {/* Main heading */}

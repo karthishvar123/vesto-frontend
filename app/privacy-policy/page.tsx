@@ -37,7 +37,7 @@ export default function PrivacyPolicyPage() {
                             </div>
                             <div>
                                 <h3 className="text-white font-semibold mb-1">Skin Tone Data</h3>
-                                <p>If you use the AI camera feature, skin tone analysis is performed entirely on your device using MediaPipe. No facial images or biometric data are transmitted to or stored on our servers.</p>
+                                <p>If you use the camera detection feature, skin tone analysis is performed entirely on your device using MediaPipe. No facial images or biometric data are transmitted to or stored on our servers.</p>
                             </div>
                             <div>
                                 <h3 className="text-white font-semibold mb-1">Usage Data</h3>
@@ -74,7 +74,7 @@ export default function PrivacyPolicyPage() {
                             </div>
                             <div>
                                 <h3 className="text-white font-semibold mb-1">MediaPipe (Google)</h3>
-                                <p>The AI camera feature uses MediaPipe, which runs entirely on your device. No camera data is sent to Google or any external server through our app.</p>
+                                <p>The camera detection feature uses MediaPipe, which runs entirely on your device. No camera data is sent to Google or any external server through our app.</p>
                             </div>
                         </div>
                     </section>

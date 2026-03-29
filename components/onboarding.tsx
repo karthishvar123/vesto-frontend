@@ -36,7 +36,7 @@ const SLIDES = [
         visual: (
             <div className="flex flex-col gap-4 w-full max-w-xs mx-auto">
                 {[
-                    { num: "01", title: "Scan your skin tone", desc: "Use AI camera or select manually from 6 Fitzpatrick types", color: "#C4724F" },
+                    { num: "01", title: "Scan your skin tone", desc: "Use camera detection or select manually from 6 Fitzpatrick types", color: "#C4724F" },
                     { num: "02", title: "Browse matched clothes", desc: "Every product is filtered by color compatibility for your tone", color: "#E8A87C" },
                     { num: "03", title: "Build your wardrobe", desc: "Save items, get daily outfit suggestions, complete your look", color: "#C4724F" },
                 ].map((step, i) => (

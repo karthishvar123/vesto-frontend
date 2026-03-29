@@ -79,7 +79,7 @@ export default function SkinToneShop() {
                         Shop by Skin Tone
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                     </Link>
-                    <p className="text-white/30 text-sm">or use AI camera for instant detection</p>
+                    <p className="text-white/30 text-sm">or use camera detection</p>
                 </div>
             </div>
         </section>

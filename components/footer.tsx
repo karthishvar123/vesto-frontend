@@ -13,7 +13,7 @@ export function Footer() {
                         </span>
                     </Link>
                     <p className="text-white/40 text-sm text-center md:text-left">
-                        AI-Powered Style Intelligence for the Modern Wardrobe.
+                        Smart Style Intelligence for the Modern Wardrobe.
                     </p>
                 </div>
 

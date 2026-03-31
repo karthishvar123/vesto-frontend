@@ -27,9 +27,10 @@ export default function ShopBySkinTonePage() {
     const router = useRouter();
     const [showCamera, setShowCamera] = useState(false);
 
-    const handleShopClick = async () => {
+    const handleShopClick = () => {
         if (!selectedType) return;
-        await saveSkinToneToFirestore();
+        // Fire-and-forget — don't block navigation on Firestore (handles unauthenticated via session UUID)
+        saveSkinToneToFirestore().catch(() => {});
         router.push("/recommendations");
     };
 

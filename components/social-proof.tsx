@@ -1,17 +1,23 @@
+"use client";
+
+import { FlaskConical } from "lucide-react";
+
 export default function SocialProof() {
     return (
-        <section className="w-full py-8 sm:py-20 border-t border-white/5 bg-[#0A0A0A]">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-24 items-start max-w-5xl mx-auto px-4">
-                {[
-                    { num: "6", label: "Fitzpatrick skin types covered" },
-                    { num: "50+", label: "Color families mapped" },
-                    { num: "3", label: "Smart outfit categories" },
-                ].map((s) => (
-                    <div key={s.label} className="text-center flex flex-col items-center">
-                        <p className="text-4xl sm:text-5xl font-black text-[#C4724F] mb-2">{s.num}</p>
-                        <p className="text-white/40 text-[10px] sm:text-sm uppercase tracking-widest max-w-[160px] leading-relaxed">{s.label}</p>
-                    </div>
-                ))}
+        <section className="w-full py-10 sm:py-16 border-t border-white/5 bg-[#0A0A0A]">
+            <div className="max-w-2xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 text-center sm:text-left">
+                <div className="w-12 h-12 rounded-2xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center shrink-0">
+                    <FlaskConical className="w-5 h-5 text-indigo-400" />
+                </div>
+                <div>
+                    <p className="text-white font-black text-sm uppercase tracking-tight">
+                        Built on the{" "}
+                        <span className="text-[#E8A87C]">Fitzpatrick Scale</span>
+                    </p>
+                    <p className="text-white/30 text-xs leading-relaxed mt-1">
+                        The dermatological standard used by NASA, the WHO, and dermatologists worldwide — not a guess.
+                    </p>
+                </div>
             </div>
         </section>
     );

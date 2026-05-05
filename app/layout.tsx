@@ -23,6 +23,9 @@ export const metadata: Metadata = {
   title: "Vesto | Smart Style Intelligence",
   description: "Dress for your skin tone. Vesto analyses your complexion, builds your wardrobe, and pairs every outfit — so you always look intentional.",
   manifest: "/manifest.json",
+  other: {
+    "verify-admitad": "2454ce29d7",
+  },
   icons: {
     icon: [
       { url: "/icon-192.png", sizes: "192x192", type: "image/png" },

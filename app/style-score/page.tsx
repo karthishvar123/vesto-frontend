@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import { ShoppingBag, AlertTriangle, CheckCircle2, TrendingUp, Palette, Target, Zap } from "lucide-react";
 import Navbar from "@/components/navbar";
-import ProtectedRoute from "@/components/protected-route";
 import { useWardrobe } from "@/context/wardrobe-context";
 import { useSkinTone } from "@/context/skin-tone-context";
 import {
@@ -150,8 +149,7 @@ export default function StyleScorePage() {
     const grade = getGrade(scores.composite);
 
     return (
-        <ProtectedRoute>
-            <main className="min-h-screen bg-[#0A0A0A]">
+        <main className="min-h-screen bg-[#0A0A0A]">
                 <Navbar />
 
                 {/* Ambient glow */}
@@ -371,6 +369,5 @@ export default function StyleScorePage() {
                     )}
                 </div>
             </main>
-        </ProtectedRoute>
     );
 }

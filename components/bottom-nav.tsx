@@ -2,14 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, Shirt, ScanFace, ShoppingBag, User } from "lucide-react";
+import { Home, Shirt, ScanFace, CalendarDays, TrendingUp } from "lucide-react";
 
 const tabs = [
     { href: "/", icon: Home, label: "Home" },
-    { href: "/men", icon: ShoppingBag, label: "Shop" },
+    { href: "/occasion-planner", icon: CalendarDays, label: "Occasion" },
     { href: "/shop-by-skin-tone", icon: ScanFace, label: "Skin Tone" },
     { href: "/virtual-wardrobe", icon: Shirt, label: "Wardrobe" },
-    { href: "/auth", icon: User, label: "Profile" },
+    { href: "/style-score", icon: TrendingUp, label: "My Score" },
 ];
 
 export default function BottomNav() {

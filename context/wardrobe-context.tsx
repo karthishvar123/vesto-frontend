@@ -16,6 +16,10 @@ export interface WardrobeItem {
     brand?: string;
     activityType?: string;
     colorFamily?: string;
+    // --- v2 fields (optional for backward compat) ---
+    occasionTags?: string[];   // e.g. ['wedding-guest', 'office', 'casual']
+    fabricType?: string;       // e.g. 'linen' | 'cotton' | 'wool' | 'denim' | 'polyester'
+    fitType?: string;          // e.g. 'slim-fit' | 'regular' | 'straight' | 'relaxed'
 }
 
 interface WardrobeContextType {

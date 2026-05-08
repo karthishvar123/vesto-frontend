@@ -218,7 +218,7 @@ export default function Navbar() {
 
         {/* Desktop links */}
         <div className="hidden md:flex items-center gap-8">
-          {["MEN", "SHOP BY SKINTONE", "VIRTUAL WARDROBE"].map((item) => (
+          {["MEN", "SHOP BY SKINTONE", "VIRTUAL WARDROBE", "STYLE SCORE", "OCCASION"].map((item) => (
             <div
               key={item}
               className="relative"
@@ -226,9 +226,11 @@ export default function Navbar() {
             >
               <Link
                 href={
-                  item === "MEN" ? "/men" :
-                    item === "SHOP BY SKINTONE" ? "/shop-by-skin-tone" :
-                      "/virtual-wardrobe"
+                  item === "MEN"              ? "/men" :
+                  item === "SHOP BY SKINTONE" ? "/shop-by-skin-tone" :
+                  item === "VIRTUAL WARDROBE" ? "/virtual-wardrobe" :
+                  item === "STYLE SCORE"      ? "/style-score" :
+                                               "/occasion-planner"
                 }
                 className="text-sm font-medium text-white/60 hover:text-white transition-colors uppercase tracking-wide py-3"
               >
